@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="QR Scanner"
+        android:icon="@drawable/baseline_qr_code_24"
+        android:id="@+id/QR_Scanner"/>
+    <item
+        android:title="Event"
+        android:icon="@drawable/baseline_event_24"
+        android:id="@+id/Event"/>
+    <item
+        android:title="Profile"
+        android:icon="@drawable/baseline_person_24"
+        android:id="@+id/Profile"/>
+</menu>
