@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="16dp"
+    android:weightSum="8">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.4"
+        android:gravity="center"
+        android:shadowRadius="2.1"
+        android:text="Log In"
+        android:textColor="@color/black"
+        android:textSize="35sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp"
+        android:weightSum="3"
+        android:layout_weight="3.5">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" Name"
+            android:background="@drawable/blank"
+            android:layout_weight="0.4"
+            android:textColorHint="#bebebe"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" Email"
+            android:background="@drawable/blank"
+            android:layout_weight="0.4"
+            android:textColorHint="#bebebe"
+            android:layout_marginBottom="8dp"/>
+
+
+        <EditText
+            android:id="@+id/editTextTextPassword"
+            android:layout_width="match_parent"
+            android:hint=" Password"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blank"
+            android:textColorHint="#bebebe"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="0.4"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/rounded_button_background"
+        android:textColor="@color/white"
+        android:text="Log In"
+        android:shadowColor="#536061"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2.1"
+        android:layout_marginTop="24dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="New User?"
+        android:textColor="#00B6AA"
+        android:textStyle="bold" />
+
+</LinearLayout>
