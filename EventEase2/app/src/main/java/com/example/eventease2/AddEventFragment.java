@@ -89,7 +89,7 @@ public class AddEventFragment extends AppCompatActivity {
         String location = locationView.getText().toString();
         String duration = durationView.getText().toString();
         Boolean isAbleLocationTracking = isAbleLocationTrackingView.isChecked();
-        Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode("test");
+        Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode("https://console.firebase.google.com/u/0/project/syntaxsquad-1d644/firestore/data/~2FEvents~2Fnewevent");
 
         db.collection("collections").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -121,11 +121,12 @@ public class AddEventFragment extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event event = new Event(imageView , eventName, description, location, isAbleLocationTracking, duration, qrCode);
-                eventsRef.add(event);
-                HashMap<String, Event> data = new HashMap<>();
-                data.put("Event", event);
-                eventsRef.document("newEvent").set(data);
+                imageView.setImageBitmap(qrCode);
+//                Event event = new Event(imageView , eventName, description, location, isAbleLocationTracking, duration, qrCode);
+//                eventsRef.add(event);
+//                HashMap<String, Event> data = new HashMap<>();
+//                data.put("Event", event);
+//                eventsRef.document("newEvent").set(data);
             }
         });
         //real time update
