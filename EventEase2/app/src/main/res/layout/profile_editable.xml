@@ -11,7 +11,7 @@
         android:id="@+id/blue_background"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@color/buttonColor"
+        android:background="#00B6AA"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +42,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/blue_background"
-        app:layout_constraintVertical_bias="0.166"
+        app:layout_constraintVertical_bias="0.142"
         app:srcCompat="@drawable/ellipse_9" />
 
     <TextView
@@ -139,7 +139,7 @@
         android:layout_width="320dp"
         android:layout_height="57dp"
         android:backgroundTint="#00B6AA"
-        android:text="Save Changes"
+        android:text="@string/save_changes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
