@@ -5,11 +5,14 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
@@ -23,6 +26,8 @@ public class AddEventFragment extends AppCompatActivity {
     private CheckBox isAbleLocationTrackingView;
     private EditText durationView;
 
+    private Button generateButton;
+
     private static final int REQUEST_IMAGE_PICK = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,7 @@ public class AddEventFragment extends AppCompatActivity {
         locationView = findViewById(R.id.editTextText3);
         isAbleLocationTrackingView = findViewById(R.id.enable_location_checkbox);
         durationView = findViewById(R.id.editTextText4);
+        generateButton = findViewById(R.id.button2);
 
         //get the event info to make an event
         //Image image = imageView.getImageAlpha();
@@ -49,33 +55,25 @@ public class AddEventFragment extends AppCompatActivity {
     }
 
     /**
-     *This method allow user to choose an image to for the event
+     * Define a launcher for picking images
      */
-    private void selectImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*"); // Allow all file types
-        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_IMAGE_PICK);
-    }
+    ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                // Handle the picked image URI here
+                if (uri != null) {
+                    // Set the selected file to the image view
+                    imageView.setImageURI(uri);
+                }
+            }
+    );
 
     /**
-     *
-     * @param requestCode The integer request code originally supplied to
-     *                    startActivityForResult(), allowing you to identify who this
-     *                    result came from.
-     * @param resultCode The integer result code returned by the child activity
-     *                   through its setResult().
-     * @param data An Intent, which can return result data to the caller
-     *               (various data can be attached to Intent "extras").
-     *
+     * Call the launcher to select image
      */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
-            Uri selectedFileUri = data.getData();
-            // Set the selected file to the image view
-            imageView.setImageURI(selectedFileUri);
-        }
+    void selectImage() {
+        pickImageLauncher.launch("image/*");
     }
+
 
 }
