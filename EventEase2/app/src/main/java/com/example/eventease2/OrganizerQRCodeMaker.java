@@ -20,6 +20,9 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**This is the class to create a QR code
+ *
+ */
 public class OrganizerQRCodeMaker extends AppCompatActivity {
     private ImageView qrCodeImageView;
 
