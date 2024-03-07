@@ -2,6 +2,7 @@ package com.example.eventease2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -9,11 +10,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.firebase.Firebase;
+import com.example.eventease2.Attendee.AttendeeStartActivity;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Collection;
 
 public class RoleChooseActivity extends AppCompatActivity {
 
@@ -26,7 +25,7 @@ public class RoleChooseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_role_choose);
+        setContentView(R.layout.activity_main);
 
         appDb = FirebaseFirestore.getInstance();
         // Firebase contain info of all events on app
@@ -45,6 +44,9 @@ public class RoleChooseActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(RoleChooseActivity.this, "You clicked the Attendee Button", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(RoleChooseActivity.this, AttendeeStartActivity.class);
+                        startActivity(i);
+
                     }
                 });
             }
@@ -71,6 +73,8 @@ public class RoleChooseActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(RoleChooseActivity.this, "You clicked the admin Button", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, city + " was clicked", Toast.LENGTH_SHORT).show();
+
                     }
                 });
             }
