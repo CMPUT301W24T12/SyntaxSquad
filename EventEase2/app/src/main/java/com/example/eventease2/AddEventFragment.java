@@ -265,6 +265,9 @@ public class AddEventFragment extends AppCompatActivity {
         pickImageLauncher.launch("image/*");
     }
 
+    /**
+     * Get all info for the event from the plain text boxes
+     */
     void getInfo(){
         //get the event info to make an event
         eventName = eventNameView.getText().toString();
