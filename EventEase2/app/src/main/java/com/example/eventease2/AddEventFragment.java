@@ -2,11 +2,17 @@ package com.example.eventease2;
 
 import static android.content.ContentValues.TAG;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +27,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -56,14 +66,18 @@ public class AddEventFragment extends AppCompatActivity {
     private CheckBox isAbleLocationTrackingView;
     private EditText durationView;
     private Button generateButton;
-
     private String id;
+    private String organizerID;
     private static final int REQUEST_IMAGE_PICK = 1;
     private DocumentReference eventsRef;
 
     private  CollectionReference collectionRef;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
+
+    TelephonyManager tm;
+
+    String imei;
     /**
      * Define a launcher for picking images
      */
@@ -78,10 +92,38 @@ public class AddEventFragment extends AppCompatActivity {
                 }
             }
     );
+    @SuppressLint("HardwareIds")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_image_page);
+
+//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, PackageManager.PERMISSION_GRANTED);
+//
+//        TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(TELEPHONY_SERVICE);
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            String stringIMEI = telephonyManager.getImei();
+//            Log.d("IMEI", "IMEI Number: " + stringIMEI);
+//        }
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // For Android 10 (API level 29) and above, use getImei() instead of getDeviceId()
+                imei = tm.getImei();
+            } else {
+                // For devices below Android 10, use getDeviceId()
+                imei = tm.getDeviceId();
+            }
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 123);
+        }
+
+// Check if imei is null to avoid NullPointerException
+        if (imei != null) {
+            Log.d("IMEI", "IMEI Number: " + imei);
+        } else {
+            Log.d("IMEI", "IMEI Number not available");
+        }
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -128,7 +170,33 @@ public class AddEventFragment extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 selectImage();
+                DocumentReference documentReference = db.collection("EventEase").document("Organizer").collection("b77fd05e-2ff1-445e-8187-33cbb3fc0f53").document("ThisEvent");
+                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                // Retrieve the value of the field by its name
+                                String eventName = document.getString("Name");
+                                Log.d( "Name: ", eventName);
+                                if (eventName != null) {
+                                    // Do something with the eventName
+                                } else {
+                                    Log.d( "Name: ", "Not found");
+                                }
+                            } else {
+                                Log.d( "Document: ", "Not found");
+                            }
+                        } else {
+                            // Handle errors here
+                            Log.d(TAG, "Error getting document", task.getException());
+                        }
+                    }
+                });
+
             }
         });
 
@@ -140,16 +208,15 @@ public class AddEventFragment extends AppCompatActivity {
 //                Event event = new Event(imageView , eventName, description, location, isAbleLocationTracking, duration, qrCode);
 //                eventsRef.add(event);
                 final String randomKey = UUID.randomUUID().toString();
-
+                final String randomKey2 = UUID.randomUUID().toString();
                 id = randomKey;
+                organizerID = randomKey2;
 
                 HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
 
-// Add strings to a list
+                // Add Lists of attendees name, phoneNumbers, emails
                 List<String> emailList = new ArrayList<>();
                 emailList.add("email1");
-                emailList.add("email2");
-                emailList.add("email3");
 
                 List<String> phoneList = new ArrayList<>();
                 phoneList.add("phone1");
@@ -157,7 +224,7 @@ public class AddEventFragment extends AppCompatActivity {
                 List<String> nameList = new ArrayList<>();
                 nameList.add("name1");
 
-// Put the list into the HashMap
+                // Put the list into the HashMap
                 data.put("Name", "name");
                 data.put("ID", id);
                 data.put("Location", "location");
@@ -167,28 +234,34 @@ public class AddEventFragment extends AppCompatActivity {
                 data.put("EmailList", emailList);
                 data.put("PhoneList", phoneList);
                 data.put("NameList", nameList);
-                CollectionReference newRef = eventsRef.collection("NewEvent");
-                newRef.document("TestEvent").set(data);
-
-
-
+                CollectionReference newRef = eventsRef.collection(organizerID);
+                newRef.document(id).set(data);
 
                 StorageReference imageRef = storageRef.child("images/" + id);
                 imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getApplicationContext(),"Success",Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddEventFragment.this,"Success",Toast.LENGTH_LONG).show();
+
+                        // Create a new instance of the fragment
+                        EventFragment eventFragment = new EventFragment();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout, eventFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(),"Fail",Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddEventFragment.this,"Fail",Toast.LENGTH_LONG).show();
                     }
                 });
 
 
             }
         });
+
         //real time update
 //        eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
 //            @Override
