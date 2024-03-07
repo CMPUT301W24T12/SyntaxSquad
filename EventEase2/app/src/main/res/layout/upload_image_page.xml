@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00B6AA"
-    tools:context=".MainActivity">
+    tools:context=".Attendee.AttendeeStartActivity">
 
     <Button
         android:id="@+id/back_button"
@@ -59,14 +59,14 @@
         android:background="#00000000"
         android:scaleType="fitCenter"
         android:src="@drawable/upload_image_button"
-        app:layout_constraintBottom_toTopOf="@+id/editTextText"
+        app:layout_constraintBottom_toTopOf="@+id/editAttendeeName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="1.0" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/editAttendeeName"
         android:layout_width="390dp"
         android:layout_height="50dp"
         android:background="@android:color/background_light"
@@ -160,7 +160,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload an image for the event using the icon below"
-        app:layout_constraintBottom_toTopOf="@+id/editTextText"
+        app:layout_constraintBottom_toTopOf="@+id/editAttendeeName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/divider"

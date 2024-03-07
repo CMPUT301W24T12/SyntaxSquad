@@ -1,4 +1,4 @@
-package com.example.eventease2;
+package com.example.eventease2.Attendee;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -7,16 +7,18 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
+import com.example.eventease2.R;
+import com.example.eventease2.databinding.ActivityAttendeeStartBinding;
 import com.example.eventease2.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class AttendeeStartActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
+    ActivityAttendeeStartBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityAttendeeStartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         replaceFragment(new QRFragment());
 
