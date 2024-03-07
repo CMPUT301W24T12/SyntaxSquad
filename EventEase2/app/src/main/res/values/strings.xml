@@ -11,4 +11,5 @@
     <string name="todo">Todo:</string>
     <string name="phone">Phone:</string>
     <string name="profile">Profile</string>
+    <string name="todo_">TODO</string>
 </resources>
