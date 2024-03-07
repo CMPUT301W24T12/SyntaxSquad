@@ -98,32 +98,9 @@ public class AddEventFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_image_page);
 
-//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, PackageManager.PERMISSION_GRANTED);
-//
-//        TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(TELEPHONY_SERVICE);
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//            String stringIMEI = telephonyManager.getImei();
-//            Log.d("IMEI", "IMEI Number: " + stringIMEI);
-//        }
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // For Android 10 (API level 29) and above, use getImei() instead of getDeviceId()
-                imei = tm.getImei();
-            } else {
-                // For devices below Android 10, use getDeviceId()
-                imei = tm.getDeviceId();
-            }
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 123);
-        }
+        // Copyright 2020 M. Fadli Zein
+        imei = DeviceInfoUtils.getIMEI(getApplicationContext()); // device number
 
-// Check if imei is null to avoid NullPointerException
-        if (imei != null) {
-            Log.d("IMEI", "IMEI Number: " + imei);
-        } else {
-            Log.d("IMEI", "IMEI Number not available");
-        }
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
