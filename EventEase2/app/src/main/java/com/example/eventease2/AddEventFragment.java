@@ -14,7 +14,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -49,6 +51,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +69,12 @@ public class AddEventFragment extends AppCompatActivity {
     private CheckBox isAbleLocationTrackingView;
     private EditText durationView;
     private Button generateButton;
+
+    String eventName;
+    String description;
+    String location;
+    String duration;
+    Boolean isAbleLocationTracking;
     private String id;
     private String organizerID;
     private static final int REQUEST_IMAGE_PICK = 1;
@@ -75,9 +84,9 @@ public class AddEventFragment extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
-    TelephonyManager tm;
+    public TelephonyManager tm;
 
-    String imei;
+    public String imei;
     /**
      * Define a launcher for picking images
      */
@@ -105,17 +114,28 @@ public class AddEventFragment extends AppCompatActivity {
 //            String stringIMEI = telephonyManager.getImei();
 //            Log.d("IMEI", "IMEI Number: " + stringIMEI);
 //        }
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 // For Android 10 (API level 29) and above, use getImei() instead of getDeviceId()
-                imei = tm.getImei();
+                try {
+                    // Attempt to get the IMEI
+                    imei = tm.getImei();
+                    Log.d("IMEI",imei );
+                } catch (SecurityException e) {
+                    // Handle the exception, possibly by requesting the permission again
+                    Log.d("IMEI", "Error getting IMEI: " + e.getMessage() + "Permission: "+ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE));
+                    // You might want to request permission again here or handle it differently based on your app's logic
+                }
+
             } else {
                 // For devices below Android 10, use getDeviceId()
                 imei = tm.getDeviceId();
+                Log.d("IMEI",imei );
             }
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 123);
+            Log.d("IMEI","no permission" );
         }
 
 // Check if imei is null to avoid NullPointerException
@@ -124,6 +144,7 @@ public class AddEventFragment extends AppCompatActivity {
         } else {
             Log.d("IMEI", "IMEI Number not available");
         }
+
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -140,13 +161,11 @@ public class AddEventFragment extends AppCompatActivity {
         durationView = findViewById(R.id.editTextText4);
         generateButton = findViewById(R.id.button2);
 
-        //get the event info to make an event
-        String eventName = eventNameView.getText().toString();
-        String description = descriptionView.getText().toString();
-        String location = locationView.getText().toString();
-        String duration = durationView.getText().toString();
-        Boolean isAbleLocationTracking = isAbleLocationTrackingView.isChecked();
-        Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode("https://console.firebase.google.com/u/0/project/syntaxsquad-1d644/firestore/data/~2FEvents~2Fnewevent");
+        final String randomKey = UUID.randomUUID().toString();
+        final String randomKey2 = UUID.randomUUID().toString();
+        id = randomKey;
+        organizerID = randomKey2;
+        Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode(id);
 
         db.collection("collections").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -170,33 +189,7 @@ public class AddEventFragment extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 selectImage();
-                DocumentReference documentReference = db.collection("EventEase").document("Organizer").collection("b77fd05e-2ff1-445e-8187-33cbb3fc0f53").document("ThisEvent");
-                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                // Retrieve the value of the field by its name
-                                String eventName = document.getString("Name");
-                                Log.d( "Name: ", eventName);
-                                if (eventName != null) {
-                                    // Do something with the eventName
-                                } else {
-                                    Log.d( "Name: ", "Not found");
-                                }
-                            } else {
-                                Log.d( "Document: ", "Not found");
-                            }
-                        } else {
-                            // Handle errors here
-                            Log.d(TAG, "Error getting document", task.getException());
-                        }
-                    }
-                });
-
             }
         });
 
@@ -204,13 +197,8 @@ public class AddEventFragment extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                imageView.setImageBitmap(qrCode);
-//                Event event = new Event(imageView , eventName, description, location, isAbleLocationTracking, duration, qrCode);
-//                eventsRef.add(event);
-                final String randomKey = UUID.randomUUID().toString();
-                final String randomKey2 = UUID.randomUUID().toString();
-                id = randomKey;
-                organizerID = randomKey2;
+                getInfo();
+                Log.d("ANAME",eventName);
 
                 HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
 
@@ -225,12 +213,12 @@ public class AddEventFragment extends AppCompatActivity {
                 nameList.add("name1");
 
                 // Put the list into the HashMap
-                data.put("Name", "name");
+                data.put("Name", eventName);
                 data.put("ID", id);
-                data.put("Location", "location");
-                data.put("Description", "description");
-                data.put("Duration", "duration");
-                data.put("IsAbleLocationTracking", false);
+                data.put("Location", location);
+                data.put("Description", description);
+                data.put("Duration", duration);
+                data.put("IsAbleLocationTracking", isAbleLocationTracking);
                 data.put("EmailList", emailList);
                 data.put("PhoneList", phoneList);
                 data.put("NameList", nameList);
@@ -238,18 +226,24 @@ public class AddEventFragment extends AppCompatActivity {
                 newRef.document(id).set(data);
 
                 StorageReference imageRef = storageRef.child("images/" + id);
+                StorageReference qrRef = storageRef.child("QRCode/" + id);
+
+                // Convert QR code bitmap to byte array
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] qrCodeByteArray = baos.toByteArray();
+
+                // Upload QR code to Firebase Storage
+                qrRef.putBytes(qrCodeByteArray);
                 imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(AddEventFragment.this,"Success",Toast.LENGTH_LONG).show();
 
-                        // Create a new instance of the fragment
-                        EventFragment eventFragment = new EventFragment();
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.frameLayout, eventFragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        Intent intent = new Intent(getApplicationContext(), OrganizerEventFrame.class);
+                        intent.putExtra("ID",id);
+                        intent.putExtra("OrganizerID",organizerID);
+                        startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -258,32 +252,8 @@ public class AddEventFragment extends AppCompatActivity {
                     }
                 });
 
-
             }
         });
-
-        //real time update
-//        eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot querySnapshots,
-//                                @Nullable FirebaseFirestoreException error) {
-//                if (error != null) {
-//                    Log.e("Firestore", error.toString());
-//                    return;
-//                }
-//                if (querySnapshots != null) {
-//                    cityDataList.clear();
-//                    for (QueryDocumentSnapshot doc: querySnapshots) {
-//                        String city = doc.getId();
-//                        String province = doc.getString("Province");
-//                        Log.d("Firestore", String.format("City(%s, %s) fetched", city,
-//                                province));
-//                        cityDataList.add(new City(city, province));
-//                    }
-//                    cityArrayAdapter.notifyDataSetChanged();
-//                }
-//            }
-//        });
 
 
     }
@@ -295,5 +265,13 @@ public class AddEventFragment extends AppCompatActivity {
         pickImageLauncher.launch("image/*");
     }
 
+    void getInfo(){
+        //get the event info to make an event
+        eventName = eventNameView.getText().toString();
+        description = descriptionView.getText().toString();
+        location = locationView.getText().toString();
+        duration = durationView.getText().toString();
+        isAbleLocationTracking = isAbleLocationTrackingView.isChecked();
+    }
 
 }
