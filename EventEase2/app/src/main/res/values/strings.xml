@@ -2,4 +2,17 @@
     <string name="app_name">EventEase2</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save_changes">Save Changes\n</string>
+    <string name="enable_geolocation_tracking">Enable Geolocation Tracking\n</string>
+    <string name="email">Email:</string>
+    <string name="contact_information">Contact Information</string>
+    <string name="editable_bio">Editable Bio</string>
+    <string name="editable_name">Editable Name</string>
+    <string name="todo">Todo:</string>
+    <string name="phone">Phone:</string>
+    <string name="profile">Profile</string>
+    <string name="todo_">TODO</string>
+    <string name="todo2">TODO</string>
+    <string name="todo3">TODO</string>
+    <string name="todo5">TODO</string>
 </resources>
