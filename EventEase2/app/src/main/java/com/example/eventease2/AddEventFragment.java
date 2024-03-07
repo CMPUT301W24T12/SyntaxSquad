@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,27 +35,34 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * This is the class to add a event into the event list
  */
 public class AddEventFragment extends AppCompatActivity {
     private ImageView imageView;
+    private Uri imageURI;
     private TextView eventNameView;
     private TextView descriptionView;
     private  TextView locationView;
     private CheckBox isAbleLocationTrackingView;
     private EditText durationView;
-
     private Button generateButton;
 
     private static final int REQUEST_IMAGE_PICK = 1;
-    private CollectionReference eventsRef;
+    private DocumentReference eventsRef;
+
+    private  CollectionReference collectionRef;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
     /**
      * Define a launcher for picking images
      */
@@ -64,6 +73,7 @@ public class AddEventFragment extends AppCompatActivity {
                 if (uri != null) {
                     // Set the selected file to the image view
                     imageView.setImageURI(uri);
+                    imageURI = uri;
                 }
             }
     );
@@ -73,7 +83,11 @@ public class AddEventFragment extends AppCompatActivity {
         setContentView(R.layout.upload_image_page);
 
         db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("TTTT");
+        storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        collectionRef = db.collection("EventEase");
+        eventsRef = collectionRef.document("Organizer");
 
         imageView = findViewById(R.id.imageButton);
         eventNameView = findViewById(R.id.editTextText);
@@ -121,12 +135,42 @@ public class AddEventFragment extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageView.setImageBitmap(qrCode);
+//                imageView.setImageBitmap(qrCode);
 //                Event event = new Event(imageView , eventName, description, location, isAbleLocationTracking, duration, qrCode);
 //                eventsRef.add(event);
-                HashMap<String, String> data = new HashMap<>();
-                data.put("Event", "test");
-                eventsRef.document("newEvent").set(data);
+                HashMap<String, Object> dataName = new HashMap<>(); // Note the change in the type of the HashMap
+
+// Add strings to a list
+                List<String> listOfStrings = new ArrayList<>();
+                listOfStrings.add("attendee1");
+                listOfStrings.add("attendee2");
+                listOfStrings.add("attendee3");
+
+// Put the list into the HashMap
+                dataName.put("Name", "name");
+                dataName.put("location", "location");
+                dataName.put("listKey", listOfStrings);
+                CollectionReference newRef = eventsRef.collection("NewEvent");
+                newRef.document("TestEvent").set(dataName);
+
+
+                String imageString = imageURI.toString();
+                final String randomKey = UUID.randomUUID().toString();
+
+                StorageReference imageRef = storageRef.child("images/" + randomKey);
+                imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getApplicationContext(),"Success",Toast.LENGTH_LONG).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(),"Fail",Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
             }
         });
         //real time update
@@ -135,11 +179,19 @@ public class AddEventFragment extends AppCompatActivity {
 //            public void onEvent(@Nullable QuerySnapshot querySnapshots,
 //                                @Nullable FirebaseFirestoreException error) {
 //                if (error != null) {
-//                    Log.e(TAG, "Error getting documents: ", error);
+//                    Log.e("Firestore", error.toString());
 //                    return;
 //                }
-//                for (QueryDocumentSnapshot doc : querySnapshots) {
-//                    Log.d(TAG, doc.getId() + " => " + doc.getData());
+//                if (querySnapshots != null) {
+//                    cityDataList.clear();
+//                    for (QueryDocumentSnapshot doc: querySnapshots) {
+//                        String city = doc.getId();
+//                        String province = doc.getString("Province");
+//                        Log.d("Firestore", String.format("City(%s, %s) fetched", city,
+//                                province));
+//                        cityDataList.add(new City(city, province));
+//                    }
+//                    cityArrayAdapter.notifyDataSetChanged();
 //                }
 //            }
 //        });

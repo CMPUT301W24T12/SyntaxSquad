@@ -1,9 +1,13 @@
 package com.example.eventease2;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.widget.ImageView;
 
+import com.google.firebase.firestore.auth.User;
 import com.google.zxing.qrcode.encoder.QRCode;
+
+import java.util.Collection;
 
 public class Event {
     private ImageView image;
@@ -12,6 +16,11 @@ public class Event {
     private String location;
     private boolean isAbleLocationTracking;
     private String duration;
+
+    private Collection<String> emailList;
+    private Collection<String> nameList;
+    private Collection<String> phoneNumberList;
+    private Uri imageUri;
 
     public Bitmap qrCode;
 
