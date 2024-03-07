@@ -65,26 +65,38 @@ public class OrganizerEventFrame extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
 
                     if (document.exists()) {
-                        // Retrieve the value of the field by its name
-                        eventTitle = document.getString("Name");
-                        desciption = document.getString("Description");
-                        Log.d( "Title: ", eventTitle);
-                        Log.d( "Description: ", desciption);
-                        // Download the image from Firebase Storage
-                        imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                // Convert the byte array to a Bitmap
-                                imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        // Inside the onComplete method
+                        if (document.exists()) {
+                            // Retrieve the value of the field by its name
+                            eventTitle = document.getString("Name");
+                            desciption = document.getString("Description");
+                            Log.d("Title: ", eventTitle);
+                            Log.d("Description: ", desciption);
 
-                                // Now, you can use the imageBitmap for further processing
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Handle any errors that occurred while downloading the image
-                            }
-                        });
+                            // Set the eventTitleView and descriptionView here
+                            eventTitleView.setText(eventTitle);
+                            descriptionView.setText(desciption);
+
+                            // Download the image from Firebase Storage
+                            imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    // Convert the byte array to a Bitmap
+                                    imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                                    // Set the Bitmap to the ImageView
+                                    imageView.setImageBitmap(imageBitmap);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle any errors that occurred while downloading the image
+                                }
+                            });
+                        } else {
+                            Log.d("Document: ", "Not found");
+                        }
+
                     } else {
                         Log.d( "Document: ", "Not found");
                     }
