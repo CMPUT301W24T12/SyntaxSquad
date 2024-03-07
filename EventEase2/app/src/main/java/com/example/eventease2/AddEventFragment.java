@@ -57,6 +57,7 @@ public class AddEventFragment extends AppCompatActivity {
     private EditText durationView;
     private Button generateButton;
 
+    private String id;
     private static final int REQUEST_IMAGE_PICK = 1;
     private DocumentReference eventsRef;
 
@@ -138,6 +139,10 @@ public class AddEventFragment extends AppCompatActivity {
 //                imageView.setImageBitmap(qrCode);
 //                Event event = new Event(imageView , eventName, description, location, isAbleLocationTracking, duration, qrCode);
 //                eventsRef.add(event);
+                final String randomKey = UUID.randomUUID().toString();
+
+                id = randomKey;
+
                 HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
 
 // Add strings to a list
@@ -154,6 +159,7 @@ public class AddEventFragment extends AppCompatActivity {
 
 // Put the list into the HashMap
                 data.put("Name", "name");
+                data.put("ID", id);
                 data.put("Location", "location");
                 data.put("Description", "description");
                 data.put("Duration", "duration");
@@ -165,10 +171,9 @@ public class AddEventFragment extends AppCompatActivity {
                 newRef.document("TestEvent").set(data);
 
 
-                String imageString = imageURI.toString();
-                final String randomKey = UUID.randomUUID().toString();
 
-                StorageReference imageRef = storageRef.child("images/" + randomKey);
+
+                StorageReference imageRef = storageRef.child("images/" + id);
                 imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
