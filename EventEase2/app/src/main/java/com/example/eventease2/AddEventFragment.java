@@ -138,20 +138,31 @@ public class AddEventFragment extends AppCompatActivity {
 //                imageView.setImageBitmap(qrCode);
 //                Event event = new Event(imageView , eventName, description, location, isAbleLocationTracking, duration, qrCode);
 //                eventsRef.add(event);
-                HashMap<String, Object> dataName = new HashMap<>(); // Note the change in the type of the HashMap
+                HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
 
 // Add strings to a list
-                List<String> listOfStrings = new ArrayList<>();
-                listOfStrings.add("attendee1");
-                listOfStrings.add("attendee2");
-                listOfStrings.add("attendee3");
+                List<String> emailList = new ArrayList<>();
+                emailList.add("email1");
+                emailList.add("email2");
+                emailList.add("email3");
+
+                List<String> phoneList = new ArrayList<>();
+                phoneList.add("phone1");
+
+                List<String> nameList = new ArrayList<>();
+                nameList.add("name1");
 
 // Put the list into the HashMap
-                dataName.put("Name", "name");
-                dataName.put("location", "location");
-                dataName.put("listKey", listOfStrings);
+                data.put("Name", "name");
+                data.put("Location", "location");
+                data.put("Description", "description");
+                data.put("Duration", "duration");
+                data.put("IsAbleLocationTracking", false);
+                data.put("EmailList", emailList);
+                data.put("PhoneList", phoneList);
+                data.put("NameList", nameList);
                 CollectionReference newRef = eventsRef.collection("NewEvent");
-                newRef.document("TestEvent").set(dataName);
+                newRef.document("TestEvent").set(data);
 
 
                 String imageString = imageURI.toString();
