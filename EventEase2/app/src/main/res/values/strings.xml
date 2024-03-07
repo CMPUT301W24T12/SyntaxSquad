@@ -9,4 +9,6 @@
     <string name="editable_bio">Editable Bio</string>
     <string name="editable_name">Editable Name</string>
     <string name="todo">Todo:</string>
+    <string name="phone">Phone:</string>
+    <string name="profile">Profile</string>
 </resources>
