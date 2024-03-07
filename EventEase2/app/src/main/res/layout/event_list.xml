@@ -61,7 +61,7 @@
         tools:layout_editor_absoluteY="131dp" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/view_attendees"
         android:layout_width="151dp"
         android:layout_height="47dp"
         android:backgroundTint="#00B6AA"
@@ -73,7 +73,7 @@
         tools:layout_editor_absoluteY="179dp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/event_details"
         android:layout_width="151dp"
         android:layout_height="47dp"
         android:backgroundTint="#00B6AA"
