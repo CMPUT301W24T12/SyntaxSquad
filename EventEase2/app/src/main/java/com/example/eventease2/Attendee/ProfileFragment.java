@@ -17,7 +17,12 @@ import android.widget.Toast;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firestore.v1.WriteResult;
 
 import org.checkerframework.checker.units.qual.A;
 
@@ -44,6 +49,9 @@ public class ProfileFragment extends Fragment {
 
     private ArrayAdapter<Attendee> attendeeAdapter;
     private FirebaseFirestore appDb;
+
+    private DocumentReference orgainzerRef;
+    private DocumentReference attendeeRef;
     private ArrayList<Attendee> attendeeList;
     private EditText attendeeNameText;
     private EditText attendeePhoneText;
@@ -91,8 +99,10 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         appDb = FirebaseFirestore.getInstance();
 
-        CollectionReference collectionReference = appDb.collection("Attendee");
 
+        orgainzerRef = appDb.collection("EventEase").document("Organizer");
+        CollectionReference collectionReference = orgainzerRef.collection("NewEvent");
+        attendeeRef = collectionReference.document("TestEvent");
         attendeeList = new ArrayList<>();
 
         attendeeAdapter = new ArrayAdapter<>(getActivity(), R.layout.fragment_profile, attendeeList);
@@ -104,24 +114,30 @@ public class ProfileFragment extends Fragment {
         attendeeSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final String attendeeName = attendeeNameText.getText().toString();
                 final String attendeePhone = attendeePhoneText.getText().toString();
                 final String attendeeEmail = attendeeEmailText.getText().toString();
 
-                HashMap<String, String> userInfo = new HashMap<>();
-                Attendee attendee = new Attendee(attendeeName,attendeePhone,attendeeEmail);
+                attendeeRef.update("EmailList",FieldValue.arrayUnion(attendeeEmail));
+                attendeeRef.update("NameList",FieldValue.arrayUnion(attendeeName));
+                attendeeRef.update("PhoneList",FieldValue.arrayUnion(attendeePhone));
+//
+//                WriteBatch batch = appDb.batch();
+//                HashMap<String, String> userInfo = new HashMap<>();
+//                Attendee attendee = new Attendee(attendeeName,attendeePhone,attendeeEmail);
+//                userInfo.put("Phone",attendeePhone);
+//                userInfo.put("Email",attendeeEmail);
+//
+////                collectionReference.document(attendee.getName())
+////                        .set(userInfo)
+////                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+////                            @Override
+////                            public void onSuccess(Void unused) {
+////                                Log.d("Firestore", "DocumentSnapshot successfully written!");
+////                            }
+////                        });
 
-                userInfo.put("Phone",attendeePhone);
-                userInfo.put("Email",attendeeEmail);
-
-                collectionReference.document(attendee.getName())
-                        .set(userInfo)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d("Firestore", "DocumentSnapshot successfully written!");
-                            }
-                        });
             }
         });
 

@@ -22,10 +22,10 @@ public class QRFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_q_r, container, false);
 
         // Initialize QR code scanner
-        IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
-        integrator.setPrompt("Scan QR Code");
-        integrator.setOrientationLocked(false);
-        integrator.initiateScan();
+//        IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
+//        integrator.setPrompt("Scan QR Code");
+//        integrator.setOrientationLocked(false);
+//        integrator.initiateScan();
 
         return view;
     }
@@ -35,16 +35,16 @@ public class QRFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Parse QR code scan result
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() != null) {
-                String scannedData = result.getContents();
-                // Handle the scanned data, for example, display it or perform further actions
-            } else {
-                // Handle if no QR code is found
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+//        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//        if (result != null) {
+//            if (result.getContents() != null) {
+//                String scannedData = result.getContents();
+//                // Handle the scanned data, for example, display it or perform further actions
+//            } else {
+//                // Handle if no QR code is found
+//            }
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
     }
 }
