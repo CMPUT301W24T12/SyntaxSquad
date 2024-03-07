@@ -4,14 +4,25 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.eventease2.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.checkerframework.checker.units.qual.A;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +41,13 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Button attendeeSaveChanges;
-    FirebaseFirestore appDb;
+
+    private ArrayAdapter<Attendee> attendeeAdapter;
+    private FirebaseFirestore appDb;
+    private ArrayList<Attendee> attendeeList;
+    private EditText attendeeNameText;
+    private EditText attendeePhoneText;
+    private EditText attendeeEmailText;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -56,11 +73,15 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        appDb = FirebaseFirestore.getInstance();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        CollectionReference collectionReference = appDb.collection("Attendee");
+        attendeeList = new ArrayList<>();
+
+
     }
 
     @Override
@@ -68,20 +89,54 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        appDb = FirebaseFirestore.getInstance();
 
+        CollectionReference collectionReference = appDb.collection("Attendee");
+
+        attendeeList = new ArrayList<>();
+
+        attendeeAdapter = new ArrayAdapter<>(getActivity(), R.layout.fragment_profile, attendeeList);
         // Find the ImageButton by its ID
         attendeeSaveChanges = view.findViewById(R.id.AttendeeAddChanges);
+        attendeeNameText = view.findViewById(R.id.editAttendeeName);
+        attendeePhoneText = view.findViewById(R.id.editTextPhone2);
+        attendeeEmailText = view.findViewById(R.id.editEmailAddress);
         attendeeSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String attendeeName = attendeeNameText.getText().toString();
+                final String attendeePhone = attendeePhoneText.getText().toString();
+                final String attendeeEmail = attendeeEmailText.getText().toString();
 
+                HashMap<String, String> userInfo = new HashMap<>();
+                Attendee attendee = new Attendee(attendeeName,attendeePhone,attendeeEmail);
+
+                userInfo.put("Phone",attendeePhone);
+                userInfo.put("Email",attendeeEmail);
+
+                collectionReference.document(attendee.getName())
+                        .set(userInfo)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d("Firestore", "DocumentSnapshot successfully written!");
+                            }
+                        });
             }
         });
-        // Set OnClickListener or perform any other actions as needed
 
         return view;
     }
 
+    private void addNewAttendee(Attendee attendee) {
+        CollectionReference collectionReference = appDb.collection("Attendee");
 
+        attendeeList.add(attendee);
+        attendeeAdapter.notifyDataSetChanged();
+
+        HashMap<String, Attendee> data = new HashMap<>();
+        data.put(attendee.getName(), attendee);
+        collectionReference.document(attendee.getName()).set(data);
+    }
 
 }
