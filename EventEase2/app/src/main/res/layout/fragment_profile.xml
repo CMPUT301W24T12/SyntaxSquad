@@ -42,15 +42,13 @@
 
     <View
         android:id="@+id/divider"
-        android:layout_width="418dp"
-        android:layout_height="551dp"
+        android:layout_width="411dp"
+        android:layout_height="525dp"
         android:background="@drawable/rounded_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.988" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
         android:id="@+id/imageButton"
@@ -62,8 +60,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_name"
-        app:layout_constraintVertical_bias="0.059" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.101" />
 
     <EditText
         android:id="@+id/editAttendeeName"
@@ -78,8 +76,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.332" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButton"
+        app:layout_constraintVertical_bias="0.043" />
 
     <TextView
         android:id="@+id/textView"
@@ -96,19 +94,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_name"
         app:layout_constraintVertical_bias="0.0" />
-
-    <View
-        android:id="@+id/divider3"
-        android:layout_width="409dp"
-        android:layout_height="1dp"
-        android:background="#A4A9A9A9"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.913" />
 
     <EditText
         android:id="@+id/editTextText"
@@ -129,42 +114,38 @@
         android:id="@+id/editTextPhone2"
         android:layout_width="210dp"
         android:layout_height="37dp"
+        android:layout_marginEnd="28dp"
         android:background="#F3F3F3"
         android:ems="10"
         android:inputType="phone"
-        app:layout_constraintBottom_toBottomOf="@+id/divider3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.875"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText"
-        app:layout_constraintVertical_bias="0.278" />
+        app:layout_constraintTop_toBottomOf="@+id/AttendeeCITitle"
+        app:layout_constraintVertical_bias="0.055" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
         android:layout_width="211dp"
         android:layout_height="41dp"
+        android:layout_marginEnd="28dp"
         android:background="#F4F4F4"
         android:ems="10"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.88"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextPhone2"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintVertical_bias="0.064" />
 
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="28dp"
-        app:layout_constraintBottom_toTopOf="@+id/AttendeeAddChanges"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.36"
-        app:layout_constraintStart_toEndOf="@+id/EnableGeoLocationTracking"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintVertical_bias="0.032" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85" />
 
     <TextView
         android:id="@+id/EnableGeoLocationTracking"
@@ -174,11 +155,10 @@
         android:text="Enable GeoLocation Tracking"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.35"
+        app:layout_constraintEnd_toStartOf="@+id/checkBox"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintVertical_bias="0.236" />
+        app:layout_constraintVertical_bias="0.156" />
 
     <Button
         android:id="@+id/AttendeeAddChanges"
@@ -188,12 +168,11 @@
         android:background="#00B5A9"
         android:text="Save Changes"
         android:textColor="#FEFEFE"
-        app:layout_constraintBottom_toTopOf="@+id/divider3"
+        app:layout_constraintBottom_toBottomOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/EnableGeoLocationTracking"
-        app:layout_constraintVertical_bias="0.176" />
+        app:layout_constraintVertical_bias="0.117" />
 
     <TextView
         android:id="@+id/AttendeePhone"
@@ -203,23 +182,23 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editTextPhone2"
-        app:layout_constraintHorizontal_bias="0.564"
+        app:layout_constraintHorizontal_bias="0.745"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText"
-        app:layout_constraintVertical_bias="0.23" />
+        app:layout_constraintTop_toBottomOf="@+id/AttendeeCITitle"
+        app:layout_constraintVertical_bias="0.055" />
 
     <TextView
         android:id="@+id/AttendeeEmail"
-        android:layout_width="114dp"
-        android:layout_height="44dp"
+        android:layout_width="105dp"
+        android:layout_height="46dp"
         android:text="Email:"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintHorizontal_bias="0.557"
+        app:layout_constraintHorizontal_bias="0.656"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AttendeePhone"
-        app:layout_constraintVertical_bias="0.088" />
+        app:layout_constraintVertical_bias="0.066" />
 
     <TextView
         android:id="@+id/AttendeeCITitle"
