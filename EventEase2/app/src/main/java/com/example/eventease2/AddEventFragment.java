@@ -73,7 +73,7 @@ public class AddEventFragment extends AppCompatActivity {
         setContentView(R.layout.upload_image_page);
 
         db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("Events");
+        eventsRef = db.collection("TTTT");
 
         imageView = findViewById(R.id.imageButton);
         eventNameView = findViewById(R.id.editTextText);
@@ -124,9 +124,9 @@ public class AddEventFragment extends AppCompatActivity {
                 imageView.setImageBitmap(qrCode);
 //                Event event = new Event(imageView , eventName, description, location, isAbleLocationTracking, duration, qrCode);
 //                eventsRef.add(event);
-//                HashMap<String, Event> data = new HashMap<>();
-//                data.put("Event", event);
-//                eventsRef.document("newEvent").set(data);
+                HashMap<String, String> data = new HashMap<>();
+                data.put("Event", "test");
+                eventsRef.document("newEvent").set(data);
             }
         });
         //real time update
