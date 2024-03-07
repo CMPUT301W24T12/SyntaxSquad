@@ -43,6 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/blue_background"
         app:layout_constraintVertical_bias="0.142"
+        app:layout_constraintVertical_bias="0.166"
         app:srcCompat="@drawable/ellipse_9" />
 
     <TextView
@@ -95,6 +96,7 @@
         android:ems="10"
         android:inputType="text"
         android:text="@string/phone"
+        android:text="Phone: "
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -103,7 +105,8 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="DuplicateIds,LabelFor"
-        android:autofillHints="" />
+        android:autofillHints="" 
+        tools:ignore="DuplicateIds" />
 
     <EditText
         android:id="@+id/editTextText2"
@@ -112,6 +115,7 @@
         android:ems="10"
         android:inputType="text"
         android:text="@string/email"
+        android:text="Email: "
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -120,7 +124,8 @@
         app:layout_constraintTop_toTopOf="@+id/blue_background"
         app:layout_constraintVertical_bias="0.67"
         android:autofillHints=""
-        tools:ignore="LabelFor" />
+        tools:ignore="LabelFor" 
+        app:layout_constraintVertical_bias="0.67" />
 
     <CheckBox
         android:id="@+id/checkBox3"
@@ -143,6 +148,7 @@
         android:layout_height="57dp"
         android:backgroundTint="#00B6AA"
         android:text="@string/save_changes"
+        android:text="Save Changes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -162,7 +168,8 @@
         app:layout_constraintTop_toBottomOf="@+id/button2"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/vector"
-        android:contentDescription="@string/todo_" />
+        android:contentDescription="@string/todo_" 
+        app:srcCompat="@drawable/vector" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -179,7 +186,7 @@
         app:srcCompat="@drawable/vector__1_"
         tools:ignore="MissingConstraints"
         android:contentDescription="@string/todo5" />
-
+  
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="59dp"
@@ -193,7 +200,8 @@
         app:layout_constraintVertical_bias="0.266"
         app:srcCompat="@drawable/vector__2_"
         tools:ignore="MissingConstraints"
-        android:contentDescription="@string/todo2" />
+        android:contentDescription="@string/todo2" 
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/imageView7"
@@ -206,6 +214,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.33"
         app:srcCompat="@drawable/vector__5_"
-        android:contentDescription="@string/todo3" />
+        android:contentDescription="@string/todo3" 
+        app:srcCompat="@drawable/vector__5_" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
