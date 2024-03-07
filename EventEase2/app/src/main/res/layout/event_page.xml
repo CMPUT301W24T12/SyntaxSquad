@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/header"
@@ -16,35 +17,19 @@
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/event_header"
         android:layout_width="409dp"
         android:layout_height="52dp"
         android:fontFamily="sans-serif-thin"
+        android:paddingLeft="12dp"
         android:text="EVENTS"
         android:textAlignment="textStart"
         android:textColor="#000000"
         android:textSize="34sp"
-        android:textStyle="bold"
-        android:translationY="75dp"
-        android:paddingLeft="12dp"
- />
-
-    <ListView
-        android:id="@+id/event_list"
-        android:layout_width="409dp"
-        android:layout_height="531dp"
-        android:layout_marginTop="124dp"
-        android:layout_weight="1"
-        android:translationY="125dp"
->
-
-    </ListView>
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/button_second"
@@ -56,10 +41,8 @@
         android:onClick="onButtonClick"
         android:text="Back"
         android:textSize="16sp"
-        android:translationY="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:translationX="20dp"
+        android:translationY="-115dp"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -67,15 +50,16 @@
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:background="#E8E8E8"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:translationY="452dp" />
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="72dp"
         android:layout_height="56dp"
-        app:tint="#00B6AA"
+        android:translationX="25dp"
+        android:translationY="385dp"
         app:srcCompat="@drawable/ic_list"
-
+        app:tint="#00B6AA"
         tools:layout_editor_absoluteX="43dp"
         tools:layout_editor_absoluteY="667dp" />
 
@@ -83,8 +67,9 @@
         android:id="@+id/imageView5"
         android:layout_width="61dp"
         android:layout_height="55dp"
+        android:translationX="300dp"
+        android:translationY="330dp"
         app:srcCompat="@drawable/ic_calender"
-
         tools:layout_editor_absoluteX="175dp"
         tools:layout_editor_absoluteY="668dp" />
 
@@ -92,8 +77,9 @@
         android:id="@+id/imageView7"
         android:layout_width="77dp"
         android:layout_height="55dp"
+        android:translationX="150dp"
+        android:translationY="275dp"
         app:srcCompat="@drawable/ic_profile"
-
         tools:layout_editor_absoluteX="304dp"
         tools:layout_editor_absoluteY="667dp" />
 
@@ -104,9 +90,16 @@
         android:background="@android:color/transparent"
         android:scaleX="1.5"
         android:scaleY="1.5"
-        app:srcCompat="@drawable/baseline_qr_code_24"
+        android:translationX="310dp"
+        android:translationY="-440dp"
+        app:srcCompat="@drawable/ic_circle_plus"
         app:tint="#FFFFFF"
         tools:layout_editor_absoluteX="314dp"
         tools:layout_editor_absoluteY="0dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="526dp"
+        android:translationY="-391dp" />
+
+</LinearLayout>
