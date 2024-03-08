@@ -49,11 +49,22 @@ public class AdminArrayAdapter extends ArrayAdapter<Event> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "event "+currentEvent.getEventName(), Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getContext(), AdminEventView.class);
-                AdminEditEvent editEvent = new AdminEditEvent();
-                FragmentManager fm = ((FragmentActivity)context).getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.fragment_container,editEvent);
+                AdminEditEvent fragment = new AdminEditEvent();
+
+                // Get the FragmentManager
+                FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
+
+                // Begin a transaction
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                // Replace the current fragment with the new fragment
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+
+                // Add the transaction to the back stack (optional)
+                fragmentTransaction.addToBackStack(null);
+
+                // Commit the transaction
+                fragmentTransaction.commit();
             }
         });
         eventAttendeesButton.setOnClickListener(new View.OnClickListener() {

@@ -19,7 +19,6 @@
         <activity
             android:name=".Administrator.AdminAttendeeView"
             android:exported="false" />
-
         <activity
             android:name=".RoleChooseActivity"
             android:exported="true">
