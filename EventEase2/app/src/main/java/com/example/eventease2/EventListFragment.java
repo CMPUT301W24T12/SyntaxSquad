@@ -29,6 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Fragment for the Events List page, gets the necessary data for the page from firebase
+ * and displays it using EventListArrayAdapter. Also has a add/plus button that will send users to the
+ * create event activity
+ */
 public class EventListFragment extends AppCompatActivity {
     ListView eventList;
     ArrayList<String> eventDataList;
@@ -41,12 +46,6 @@ public class EventListFragment extends AppCompatActivity {
         setContentView(R.layout.event_page);
 
         eventList = findViewById(R.id.event_list);
-
-        if (eventList == null) {
-            Log.e("Event List1", "ListView with ID event_list not found in layout");
-        } else {
-            Log.e("Event List2", "good");
-        }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String organizerID = getIntent().getStringExtra("OrganizerID");
