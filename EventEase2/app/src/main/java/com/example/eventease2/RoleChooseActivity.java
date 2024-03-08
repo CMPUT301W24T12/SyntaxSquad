@@ -38,8 +38,6 @@ public class RoleChooseActivity extends AppCompatActivity {
     private DocumentReference organizerRef;
     private  CollectionReference collectionRef;
 
-    private Boolean checkedID = Boolean.FALSE;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,25 +51,6 @@ public class RoleChooseActivity extends AppCompatActivity {
         imei = DeviceInfoUtils.getIMEI(getApplicationContext()); // device number
         Log.d("IMEI", imei);
         CollectionReference collectionRef = appDb.collection("Organizer");
-        collectionRef.get()
-        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                    // Access each document here
-                    Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                    if (Objects.equals(imei, documentSnapshot.getId())) {
-                        checkedID = Boolean.TRUE;
-                    }
-                }
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("NewTag", "Error getting documents.", e);
-                    }
-                });
 
         organizerIcon = findViewById(R.id.orgIcon);
         admIcon = findViewById(R.id.admIcon);
@@ -126,6 +105,7 @@ public class RoleChooseActivity extends AppCompatActivity {
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                     // Access each document here
                                     Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                                    //                         event id's                            event info
                                 }
                             }
                         })
