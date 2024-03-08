@@ -1,4 +1,4 @@
-package com.example.eventease2;
+package com.example.eventease2.Organizer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
