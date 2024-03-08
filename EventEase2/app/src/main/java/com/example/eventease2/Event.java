@@ -1,9 +1,20 @@
 package com.example.eventease2;
 
+import static android.content.ContentValues.TAG;
+
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 import com.google.zxing.qrcode.encoder.QRCode;
 
@@ -22,8 +33,36 @@ public class Event {
     private Collection<String> phoneNumberList;
     private Uri imageUri;
 
-    public Bitmap qrCode;
-
+    protected Bitmap qrCode;
+    protected DocumentReference documentReference;
+//    public Event(FirebaseFirestore db){
+//        documentReference = db.collection("EventEase").document("Organizer").collection("NewEvent").document("TestEvent");
+//
+//        Log.d( "Document path: ",documentReference.getPath());
+//        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        // Retrieve the value of the field by its name
+//                        eventName = document.getString("Name");
+//                        Log.d( "Name: ", eventName);
+//                        if (eventName != null) {
+//                            // Do something with the eventName
+//                        } else {
+//                            Log.d( "Name: ", "Not found");
+//                        }
+//                    } else {
+//                        Log.d( "Document: ", "Not found");
+//                    }
+//                } else {
+//                    // Handle errors here
+//                    Log.d(TAG, "Error getting document", task.getException());
+//                }
+//            }
+//        });
+//    }
     public ImageView getImage() {
         return image;
     }

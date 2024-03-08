@@ -1,13 +1,20 @@
 package com.example.eventease2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.telephony.TelephonyManager;
 
 import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
@@ -57,7 +64,8 @@ public class RoleChooseActivity extends AppCompatActivity {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(RoleChooseActivity.this, "You clicked the Organizer Button", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), AddEventFragment.class);
+                        startActivity(intent);
                     }
                 });
             }
@@ -70,7 +78,8 @@ public class RoleChooseActivity extends AppCompatActivity {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(RoleChooseActivity.this, "You clicked the admin Button", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), AdminEventView.class);
+                        startActivity(intent);
                     }
                 });
             }
