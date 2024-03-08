@@ -122,21 +122,6 @@ public class ProfileFragment extends Fragment {
                 attendeeRef.update("EmailList",FieldValue.arrayUnion(attendeeEmail));
                 attendeeRef.update("NameList",FieldValue.arrayUnion(attendeeName));
                 attendeeRef.update("PhoneList",FieldValue.arrayUnion(attendeePhone));
-//
-//                WriteBatch batch = appDb.batch();
-//                HashMap<String, String> userInfo = new HashMap<>();
-//                Attendee attendee = new Attendee(attendeeName,attendeePhone,attendeeEmail);
-//                userInfo.put("Phone",attendeePhone);
-//                userInfo.put("Email",attendeeEmail);
-//
-////                collectionReference.document(attendee.getName())
-////                        .set(userInfo)
-////                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-////                            @Override
-////                            public void onSuccess(Void unused) {
-////                                Log.d("Firestore", "DocumentSnapshot successfully written!");
-////                            }
-////                        });
 
             }
         });
