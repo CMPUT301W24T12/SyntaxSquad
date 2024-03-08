@@ -1,4 +1,4 @@
-package com.example.eventease2;
+package com.example.eventease2.Organizer;
 
 import static android.content.ContentValues.TAG;
 
@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,32 +19,39 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+
 /**A frame for the organizer
  * Show the event info
  */
 public class OrganizerEventFrame extends AppCompatActivity {
     private ImageView imageView;
-    private TextView descriptionView;
-    private TextView eventTitleView;
-    private TextView eventBodyView;
-
-    private Button button;
+    private EditText descriptionView;
+    private EditText eventTitleView;
+    private EditText eventBodyView;
+    private  Button editButton;
+    private Button backButton;
+    private Button doneButton;
     private String id;
     private String organizerID;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     String eventTitle;
     String description;
+
+    String eventBody;
     Uri image;
     Bitmap imageBitmap;
 
@@ -63,10 +71,14 @@ public class OrganizerEventFrame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_event_frame);
 
-        button = findViewById(R.id.button3);
+        doneButton = findViewById(R.id.done_button);
+        doneButton.setEnabled(false);
+
+        backButton = findViewById(R.id.back_button);
+        editButton = findViewById(R.id.edit_button);
         imageView = findViewById(R.id.imageView2);
         descriptionView = findViewById(R.id.Description);
-        eventBodyView = findViewById(R.id.eventBody);
+        eventBodyView = findViewById(R.id.editTextText2);
         eventTitleView = findViewById(R.id.eventTitle);
         id = getIntent().getStringExtra("ID");
         organizerID = getIntent().getStringExtra("OrganizerID");
@@ -136,24 +148,45 @@ public class OrganizerEventFrame extends AppCompatActivity {
             public void onClick(View v) {
                 selectImage();
             }
+
         });
 
-        eventTitleView.setOnClickListener(new View.OnClickListener() {
+//        eventTitleView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+//
+//        eventBodyView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+        editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                doneButton.setEnabled(true);
             }
         });
-
-        eventBodyView.setOnClickListener(new View.OnClickListener() {
+        doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getInfo();
+                HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
 
-            }
-        });
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                // Put the list into the HashMap
+                data.put("Name", eventTitle);
+                data.put("Description", description);
+                data.put("EventBody", eventBody);
+
+                CollectionReference newRef = db.collection("EventEase").document("Organizer").collection(organizerID);
+                newRef.document(id).set(data);
+
+                StorageReference imageRef = storageRef.child("images/" + id);
+                imageRef.putFile(image);
+
                 Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
                 intent.putExtra("ID",id);
                 intent.putExtra("OrganizerID",organizerID);
@@ -167,4 +200,17 @@ public class OrganizerEventFrame extends AppCompatActivity {
     void selectImage() {
         pickImageLauncher.launch("image/*");
     }
+
+    /**
+     * Get all info for the event from the plain text boxes
+     */
+    void getInfo(){
+        //get the event info to make an event
+        eventTitle = eventTitleView.getText().toString();
+        description = descriptionView.getText().toString();
+        eventBody = eventBodyView.getText().toString();
+    }
 }
+
+
+

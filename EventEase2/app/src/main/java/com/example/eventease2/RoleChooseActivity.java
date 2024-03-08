@@ -1,26 +1,24 @@
 package com.example.eventease2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.telephony.TelephonyManager;
 
-import com.google.firebase.Firebase;
+import com.example.eventease2.Organizer.AddEventFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Collection;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class RoleChooseActivity extends AppCompatActivity {
 
@@ -82,6 +80,24 @@ public class RoleChooseActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                CollectionReference collectionRef = db.collection("Organizer").document("ffffffff-8a86-b983-0000-0000380c0fa3").collection("Events");
+                collectionRef.get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    // Access each document here
+                                    Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("NewTag", "Error getting documents.", e);
+                            }
+                        });
             }
         });
     }
