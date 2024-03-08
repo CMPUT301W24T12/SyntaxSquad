@@ -94,7 +94,7 @@
         android:layout_height="54dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Phone: "
+        android:text="@string/phone"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -119,7 +119,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/blue_background"
         android:autofillHints=""
-        tools:ignore="LabelFor" 
+        tools:ignore="LabelFor"
         app:layout_constraintVertical_bias="0.67" />
 
     <CheckBox
@@ -142,7 +142,7 @@
         android:layout_width="320dp"
         android:layout_height="57dp"
         android:backgroundTint="#00B6AA"
-        android:text="@string/save_changes"
+        android:text="Save Changes"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -179,7 +179,7 @@
         app:srcCompat="@drawable/vector__1_"
         tools:ignore="MissingConstraints"
         android:contentDescription="@string/todo5" />
-  
+
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="59dp"
