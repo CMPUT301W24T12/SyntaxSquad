@@ -42,7 +42,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/event_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Event!"
@@ -72,7 +72,7 @@
         app:layout_constraintVertical_bias="0.644" />
 
     <Button
-        android:id="@+id/remove_event_button"
+        android:id="@+id/event_remove_profile_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="68dp"
@@ -89,7 +89,7 @@
         android:layout_height="65dp"
         android:layout_marginBottom="44dp"
         android:text="Labore sunt veniam amet est. Minim nisi dolor eu ad incididunt cillum elit ex ut. Dolore exercitation nulla tempor consequat aliquip occaecat. Nisi id ipsum irure aute. Deserunt sit aute irure quis nulla eu consequat fugiat Lorem sunt magna et consequat labore. Laboris incididunt id Lorem est duis deserunt nisi dolore eiusmod culpa exercitation consectetur."
-        app:layout_constraintBottom_toTopOf="@+id/remove_event_button"
+        app:layout_constraintBottom_toTopOf="@+id/event_remove_profile_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
