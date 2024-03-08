@@ -8,8 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.eventease2.Event;
 import com.example.eventease2.R;
@@ -39,10 +44,22 @@ public class AdminArrayAdapter extends ArrayAdapter<Event> {
         eventName.setText(currentEvent.getEventName());
 
         Button eventDetailsButton = view.findViewById(R.id.event_details);
-        Button eventAttendeesButton = view.findViewById(R.id.event_details);
+        Button eventAttendeesButton = view.findViewById(R.id.view_attendees);
         eventDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(context, "event "+currentEvent.getEventName(), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getContext(), AdminEventView.class);
+                AdminEditEvent editEvent = new AdminEditEvent();
+                FragmentManager fm = ((FragmentActivity)context).getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.fragment_container,editEvent);
+            }
+        });
+        eventAttendeesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "attendee", Toast.LENGTH_SHORT).show();
                 //Intent i = new Intent(AdminArrayAdapter.this,AdminE)
             }
         });
