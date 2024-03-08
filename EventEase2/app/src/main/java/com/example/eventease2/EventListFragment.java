@@ -120,7 +120,7 @@ public class EventListFragment extends AppCompatActivity {
                     }
                 });
 
-        ImageButton add = findViewById(R.id.imageButton);
+        ImageButton add = findViewById(R.id.attendeeProfileImage);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
