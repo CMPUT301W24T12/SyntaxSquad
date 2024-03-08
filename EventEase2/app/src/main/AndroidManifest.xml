@@ -14,11 +14,12 @@
         android:theme="@style/Theme.EventEase2"
         tools:targetApi="31">
         <activity
-            android:name=".EventProfile"
+            android:name=".AdminEventView"
             android:exported="false" />
         <activity
-            android:name=".Administrator.AdminEventView"
+            android:name=".Administrator.AdminAttendeeView"
             android:exported="false" />
+
         <activity
             android:name=".RoleChooseActivity"
             android:exported="true">
@@ -32,10 +33,10 @@
         <activity android:name=".Organizer.OrganizerAttendeeListFragment" />
         <activity
             android:name=".Organizer.AddEventFragment"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Organizer.OrganizerEventFrame"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

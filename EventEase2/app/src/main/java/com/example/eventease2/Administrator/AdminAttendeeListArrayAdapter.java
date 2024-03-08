@@ -41,5 +41,4 @@ public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
 
         return view;
     }
-
 }
