@@ -15,6 +15,11 @@ import androidx.annotation.Nullable;
 
 import com.example.eventease2.R;
 
+/**
+ * Adapter for Organizer Attendee List Fragment
+ * revies information from fragment and displays it
+ * @author Adeel Khan
+ */
 public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
     private ArrayList<String> attendeeIDs;
     private ArrayList<String> attendeeNames;

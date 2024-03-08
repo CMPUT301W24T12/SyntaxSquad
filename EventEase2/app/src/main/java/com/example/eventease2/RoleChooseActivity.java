@@ -27,6 +27,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
+/**
+ * Opening page of app, User selects their role
+ * gets instance of Firebase and imei
+ * Each role has an icon with a click listener sending them to their respective acitivty after clicking confirm
+ */
 public class RoleChooseActivity extends AppCompatActivity {
 
     ImageButton organizerIcon;

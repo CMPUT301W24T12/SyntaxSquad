@@ -23,6 +23,7 @@ import java.util.ArrayList;
  * Custom ListArray Adapter for the Event List page
  * uses the event_list.xml to display the events in the Event Page.
  * Recieves information fromEventListFragment
+ * @author Adeel Khan
  * @param Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, String organizerID, ArrayList<String> eventIDs
  * @return view
  */

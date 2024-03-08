@@ -33,6 +33,7 @@ import java.util.Objects;
  * Fragment for the Events List page, gets the necessary data for the page from firebase
  * and displays it using EventListArrayAdapter. Also has a add/plus button that will send users to the
  * create event activity
+ * @author Adeel Khan
  */
 public class EventListFragment extends AppCompatActivity {
     ListView eventList;

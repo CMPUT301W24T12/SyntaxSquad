@@ -31,6 +31,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment for the Attendee List page
+ * recieves event and organizer ID's from intent
+ * gets attendee ID and Names from Firebase and sends it to attendeeArrayAdapter to be displayed
+ * has click listener for back button sending it to the Event List page
+ * @Author Adeel Khan
+ */
 public class OrganizerAttendeeListFragment extends AppCompatActivity {
 
     ListView attendeeList;
