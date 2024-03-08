@@ -3,6 +3,8 @@ package com.example.eventease2.Attendee;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +46,8 @@ public class AttendeeProfileFragment extends Fragment {
     private AttendeeItemViewModel viewModel;
     private boolean flag = false;
     public AttendeeProfileFragment() {
-        // Required empty public constructor
+        event = "";
+        organizer = "";
     }
 
     public AttendeeProfileFragment(String eventID, String organizerID) {
@@ -59,57 +63,46 @@ public class AttendeeProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_attendee_profile, container, false);
-        appDb = FirebaseFirestore.getInstance();
-        //event = viewModel.getString();
+        viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
         Attendee user = new Attendee();
-        orgainzerRef = appDb.collection("EventEase").document("Organizer");
 
-        //CollectionReference collectionReference = orgainzerRef.collection("29bc643d-3a87-4d5d-8716-2b7b6a224d69");
-        CollectionReference collectionReference = orgainzerRef.collection(organizer);
-
-        //attendeeRef = collectionReference.document("f24e4939-4cbb-4af7-944d-51fcfdb98855");
-        attendeeRef = collectionReference.document(event);
-
-        attendeeList = new ArrayList<>();
-
-        attendeeAdapter = new ArrayAdapter<>(getActivity(), R.layout.fragment_attendee_profile, attendeeList);
+//        attendeeList = new ArrayList<>();
+//
+//        attendeeAdapter = new ArrayAdapter<>(getActivity(), R.layout.fragment_attendee_profile, attendeeList);
         // Find the ImageButton by its ID
-        attendeeSaveChanges = view.findViewById(R.id.AttendeeAddChanges);
-        attendeeNameText = view.findViewById(R.id.editProfileName);
-        attendeePhoneText = view.findViewById(R.id.editTextPhone2);
-        attendeeEmailText = view.findViewById(R.id.editProfileEmail);
+        if(!Objects.equals(event, "")){
+            appDb = FirebaseFirestore.getInstance();
+
+            orgainzerRef = appDb.collection("EventEase").document("Organizer");
+            CollectionReference collectionReference = orgainzerRef.collection(organizer);
+            attendeeRef = collectionReference.document(event);
+        }
+        getEditTextBoxes(view);
+        //Todo:Add a set text for bio and image and geolocation
+        attendeeNameText.setText(viewModel.getProfileName());
+        attendeePhoneText.setText(viewModel.getProfilePhone());
+        attendeeEmailText.setText(viewModel.getProfileEmail());
         attendeeSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!flag){
-                    user.setName(attendeeNameText.getText().toString());
-                    user.setPhone(attendeePhoneText.getText().toString());
-                    user.setEmail(attendeeEmailText.getText().toString());
-                    attendeeRef.update("EmailList", FieldValue.arrayUnion(user.getEmail()));
-                    attendeeRef.update("NameList", FieldValue.arrayUnion(user.getName()));
-                    attendeeRef.update("PhoneList", FieldValue.arrayUnion(user.getPhone()));
-                    flag =true;
-                }else{
-                    attendeeRef.update("EmailList", FieldValue.arrayRemove(user.getEmail()));
-                    attendeeRef.update("NameList", FieldValue.arrayRemove(user.getName()));
-                    attendeeRef.update("PhoneList", FieldValue.arrayRemove(user.getPhone()));
+                user.setName(attendeeNameText.getText().toString());
+                user.setPhone(attendeePhoneText.getText().toString());
+                user.setEmail(attendeeEmailText.getText().toString());
 
-                    user.setName(attendeeNameText.getText().toString());
-                    user.setPhone(attendeePhoneText.getText().toString());
-                    user.setEmail(attendeeEmailText.getText().toString());
-
-                    attendeeRef.update("EmailList", FieldValue.arrayUnion(user.getEmail()));
-                    attendeeRef.update("NameList", FieldValue.arrayUnion(user.getName()));
-                    attendeeRef.update("PhoneList", FieldValue.arrayUnion(user.getPhone()));
+                viewModel.setProfileName(attendeeNameText.getText().toString());
+                viewModel.setProfileEmail(attendeeEmailText.getText().toString());
+                viewModel.setProfilePhone(attendeePhoneText.getText().toString());
+                if(!flag && !Objects.equals(event, "")){
+                   addAttendeeData(user);
+                   flag =true;
+                }else if (!Objects.equals(event, "")){
+                    remAttendeeData(user);
+                    addAttendeeData(user);
                 }
-
             }
         });
-
         return view;
-
     }
 
     private void addNewAttendee(Attendee attendee) {
@@ -121,6 +114,25 @@ public class AttendeeProfileFragment extends Fragment {
         HashMap<String, Attendee> data = new HashMap<>();
         data.put(attendee.getName(), attendee);
         collectionReference.document(attendee.getName()).set(data);
+    }
+    public void addAttendeeData(Attendee user){
+        attendeeRef.update("EmailList", FieldValue.arrayUnion(user.getEmail()));
+        attendeeRef.update("NameList", FieldValue.arrayUnion(user.getName()));
+        attendeeRef.update("PhoneList", FieldValue.arrayUnion(user.getPhone()));
+    }
+    public void remAttendeeData(Attendee user){
+        attendeeRef.update("EmailList", FieldValue.arrayRemove(user.getEmail()));
+        attendeeRef.update("NameList", FieldValue.arrayRemove(user.getName()));
+        attendeeRef.update("PhoneList", FieldValue.arrayRemove(user.getPhone()));
+    }
+    public void getEditTextBoxes(View view){
+        attendeeSaveChanges = view.findViewById(R.id.AttendeeAddChanges);
+        attendeeNameText = view.findViewById(R.id.editProfileName);
+        attendeePhoneText = view.findViewById(R.id.editTextPhone2);
+        attendeeEmailText = view.findViewById(R.id.editProfileEmail);
+    }
+    public void getProfileTexts(ViewModel viewModel){
+
     }
 
 }

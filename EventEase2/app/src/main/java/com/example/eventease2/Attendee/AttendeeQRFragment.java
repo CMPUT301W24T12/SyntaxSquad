@@ -48,13 +48,11 @@ public class AttendeeQRFragment extends Fragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-
         if (result != null) {
             if (result.getContents() != null) {
                 String scannedData = result.getContents();
                 // Handle the scanned data, for example, display it or perform further actions
                 displayScanResult(scannedData);
-                scannedData = "29bc643d-3a87-4d5d-8716-2b7b6a224d69#f24e4939-4cbb-4af7-944d-51fcfdb98855";
                 sendDataToModel(scannedData);
             } else {
                 // Handle if no QR code is found

@@ -65,20 +65,14 @@ public class AttendeeEventFragment extends Fragment {
 
         eventBody = (TextView)view.findViewById(R.id.eventBody);
         eventBody.setText("");
-        // Inflate the layout for this fragment
+
         appDb = FirebaseFirestore.getInstance();
-        //eventID = "f24e4939-4cbb-4af7-944d-51fcfdb98855";
-        //organizerID = "29bc643d-3a87-4d5d-8716-2b7b6a224d69";
+
         if(!Objects.equals(eventID, "default")) {
 
             orgainzerRef = appDb.collection("EventEase").document("Organizer");
-
-            //CollectionReference collectionReference = orgainzerRef.collection("29bc643d-3a87-4d5d-8716-2b7b6a224d69");
             CollectionReference collectionReference = orgainzerRef.collection(organizerID);
-
-            //eventRef = collectionReference.document("f24e4939-4cbb-4af7-944d-51fcfdb98855");
             eventRef = collectionReference.document(eventID);
-
 
             eventRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -104,11 +98,6 @@ public class AttendeeEventFragment extends Fragment {
                 }
             });
         }
-        if(!Objects.equals(eventID, "default")){
-
-            return view;
-        }else{
-            return view;
-        }
+        return view;
     }
 }
