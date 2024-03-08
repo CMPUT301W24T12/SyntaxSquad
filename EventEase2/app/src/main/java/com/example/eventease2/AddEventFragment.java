@@ -109,7 +109,7 @@ public class AddEventFragment extends AppCompatActivity {
 
         // Copyright 2020 M. Fadli Zein
         imei = DeviceInfoUtils.getIMEI(getApplicationContext()); // device number
-
+        Log.d("IMEI", imei);
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -127,9 +127,8 @@ public class AddEventFragment extends AppCompatActivity {
         generateButton = findViewById(R.id.button2);
 
         final String randomKey = UUID.randomUUID().toString();
-        final String randomKey2 = UUID.randomUUID().toString();
         id = randomKey;
-        organizerID = randomKey2;
+        organizerID = imei;
         Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode(id);
 
         db.collection("collections").get()
@@ -177,6 +176,9 @@ public class AddEventFragment extends AppCompatActivity {
                 List<String> nameList = new ArrayList<>();
                 nameList.add("name1");
 
+                List<String> attendeeList = new ArrayList<>();
+                attendeeList.add("attendee1");
+
                 // Put the list into the HashMap
                 data.put("Name", eventName);
                 data.put("ID", id);
@@ -187,6 +189,7 @@ public class AddEventFragment extends AppCompatActivity {
                 data.put("EmailList", emailList);
                 data.put("PhoneList", phoneList);
                 data.put("NameList", nameList);
+                data.put("AttendeeList", attendeeList);
                 CollectionReference newRef = eventsRef.collection(organizerID);
                 newRef.document(id).set(data);
 
