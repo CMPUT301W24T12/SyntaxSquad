@@ -39,10 +39,16 @@ public class ProfileFragment extends Fragment {
     private EditText attendeePhoneText;
     private EditText attendeeEmailText;
     private String event;
+    private String organizer;
     private ItemViewModel viewModel;
     private boolean flag = false;
     public ProfileFragment() {
         // Required empty public constructor
+    }
+
+    public ProfileFragment(String eventID, String organizerID) {
+        this.event = eventID;
+        this.organizer = organizerID;
     }
 
     @Override
@@ -51,25 +57,27 @@ public class ProfileFragment extends Fragment {
         appDb = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = appDb.collection("Attendee");
         attendeeList = new ArrayList<>();
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_attendee_profile, container, false);
         appDb = FirebaseFirestore.getInstance();
-        event = viewModel.getString();
-
+        //event = viewModel.getString();
+        Attendee user = new Attendee();
         orgainzerRef = appDb.collection("EventEase").document("Organizer");
+
         CollectionReference collectionReference = orgainzerRef.collection("29bc643d-3a87-4d5d-8716-2b7b6a224d69");
+        //CollectionReference collectionReference = orgainzerRef.collection(organizerID);
+
         attendeeRef = collectionReference.document("f24e4939-4cbb-4af7-944d-51fcfdb98855");
+        //attendeeRef = collectionReference.document(eventID);
+
         attendeeList = new ArrayList<>();
 
-        attendeeAdapter = new ArrayAdapter<>(getActivity(), R.layout.fragment_profile, attendeeList);
+        attendeeAdapter = new ArrayAdapter<>(getActivity(), R.layout.fragment_attendee_profile, attendeeList);
         // Find the ImageButton by its ID
         attendeeSaveChanges = view.findViewById(R.id.AttendeeAddChanges);
         attendeeNameText = view.findViewById(R.id.editProfileName);
@@ -78,14 +86,27 @@ public class ProfileFragment extends Fragment {
         attendeeSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String attendeeName = attendeeNameText.getText().toString();
-                final String attendeePhone = attendeePhoneText.getText().toString();
-                final String attendeeEmail = attendeeEmailText.getText().toString();
+                if(!flag){
+                    user.setName(attendeeNameText.getText().toString());
+                    user.setPhone(attendeePhoneText.getText().toString());
+                    user.setEmail(attendeeEmailText.getText().toString());
+                    attendeeRef.update("EmailList", FieldValue.arrayUnion(user.getEmail()));
+                    attendeeRef.update("NameList", FieldValue.arrayUnion(user.getName()));
+                    attendeeRef.update("PhoneList", FieldValue.arrayUnion(user.getPhone()));
+                    flag =true;
+                }else{
+                    attendeeRef.update("EmailList", FieldValue.arrayRemove(user.getEmail()));
+                    attendeeRef.update("NameList", FieldValue.arrayRemove(user.getName()));
+                    attendeeRef.update("PhoneList", FieldValue.arrayRemove(user.getPhone()));
 
-                attendeeRef.update("EmailList", FieldValue.arrayUnion(attendeeEmail));
-                attendeeRef.update("NameList", FieldValue.arrayUnion(attendeeName));
-                attendeeRef.update("PhoneList", FieldValue.arrayUnion(attendeePhone));
-                flag =true;
+                    user.setName(attendeeNameText.getText().toString());
+                    user.setPhone(attendeePhoneText.getText().toString());
+                    user.setEmail(attendeeEmailText.getText().toString());
+
+                    attendeeRef.update("EmailList", FieldValue.arrayUnion(user.getEmail()));
+                    attendeeRef.update("NameList", FieldValue.arrayUnion(user.getName()));
+                    attendeeRef.update("PhoneList", FieldValue.arrayUnion(user.getPhone()));
+                }
 
             }
         });

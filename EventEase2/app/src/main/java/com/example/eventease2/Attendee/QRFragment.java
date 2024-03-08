@@ -23,7 +23,7 @@ public class QRFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_q_r, container, false);
+        View view = inflater.inflate(R.layout.fragment_attendee_q_r, container, false);
         super.onViewCreated(view,savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         Button btnScanQR = view.findViewById(R.id.btnScanQR);

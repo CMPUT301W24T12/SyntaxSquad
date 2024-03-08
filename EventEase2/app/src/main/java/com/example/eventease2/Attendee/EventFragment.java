@@ -20,6 +20,7 @@ import java.util.Objects;
  */
 public class EventFragment extends Fragment {
     private String eventID;
+    private String  organizerID;
 
     private EditText eventTitle;
     private EditText eventDescription;
@@ -30,8 +31,9 @@ public class EventFragment extends Fragment {
         return eventID;
     }
 
-    EventFragment(String event){
+    EventFragment(String event,String organizer){
         this.eventID = event;
+        this.organizerID = organizer;
     }
     EventFragment(){
         this.eventID = "default";
@@ -43,9 +45,9 @@ public class EventFragment extends Fragment {
         // Inflate the layout for this fragment
         if(!Objects.equals(eventID, "default")){
 
-            return inflater.inflate(R.layout.fragment_event, container, false);
+            return inflater.inflate(R.layout.fragment_attendee_event, container, false);
         }else{
-            return inflater.inflate(R.layout.fragment_event, container, false);
+            return inflater.inflate(R.layout.fragment_attendee_event, container, false);
         }
     }
 }

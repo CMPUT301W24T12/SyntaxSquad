@@ -20,11 +20,8 @@ public class AttendeeStartActivity extends AppCompatActivity{
 
     ActivityAttendeeStartBinding binding;
     private ItemViewModel viewModel;
-    public void setEventID(String eventID) {
-        this.eventID = eventID;
-    }
-
     String eventID;
+    String organizerID;
 
 
     @Override
@@ -37,7 +34,8 @@ public class AttendeeStartActivity extends AppCompatActivity{
 
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            eventID = viewModel.getString();
+            eventID = viewModel.getEvent();
+            organizerID = viewModel.getOrganizer();
             int itemId = item.getItemId();
             if (itemId == R.id.QR_Scanner) {
 //                Intent i = new Intent(this, QRFragment.class);
@@ -45,15 +43,17 @@ public class AttendeeStartActivity extends AppCompatActivity{
                 replaceFragment(new QRFragment());
             } else if (itemId == R.id.Event) {
                 if(!Objects.equals(eventID, "")){
-                    replaceFragment(new EventFragment(eventID));
+                    replaceFragment(new EventFragment(eventID,organizerID));
                 }else{
                     replaceFragment(new EventFragment());
                 }
             } else if (itemId == R.id.Profile) {
-                replaceFragment(new ProfileFragment());
+                if(!Objects.equals(eventID, "")){
+                    replaceFragment(new ProfileFragment(eventID,organizerID));
+                }else {
+                    replaceFragment(new ProfileFragment());
+                }
             }
-
-
             return true;
         });
     }
