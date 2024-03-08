@@ -1,10 +1,11 @@
-package com.example.eventease2;
+package com.example.eventease2.Administrator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,12 +13,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.eventease2.Administrator.AdminArrayAdapter;
+import com.example.eventease2.Event;
+import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +49,11 @@ public class AdminEventView extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_event_view2);
+        appDb = FirebaseFirestore.getInstance();
 
+        eventListView = findViewById(R.id.adminEventList);
         CollectionReference collectionRef = appDb.collection("Organizer");
+
         collectionRef.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -55,7 +63,7 @@ public class AdminEventView extends AppCompatActivity {
                             String organizerId = organizerSnapshot.getId();
                             // Get a reference to the "Events" collection for this organizer
                             CollectionReference eventsCollectionRef = appDb.collection("Organizer").document(organizerId).collection("Events");
-
+                            ArrayList<Event> eventsIDs = new ArrayList<>();
                             eventsCollectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot eventQueryDocumentSnapshots) {
@@ -74,11 +82,14 @@ public class AdminEventView extends AppCompatActivity {
 
                                         // Get the name of the event
                                         String name = eventSnapshot.getString("Name");
-
+                                        Event event = new Event(null,name,description,null,false,null,null);
+                                        eventsIDs.add(event);
 
                                         Log.d("AttendeeList length for event " + eventId + " is ", String.valueOf(attendeeListLength));
                                         Log.d("Description for event " + eventId + " is ", description);
                                     }
+                                    adminArrayAdapter = new AdminArrayAdapter(AdminEventView.this, eventsIDs);
+                                    eventListView.setAdapter(adminArrayAdapter);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override

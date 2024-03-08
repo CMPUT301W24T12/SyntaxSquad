@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AdminEventView">
+    tools:context=".Administrator.AdminEventView">
     <TextView
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -52,6 +52,7 @@
 
 
     <ListView
+        android:id="@+id/adminEventList"
         android:layout_width="match_parent"
         android:layout_height="603dp"
         android:translationY="-150dp" />
