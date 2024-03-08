@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00B6AA"
-    tools:context=".MainActivity">
+    tools:context=".RoleChooseActivity">
+
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -64,7 +65,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/attendeeProfileImage"
         android:layout_width="191dp"
         android:layout_height="150dp"
         android:background="#00000000"

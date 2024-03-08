@@ -105,7 +105,7 @@ public class AddEventFragment extends AppCompatActivity {
 //        eventsRef = collectionRef.document("Organizer");
         collectionRef = db.collection("Organizer");
 
-        imageView = findViewById(R.id.imageButton);
+        imageView = findViewById(R.id.attendeeProfileImage);
         eventNameView = findViewById(R.id.editTextText);
         descriptionView = findViewById(R.id.editTextText2);
         locationView = findViewById(R.id.editTextText3);
