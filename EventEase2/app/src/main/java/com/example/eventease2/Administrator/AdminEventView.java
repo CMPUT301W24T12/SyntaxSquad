@@ -1,4 +1,4 @@
-package com.example.eventease2;
+package com.example.eventease2.Administrator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.eventease2.Administrator.AdminArrayAdapter;
+import com.example.eventease2.Event;
+import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -45,6 +47,7 @@ public class AdminEventView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_event_view2);
 
+        appDb = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = appDb.collection("Organizer");
         collectionRef.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
