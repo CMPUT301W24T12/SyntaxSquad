@@ -171,25 +171,25 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
         });
 
-//        eventTitleView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-//
-//        eventBodyView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intentToEventList();
+            }
+        });
+        /**
+         * Let the user confirm to make the change
+         */
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doneButton.setEnabled(true);
             }
         });
+
+        /**
+         * Commit the change of the details of the event
+         */
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,10 +207,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
                 StorageReference imageRef = storageRef.child("images/" + id);
                 imageRef.putFile(image);
 
-                Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
-                intent.putExtra("ID",id);
-                intent.putExtra("OrganizerID",organizerID);
-                startActivity(intent);
+                intentToEventList();
             }
         });
     }
@@ -229,6 +226,16 @@ public class OrganizerEventFrame extends AppCompatActivity {
         eventTitle = eventTitleView.getText().toString();
         description = descriptionView.getText().toString();
         eventBody = eventBodyView.getText().toString();
+    }
+
+    /**
+     * Intent back to the event list page
+     */
+    void intentToEventList(){
+        Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
+        intent.putExtra("ID",id);
+        intent.putExtra("OrganizerID",organizerID);
+        startActivity(intent);
     }
 }
 
