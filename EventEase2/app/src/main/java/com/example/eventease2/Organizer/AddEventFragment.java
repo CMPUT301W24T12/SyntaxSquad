@@ -1,22 +1,15 @@
-package com.example.eventease2;
+package com.example.eventease2.Organizer;
 
 import static android.content.ContentValues.TAG;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -27,25 +20,18 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.example.eventease2.DeviceInfoUtils;
+import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -115,8 +101,9 @@ public class AddEventFragment extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-        collectionRef = db.collection("EventEase");
-        eventsRef = collectionRef.document("Organizer");
+//        collectionRef = db.collection("EventEase");
+//        eventsRef = collectionRef.document("Organizer");
+        collectionRef = db.collection("Organizer");
 
         imageView = findViewById(R.id.imageButton);
         eventNameView = findViewById(R.id.editTextText);
@@ -129,7 +116,8 @@ public class AddEventFragment extends AppCompatActivity {
         final String randomKey = UUID.randomUUID().toString();
         id = randomKey;
         organizerID = imei;
-        Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode(id);
+        String combinedID = id+"#"+organizerID;
+        Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode(combinedID);
 
         db.collection("collections").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -185,12 +173,18 @@ public class AddEventFragment extends AppCompatActivity {
                 data.put("Location", location);
                 data.put("Description", description);
                 data.put("Duration", duration);
+                data.put("EventBody", "");
                 data.put("IsAbleLocationTracking", isAbleLocationTracking);
                 data.put("EmailList", emailList);
                 data.put("PhoneList", phoneList);
                 data.put("NameList", nameList);
                 data.put("AttendeeList", attendeeList);
-                CollectionReference newRef = eventsRef.collection(organizerID);
+                DocumentReference docRef = collectionRef.document(organizerID);
+
+                HashMap<String, Object> dataID = new HashMap<>();
+                dataID.put("OrganizerID",organizerID);
+                CollectionReference newRef = docRef.collection("Events");
+                docRef.set(dataID);
                 newRef.document(id).set(data);
 
                 StorageReference imageRef = storageRef.child("images/" + id);
