@@ -75,7 +75,7 @@ public class EventListFragment extends AppCompatActivity {
                             ArrayList<String> eventInfoList = new ArrayList<>();
                             ArrayList<String> eventIDs = new ArrayList<>();
                             CollectionReference eventRef = db.collection("Organizer").document(organizerID).collection("Events");
-                                                                                                                         // replace with organizerID
+
                             eventRef.get()
                                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                         @Override
