@@ -71,17 +71,17 @@
 
     <EditText
         android:id="@+id/editTextText2"
-        android:layout_width="463dp"
-        android:layout_height="454dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="415dp"
+        android:layout_height="428dp"
+        android:layout_marginTop="4dp"
         android:background="@android:color/background_light"
         android:backgroundTint="#B4CCCCCC"
         android:gravity="top|start"
         android:hint="Event Body"
         android:textAlignment="textStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.542"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/driver"
+        app:layout_constraintHorizontal_bias="0.095"
+        app:layout_constraintStart_toStartOf="@+id/driver"
         app:layout_constraintTop_toBottomOf="@+id/Description" />
 
     <EditText
