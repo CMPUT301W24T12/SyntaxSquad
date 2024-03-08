@@ -70,9 +70,8 @@ public class AttendeeEventFragment extends Fragment {
 
         if(!Objects.equals(eventID, "default")) {
 
-            orgainzerRef = appDb.collection("EventEase").document("Organizer");
-            CollectionReference collectionReference = orgainzerRef.collection(organizerID);
-            eventRef = collectionReference.document(eventID);
+            eventRef = appDb.collection("Organizer").document(organizerID)
+                    .collection("Events").document(eventID);
 
             eventRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -81,13 +80,13 @@ public class AttendeeEventFragment extends Fragment {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                             String eventName = String.valueOf(document.getData().get("Name"));
                             String eventDescript = String.valueOf(document.getData().get("Description"));
-                            //TODO: add implementation for eventBody when Firebase changes. Also image.
-                            //String eventMainBody = String.valueOf(document.getData().get("Description"));
+                            String eventMainBody = String.valueOf(document.getData().get("EventBody"));
+                            //TODO: add implementation for image.
                             eventTitle.setText(eventName);
                             eventDescription.setText(eventDescript);
+                            eventBody.setText(eventMainBody);
 
                         } else {
                             Log.d(TAG, "No such document");

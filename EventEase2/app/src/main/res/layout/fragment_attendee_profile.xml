@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/attendeeProfileImage"
         android:layout_width="195dp"
         android:layout_height="153dp"
         android:background="#00000000"
@@ -62,7 +62,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton"
+        app:layout_constraintTop_toBottomOf="@+id/attendeeProfileImage"
         app:layout_constraintVertical_bias="0.043" />
 
     <TextView
@@ -82,7 +82,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/editBioText"
         android:layout_width="230dp"
         android:layout_height="43dp"
         android:ems="10"
@@ -199,7 +199,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText"
+        app:layout_constraintTop_toBottomOf="@+id/editBioText"
         app:layout_constraintVertical_bias="0.067" />
 
 

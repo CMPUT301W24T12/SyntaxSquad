@@ -7,19 +7,22 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.eventease2.R;
 import com.example.eventease2.databinding.ActivityAttendeeStartBinding;
 
+import java.security.SecureRandom;
 import java.util.Objects;
 
 public class AttendeeStartActivity extends AppCompatActivity{
 
     ActivityAttendeeStartBinding binding;
     private AttendeeItemViewModel viewModel;
-    String eventID;
-    String organizerID;
-
+    private String eventID;
+    private String organizerID;
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final int ID_LENGTH = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +32,15 @@ public class AttendeeStartActivity extends AppCompatActivity{
         setContentView(binding.getRoot());
         replaceFragment(new AttendeeQRFragment());
 
+        String randomID = generateRandomID();
+        viewModel.setAttendeeID(randomID);
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             eventID = viewModel.getEvent();
             organizerID = viewModel.getOrganizer();
+
             int itemId = item.getItemId();
             if (itemId == R.id.QR_Scanner) {
-//                Intent i = new Intent(this, QRFragment.class);
-//                startActivity(i);
                 replaceFragment(new AttendeeQRFragment());
             } else if (itemId == R.id.Event) {
                 if(!Objects.equals(eventID, "")){
@@ -55,11 +59,21 @@ public class AttendeeStartActivity extends AppCompatActivity{
         });
     }
     private void replaceFragment(Fragment fragment){
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout,fragment);
         fragmentTransaction.commit();
-
     }
+
+
+    public  String generateRandomID() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(ID_LENGTH);
+        for (int i = 0; i < ID_LENGTH; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(randomIndex));
+        }
+        return sb.toString();
+    }
+
 }

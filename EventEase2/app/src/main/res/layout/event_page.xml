@@ -84,7 +84,7 @@
         tools:layout_editor_absoluteY="667dp" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/attendeeProfileImage"
         android:layout_width="75dp"
         android:layout_height="76dp"
         android:background="@android:color/transparent"
