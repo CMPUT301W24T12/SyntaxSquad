@@ -25,9 +25,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Objects;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link AttendeeEventFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Shows the user a default event if the QR scanner hasn't been scanned and shows the scanned event
+ * if the scan was susccessful
+ * @author Sean
  */
 public class AttendeeEventFragment extends Fragment {
     private String eventID;
@@ -35,9 +35,7 @@ public class AttendeeEventFragment extends Fragment {
     private TextView eventTitle;
     private TextView eventDescription;
     private TextView eventBody;
-    private ImageView eventImage;
     private FirebaseFirestore appDb;
-    private DocumentReference orgainzerRef;
     private DocumentReference eventRef;
 
     public String getEventID() {
@@ -58,13 +56,13 @@ public class AttendeeEventFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_attendee_event, container, false);
 
         eventTitle = (TextView)view.findViewById(R.id.eventTitle);
-        eventTitle.setText("");
+        eventTitle.setText("Event Title");
 
         eventDescription = (TextView)view.findViewById(R.id.eventDescription);
-        eventDescription.setText("");
+        eventDescription.setText("Event Description");
 
         eventBody = (TextView)view.findViewById(R.id.eventBody);
-        eventBody.setText("");
+        eventBody.setText("Event Body Example");
 
         appDb = FirebaseFirestore.getInstance();
 

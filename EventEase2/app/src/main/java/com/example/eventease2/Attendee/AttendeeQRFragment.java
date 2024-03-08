@@ -24,6 +24,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * QR fragment is the QR scanner that allows users to scan a QR code when pressing a button.
+ */
 public class AttendeeQRFragment extends Fragment{
     private AttendeeItemViewModel viewModel;
     private boolean flag = false;
@@ -45,7 +48,9 @@ public class AttendeeQRFragment extends Fragment{
         btnScanQR.setOnClickListener(v -> startQRScanner());
         return view;
     }
-
+    /**
+     * This function opens the camera app on your phone and detects a QR code.
+     */
     private void startQRScanner() {
         // Initialize QR code scanner
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
@@ -64,7 +69,9 @@ public class AttendeeQRFragment extends Fragment{
         integrator.initiateScan();
 
     }
-
+    /**
+     * When the user scans a QR code, we get the information needed to access the firebase.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -76,6 +83,7 @@ public class AttendeeQRFragment extends Fragment{
                 sendDataToModel(scannedData);
                 event = viewModel.getEvent();
                 organizer = viewModel.getOrganizer();
+                //Todo:Uncomment this line of code in order for normal functionality to work
                 //firebase();
                 addAttendeeData();
             } else {
@@ -85,11 +93,20 @@ public class AttendeeQRFragment extends Fragment{
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
+    /**
+     * Displays a success toast if updated correctly
+     * @param scannedData
+     * This shows the scanned data to the screen, shows the organizerID and EventID
+     */
     private void displayScanResult(String scannedData) {
         // Display a message using a Toast
         Toast.makeText(getContext(), "Scan Successful: " + scannedData, Toast.LENGTH_SHORT).show();
     }
+    /**
+     * Sends data to the view model of the organizer ID and the event ID for firebase use.
+     * @param scannedData
+     * Sends the viewModel so the Attendee fragments can recieve information for the firebase
+     */
     private void sendDataToModel(String scannedData){
         String eventIDAppend ="";
         String organizerIDAppend ="";
@@ -108,6 +125,9 @@ public class AttendeeQRFragment extends Fragment{
         viewModel.setOrganizer(organizerIDAppend);
         flag =false;
     }
+    /**
+     * When initial scan is complete, add the current profile to the firebase
+     */
     public void addAttendeeData(){
         HashMap<String,String> data = new HashMap<>();
         data.put("Name", viewModel.getProfileName());
@@ -115,6 +135,9 @@ public class AttendeeQRFragment extends Fragment{
         data.put("Phone", viewModel.getProfilePhone());
         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
     }
+    /**
+     * Firebase connecting function.
+     */
     public void firebase(){
         if(!Objects.equals(event, "")){
             appDb = FirebaseFirestore.getInstance();

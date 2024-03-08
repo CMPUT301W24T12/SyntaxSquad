@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.widget.ImageButton;
 
 import androidx.lifecycle.ViewModel;
-
+/**
+ * This view model allows many attendee variables to be shared with other fragments.
+ */
 public class AttendeeItemViewModel extends ViewModel {
     private String event = "";
     private String organizer = "";
