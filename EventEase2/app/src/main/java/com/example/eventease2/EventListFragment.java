@@ -34,46 +34,85 @@ public class EventListFragment extends AppCompatActivity {
     ArrayList<String> eventDataList;
     EventListArrayAdapter eventListArrayAdapter;
     ArrayList<String> eventID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_page);
 
+        eventList = findViewById(R.id.event_list);
+
+        if (eventList == null) {
+            Log.e("Event List1", "ListView with ID event_list not found in layout");
+        } else {
+            Log.e("Event List2", "good");
+        }
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String organizerID = getIntent().getStringExtra("OrganizerID");
+        Log.d("Event List", organizerID);
 
-        /*
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    // Get the value of a field named "fieldName" as a String
-                    String eventName = (String) documentSnapshot.get("Name");
-
-                    // Create a new list and copy the contents of nameList to it
-                    Log.d("Event Name: ", eventName);
-                } else {
-                    Log.d("TAG", "No such document");
-                }
-            }
-        });
-        */
-
-        ArrayList<String> eventIDs = new ArrayList<>();
-
-        CollectionReference collectionRef = db.collection("Organizer").document(organizerID).collection("Events");
-        collectionRef.get()
+        ArrayList<String> organizerIDs = new ArrayList<>();
+        CollectionReference organizerRef = db.collection("Organizer");
+        organizerRef.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             // Access each document here
-                            Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                            eventIDs.add(documentSnapshot.getId());
+                            Log.d("Event List", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                            //                         organizer id's                            organizer info
+
+                            organizerIDs.add(documentSnapshot.getId());
+                            Log.d("Event List", organizerIDs.get(0));
+                        }
+                        Log.d("Event List", organizerIDs.get(0));
+                        Log.d("Event List", organizerID);
+                        if (organizerIDs.contains("ffffffff-8a86-b983-0000-0000380c0fa3")) {
+                                                     //replace with organizerID
+                            Log.d("Nested", organizerIDs.get(0));
+                            ArrayList<String> eventNameList = new ArrayList<>();
+                            ArrayList<String> eventInfoList = new ArrayList<>();
+                            ArrayList<String> eventIDs = new ArrayList<>();
+                            CollectionReference eventRef = db.collection("Organizer").document("ffffffff-8a86-b983-0000-0000380c0fa3").collection("Events");
+                                                                                                                         // replace with organizerID
+                            eventRef.get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                                // Access each document here
+                                                Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                                                //                         event id's                            event info
+                                                String name = documentSnapshot.getString("Name");
+                                                String description = documentSnapshot.getString("Description");
+
+                                                eventNameList.add(name);
+                                                eventInfoList.add(description);
+                                                eventIDs.add(documentSnapshot.getId());
+                                            }
+                                            Log.d("Event IDs", eventIDs.get(0));
+                                            Log.d("Name List", eventNameList.get(0));
+                                            Log.d("Event Info", eventInfoList.get(0));
+                                            eventListArrayAdapter = new EventListArrayAdapter(EventListFragment.this, eventNameList, eventInfoList, organizerID, eventIDs);
+                                            eventList.setAdapter(eventListArrayAdapter);
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d("NewTag", "Error getting documents.", e);
+                                        }
+                                    });
+                        } else {
+                            Log.d("Not If", "new Organizer ID");
+                            Log.d("Event List", organizerIDs.get(0));
+                            ArrayList<String> emptyList = new ArrayList<String>();
+                            eventListArrayAdapter = new EventListArrayAdapter(EventListFragment.this, emptyList, emptyList, organizerID, emptyList);
+                            eventList.setAdapter(eventListArrayAdapter);
                         }
                     }
                 })
-
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -81,20 +120,64 @@ public class EventListFragment extends AppCompatActivity {
                     }
                 });
 
-        //start loop
-
-        eventListArrayAdapter = new EventListArrayAdapter(EventListFragment.this, eventNameList, eventInfoList, organizerID, eventID);
-        eventList.setAdapter(eventListArrayAdapter);
-
         ImageButton add = findViewById(R.id.imageButton);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Create an Intent to navigate to the Add Event Activity
                 Intent intent = new Intent(EventListFragment.this, AddEventFragment.class);
-                intent.putExtra("OrganizerID",organizerID);
+                intent.putExtra("OrganizerID", organizerID);
                 // Start the new activity
                 startActivity(intent);
+            }
+        });
+    }
+}
+
+        /*
+        if (organizerIDs.contains(organizerID)) {
+            ArrayList<String> eventNameList = new ArrayList<>();
+            ArrayList<String> eventInfoList = new ArrayList<>();
+            ArrayList<String> eventIDs = new ArrayList<>();
+            CollectionReference eventRef = db.collection("Organizer").document("ffffffff-8a86-b983-0000-0000380c0fa3").collection("Events");
+                                                                                                         // replace with organizerID
+            eventRef.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                // Access each document here
+                                Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                                //                         event id's                            event info
+                                String name = documentSnapshot.getString("Name");
+                                String description = documentSnapshot.getString("Description");
+
+                                eventNameList.add(name);
+                                eventInfoList.add(description);
+                                eventIDs.add(documentSnapshot.getId());
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("NewTag", "Error getting documents.", e);
+                        }
+                    });
+            eventListArrayAdapter = new EventListArrayAdapter(EventListFragment.this, eventNameList, eventInfoList, organizerID, eventIDs);
+            eventList.setAdapter(eventListArrayAdapter);
+        } else {
+            ArrayList<String> emptyList = new ArrayList<String>();
+            eventListArrayAdapter = new EventListArrayAdapter(EventListFragment.this, emptyList, emptyList, organizerID, emptyList);
+            eventList.setAdapter(eventListArrayAdapter);
+        }
+        */
+
+//start loop
+
+//eventListArrayAdapter = new EventListArrayAdapter(EventListFragment.this, eventNameList, eventInfoList, organizerID, eventIDs);
+//eventList.setAdapter(eventListArrayAdapter);
+
         /*
         eventList = findViewById(R.id.event_list);
         colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -127,17 +210,4 @@ public class EventListFragment extends AppCompatActivity {
             }
         });
 
-        ImageButton add = findViewById(R.id.imageButton);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Create an Intent to navigate to the Add Event Activity
-                Intent intent = new Intent(EventListFragment.this, AddEventFragment.class);
-                intent.putExtra("OrganizerID",organizerID);
-                // Start the new activity
-                startActivity(intent);
-            }
-        });
-    }
     */
-}

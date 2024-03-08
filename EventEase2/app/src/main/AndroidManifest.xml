@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EventListFragment" />
+        <activity android:name=".EventListArrayAdapter" />
         <activity android:name=".Organizer.OrganizerAttendeeListFragment" />
         <activity
             android:name=".Organizer.AddEventFragment"
