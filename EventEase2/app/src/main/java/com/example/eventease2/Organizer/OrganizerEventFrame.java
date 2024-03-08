@@ -35,7 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 
 /**A frame for the organizer
- * Show the event info
+ * Show the event info, and the user is able to to edit the text in this frame
  */
 public class OrganizerEventFrame extends AppCompatActivity {
     private ImageView imageView;
