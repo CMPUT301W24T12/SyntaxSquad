@@ -55,7 +55,7 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
 
         attendeeList = findViewById(R.id.organizer_attendee_list);
 
-        CollectionReference attendeeRef = db.collection("Organizer").document("ffffffff-8a86-b983-0000-0000380c0fa3").collection("Events").document("d2ea4e72-5d4c-47a6-8c4b-49a442a08a41").collection("Attendees");
+        CollectionReference attendeeRef = db.collection("Organizer").document(organizerID).collection("Events").document(eventID).collection("Attendees");
         ArrayList<String> attendeeIDs = new ArrayList<>();                                                   //replace with organizer ID                                                                        //replace with event ID
         ArrayList<String> attendeeNames = new ArrayList<>();
         attendeeRef.get()

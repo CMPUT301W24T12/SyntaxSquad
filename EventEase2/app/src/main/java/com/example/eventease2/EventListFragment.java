@@ -68,13 +68,13 @@ public class EventListFragment extends AppCompatActivity {
                         }
                         Log.d("Event List", organizerIDs.get(0));
                         Log.d("Event List", organizerID);
-                        if (organizerIDs.contains("ffffffff-8a86-b983-0000-0000380c0fa3")) {
+                        if (organizerIDs.contains(organizerID)) {
                                                      //replace with organizerID
                             Log.d("Nested", organizerIDs.get(0));
                             ArrayList<String> eventNameList = new ArrayList<>();
                             ArrayList<String> eventInfoList = new ArrayList<>();
                             ArrayList<String> eventIDs = new ArrayList<>();
-                            CollectionReference eventRef = db.collection("Organizer").document("ffffffff-8a86-b983-0000-0000380c0fa3").collection("Events");
+                            CollectionReference eventRef = db.collection("Organizer").document(organizerID).collection("Events");
                                                                                                                          // replace with organizerID
                             eventRef.get()
                                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
