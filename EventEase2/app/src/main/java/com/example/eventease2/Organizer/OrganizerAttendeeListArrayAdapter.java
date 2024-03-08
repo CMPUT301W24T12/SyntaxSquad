@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,11 +16,13 @@ import androidx.annotation.Nullable;
 import com.example.eventease2.R;
 
 public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
+    private ArrayList<String> attendeeIDs;
     private ArrayList<String> attendeeNames;
     private Context context;
 
-    public OrganizerAttendeeListArrayAdapter(Context context, ArrayList<String> attendeeNames) {
-        super(context, 0, attendeeNames);
+    public OrganizerAttendeeListArrayAdapter(Context context, ArrayList<String> attendeeIDs, ArrayList<String> attendeeNames) {
+        super(context, 0, attendeeIDs);
+        this.attendeeIDs = attendeeIDs;
         this.attendeeNames = attendeeNames;
         this.context = context;
     }
@@ -37,8 +40,10 @@ public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
         String name = attendeeNames.get(position);
 
         TextView attendeeName = view.findViewById(R.id.attendee_name);
-
         attendeeName.setText(name);
+
+        ImageView attendeePicture = view.findViewById(R.id.attendeePortrait);
+        attendeePicture.setImageResource(R.drawable.frame_4);
 
         return view;
     }

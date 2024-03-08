@@ -49,6 +49,7 @@
         android:id="@+id/organizer_attendee_list"
         android:layout_width="409dp"
         android:layout_height="601dp"
+        android:translationX="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -61,6 +62,7 @@
         android:backgroundTint="#00B6AA"
         android:text="Send Notifications"
         android:translationX="-20dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/organizer_attendee_list"
         app:layout_constraintEnd_toStartOf="@+id/button5"
         app:layout_constraintStart_toStartOf="parent" />
@@ -73,6 +75,7 @@
         android:backgroundTint="#00B6AA"
         android:text="Set Milestones"
         android:translationX="-40dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/organizer_attendee_list"
         app:layout_constraintEnd_toEndOf="parent" />
 
