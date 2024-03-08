@@ -15,10 +15,10 @@ import androidx.annotation.Nullable;
 import com.example.eventease2.R;
 
 public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
-    private List<String> attendeeNames;
+    private ArrayList<String> attendeeNames;
     private Context context;
 
-    public OrganizerAttendeeListArrayAdapter(Context context, List<String> attendeeNames) {
+    public OrganizerAttendeeListArrayAdapter(Context context, ArrayList<String> attendeeNames) {
         super(context, 0, attendeeNames);
         this.attendeeNames = attendeeNames;
         this.context = context;

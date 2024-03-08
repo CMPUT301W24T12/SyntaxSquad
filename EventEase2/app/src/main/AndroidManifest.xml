@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Organizer.EventListFragment" />
+        <activity android:name=".EventListFragment" />
         <activity android:name=".Organizer.OrganizerAttendeeListFragment" />
         <activity
             android:name=".Organizer.AddEventFragment"

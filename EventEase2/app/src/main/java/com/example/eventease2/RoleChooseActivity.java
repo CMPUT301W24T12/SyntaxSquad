@@ -12,13 +12,20 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.eventease2.Organizer.AddEventFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
+
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Objects;
 
 public class RoleChooseActivity extends AppCompatActivity {
 
@@ -27,6 +34,11 @@ public class RoleChooseActivity extends AppCompatActivity {
     ImageButton attendeeIcon;
     Button confirmButton;
     FirebaseFirestore appDb;
+    public String imei;
+    private DocumentReference organizerRef;
+    private  CollectionReference collectionRef;
+
+    private Boolean checkedID = Boolean.FALSE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +48,30 @@ public class RoleChooseActivity extends AppCompatActivity {
         appDb = FirebaseFirestore.getInstance();
         // Firebase contain info of all events on app
         CollectionReference collectionReference = appDb.collection("Events");
+
+        // Copyright 2020 M. Fadli Zein
+        imei = DeviceInfoUtils.getIMEI(getApplicationContext()); // device number
+        Log.d("IMEI", imei);
+        CollectionReference collectionRef = appDb.collection("Organizer");
+        collectionRef.get()
+        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    // Access each document here
+                    Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                    if (Objects.equals(imei, documentSnapshot.getId())) {
+                        checkedID = Boolean.TRUE;
+                    }
+                }
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("NewTag", "Error getting documents.", e);
+                    }
+                });
 
         organizerIcon = findViewById(R.id.orgIcon);
         admIcon = findViewById(R.id.admIcon);
@@ -62,7 +98,8 @@ public class RoleChooseActivity extends AppCompatActivity {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), AddEventFragment.class);
+                        Intent intent = new Intent(RoleChooseActivity.this, EventListFragment.class);
+                        intent.putExtra("OrganizerID",imei);
                         startActivity(intent);
                     }
                 });

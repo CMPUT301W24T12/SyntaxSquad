@@ -7,6 +7,7 @@ import android.widget.ListView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import com.example.eventease2.Organizer.OrganizerAttendeeListArrayAdapter;
 import com.example.eventease2.R;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,42 +22,56 @@ import java.util.List;
 public class OrganizerAttendeeListFragment extends AppCompatActivity {
 
     ListView attendeeList;
-    List<String> attendeeDataList;
+    ArrayList<String> attendeeNameList;
     OrganizerAttendeeListArrayAdapter attendeeArrayAdapter;
-
-    private FirebaseFirestore db;
-    private DocumentReference organizerRef;
-    private DocumentReference attendeeRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_attendee_list);
 
-        attendeeDataList = new ArrayList<>();
-        attendeeList = findViewById(R.id.organizer_attendee_list);
-        attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(this, attendeeDataList);
-        attendeeList.setAdapter(attendeeArrayAdapter);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String id = getIntent().getStringExtra("ID");
+        String organizerID = getIntent().getStringExtra("OrganizerID");
 
-        db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("EventEase")
+                .document("Organizer")
+                .collection(organizerID)
+                .document(id);
 
-        organizerRef = db.collection("EventEase").document("Organizer");
-        attendeeRef = organizerRef.collection("NewEvent").document("TestEvent");
-
-        attendeeRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        /*
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", "Listen failed: ", error);
-                    return;
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    // Get the value of a field named "fieldName" as a String
+                    attendeeNameList = (ArrayList<String>) documentSnapshot.get("NameList");
+
+                    // Create a new list and copy the contents of nameList to it
+                    Log.d("List", attendeeNameList.get(0));
+                } else {
+                    Log.d("TAG", "No such document");
                 }
-                if (value != null && value.exists()) {
-                    attendeeDataList = (List<String>) value.get("NameList");
-                }
-                attendeeArrayAdapter.notifyDataSetChanged();
             }
         });
+        */
+        attendeeList = findViewById(R.id.organizer_attendee_list);
+        attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(this, attendeeNameList);
+        attendeeList.setAdapter(attendeeArrayAdapter);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (value.exists()) {
+                    // Get the value of a field named "fieldName" as a String
+                    attendeeNameList = (ArrayList<String>) value.get("NameList");
 
+                    // Create a new list and copy the contents of nameList to it
+                    Log.d("List", attendeeNameList.get(0));
+                } else {
+                    Log.d("TAG", "No such document");
+                }
+            }
+        });
     }
 
 }
