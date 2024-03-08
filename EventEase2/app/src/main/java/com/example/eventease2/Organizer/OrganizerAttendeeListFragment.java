@@ -1,8 +1,12 @@
 package com.example.eventease2.Organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,8 +62,6 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                             attendeeIDs.add(documentSnapshot.getId());
                             attendeeNames.add(documentSnapshot.getString("Name"));
                         }
-                        Log.d("Attendee IDs", attendeeIDs.get(7));
-                        Log.d("Attendee Names", attendeeNames.get(7));
                         attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerAttendeeListFragment.this, attendeeIDs, attendeeNames);
                         attendeeList.setAdapter(attendeeArrayAdapter);
                     }
@@ -70,6 +72,19 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                         Log.d("NewTag", "Error getting documents.", e);
                     }
                 });
+
+        TextView back = findViewById(R.id.back_text);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to navigate to the Add Event Activity
+                Intent intent = new Intent(OrganizerAttendeeListFragment.this, EventListFragment.class);
+                intent.putExtra("OrganizerID", organizerID);
+                intent.putExtra("EventID", eventID);
+                // Start the new activity
+                startActivity(intent);
+            }
+        });
     }
 
 }
