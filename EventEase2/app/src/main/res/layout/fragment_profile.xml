@@ -50,7 +50,7 @@
         app:layout_constraintVertical_bias="0.091" />
 
     <EditText
-        android:id="@+id/editAttendeeName"
+        android:id="@+id/editProfileName"
         android:layout_width="353dp"
         android:layout_height="55dp"
         android:background="@android:color/background_light"
@@ -74,7 +74,7 @@
         android:textColor="#FEFEFE"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/editAttendeeName"
+        app:layout_constraintBottom_toTopOf="@+id/editProfileName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.525"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +93,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAttendeeName"
+        app:layout_constraintTop_toBottomOf="@+id/editProfileName"
         app:layout_constraintVertical_bias="0.017" />
 
     <EditText
@@ -111,7 +111,7 @@
         app:layout_constraintVertical_bias="0.044" />
 
     <EditText
-        android:id="@+id/editEmailAddress"
+        android:id="@+id/editProfileEmail"
         android:layout_width="193dp"
         android:layout_height="44dp"
         android:background="#F4F4F4"
@@ -129,10 +129,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/editEmailAddress"
+        app:layout_constraintEnd_toEndOf="@+id/editProfileEmail"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/AttendeeEmail"
-        app:layout_constraintTop_toBottomOf="@+id/editEmailAddress"
+        app:layout_constraintTop_toBottomOf="@+id/editProfileEmail"
         app:layout_constraintVertical_bias="0.153" />
 
     <TextView
@@ -146,7 +146,7 @@
         app:layout_constraintEnd_toStartOf="@+id/checkBox"
         app:layout_constraintHorizontal_bias="0.926"
         app:layout_constraintStart_toStartOf="@+id/AttendeeEmail"
-        app:layout_constraintTop_toBottomOf="@+id/editEmailAddress"
+        app:layout_constraintTop_toBottomOf="@+id/editProfileEmail"
         app:layout_constraintVertical_bias="0.153" />
 
     <Button

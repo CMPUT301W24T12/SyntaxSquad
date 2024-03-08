@@ -4,31 +4,21 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.eventease2.R;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
-import com.google.firestore.v1.WriteResult;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,14 +39,11 @@ public class ProfileFragment extends Fragment {
     private EditText attendeePhoneText;
     private EditText attendeeEmailText;
     private String event;
+    private ItemViewModel viewModel;
+    private boolean flag = false;
     public ProfileFragment() {
         // Required empty public constructor
     }
-    public ProfileFragment(String eventID) {
-        this.event = eventID;
-    }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +62,7 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         appDb = FirebaseFirestore.getInstance();
-
+        event = viewModel.getString();
 
         orgainzerRef = appDb.collection("EventEase").document("Organizer");
         CollectionReference collectionReference = orgainzerRef.collection("29bc643d-3a87-4d5d-8716-2b7b6a224d69");
@@ -85,21 +72,20 @@ public class ProfileFragment extends Fragment {
         attendeeAdapter = new ArrayAdapter<>(getActivity(), R.layout.fragment_profile, attendeeList);
         // Find the ImageButton by its ID
         attendeeSaveChanges = view.findViewById(R.id.AttendeeAddChanges);
-        attendeeNameText = view.findViewById(R.id.editAttendeeName);
+        attendeeNameText = view.findViewById(R.id.editProfileName);
         attendeePhoneText = view.findViewById(R.id.editTextPhone2);
-        attendeeEmailText = view.findViewById(R.id.editEmailAddress);
+        attendeeEmailText = view.findViewById(R.id.editProfileEmail);
         attendeeSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Objects.equals(event, "default")){
-                    final String attendeeName = attendeeNameText.getText().toString();
-                    final String attendeePhone = attendeePhoneText.getText().toString();
-                    final String attendeeEmail = attendeeEmailText.getText().toString();
+                final String attendeeName = attendeeNameText.getText().toString();
+                final String attendeePhone = attendeePhoneText.getText().toString();
+                final String attendeeEmail = attendeeEmailText.getText().toString();
 
-                    attendeeRef.update("EmailList", FieldValue.arrayUnion(attendeeEmail));
-                    attendeeRef.update("NameList", FieldValue.arrayUnion(attendeeName));
-                    attendeeRef.update("PhoneList", FieldValue.arrayUnion(attendeePhone));
-                }
+                attendeeRef.update("EmailList", FieldValue.arrayUnion(attendeeEmail));
+                attendeeRef.update("NameList", FieldValue.arrayUnion(attendeeName));
+                attendeeRef.update("PhoneList", FieldValue.arrayUnion(attendeePhone));
+                flag =true;
 
             }
         });
