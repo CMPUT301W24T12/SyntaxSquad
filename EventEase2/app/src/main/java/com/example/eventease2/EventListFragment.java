@@ -12,8 +12,10 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.eventease2.Organizer.AddEventFragment;
 import com.example.eventease2.Organizer.OrganizerAttendeeListFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EventListFragment extends AppCompatActivity {
     ListView eventList;
@@ -38,10 +41,6 @@ public class EventListFragment extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String organizerID = getIntent().getStringExtra("OrganizerID");
-
-        CollectionReference colRef = db.collection("EventEase")
-                .document("Organizer")
-                .collection(organizerID);
 
         /*
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -59,6 +58,44 @@ public class EventListFragment extends AppCompatActivity {
             }
         });
         */
+
+        ArrayList<String> eventIDs = new ArrayList<>();
+
+        CollectionReference collectionRef = db.collection("Organizer").document(organizerID).collection("Events");
+        collectionRef.get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            // Access each document here
+                            Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                            eventIDs.add(documentSnapshot.getId());
+                        }
+                    }
+                })
+
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("NewTag", "Error getting documents.", e);
+                    }
+                });
+
+        //start loop
+
+        eventListArrayAdapter = new EventListArrayAdapter(EventListFragment.this, eventNameList, eventInfoList, organizerID, eventID);
+        eventList.setAdapter(eventListArrayAdapter);
+
+        ImageButton add = findViewById(R.id.imageButton);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to navigate to the Add Event Activity
+                Intent intent = new Intent(EventListFragment.this, AddEventFragment.class);
+                intent.putExtra("OrganizerID",organizerID);
+                // Start the new activity
+                startActivity(intent);
+        /*
         eventList = findViewById(R.id.event_list);
         colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -102,4 +139,5 @@ public class EventListFragment extends AppCompatActivity {
             }
         });
     }
+    */
 }

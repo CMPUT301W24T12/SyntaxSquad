@@ -25,6 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Objects;
+
 public class RoleChooseActivity extends AppCompatActivity {
 
     ImageButton organizerIcon;
@@ -35,6 +37,8 @@ public class RoleChooseActivity extends AppCompatActivity {
     public String imei;
     private DocumentReference organizerRef;
     private  CollectionReference collectionRef;
+
+    private Boolean checkedID = Boolean.FALSE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,25 +52,26 @@ public class RoleChooseActivity extends AppCompatActivity {
         // Copyright 2020 M. Fadli Zein
         imei = DeviceInfoUtils.getIMEI(getApplicationContext()); // device number
         Log.d("IMEI", imei);
-
-        collectionRef = appDb.collection("EventEase");
-        organizerRef = collectionRef.document("Organizer");
-
-        organizerRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        CollectionReference collectionRef = appDb.collection("Organizer");
+        collectionRef.get()
+        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        // Document exists, check if the ID is present
-                        if (!document.contains(imei)) {
-                            // ID is not present, update the document
-                            organizerRef.update(imei, true);
-                        }
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    // Access each document here
+                    Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                    if (Objects.equals(imei, documentSnapshot.getId())) {
+                        checkedID = Boolean.TRUE;
                     }
                 }
             }
-        });
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("NewTag", "Error getting documents.", e);
+                    }
+                });
 
         organizerIcon = findViewById(R.id.orgIcon);
         admIcon = findViewById(R.id.admIcon);
@@ -93,7 +98,7 @@ public class RoleChooseActivity extends AppCompatActivity {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
+                        Intent intent = new Intent(RoleChooseActivity.this, EventListFragment.class);
                         intent.putExtra("OrganizerID",imei);
                         startActivity(intent);
                     }
