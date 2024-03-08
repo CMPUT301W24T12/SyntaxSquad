@@ -1,5 +1,7 @@
 package com.example.eventease2.Administrator;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -49,22 +51,9 @@ public class AdminArrayAdapter extends ArrayAdapter<Event> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "event "+currentEvent.getEventName(), Toast.LENGTH_SHORT).show();
-                AdminEditEvent fragment = new AdminEditEvent();
 
-                // Get the FragmentManager
-                FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
-
-                // Begin a transaction
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                // Replace the current fragment with the new fragment
-                fragmentTransaction.replace(R.id.fragment_container, fragment);
-
-                // Add the transaction to the back stack (optional)
-                fragmentTransaction.addToBackStack(null);
-
-                // Commit the transaction
-                fragmentTransaction.commit();
+                Intent intent = new Intent(context, AdminEditEventFragment.class);
+                context.startActivity(intent);
             }
         });
         eventAttendeesButton.setOnClickListener(new View.OnClickListener() {
