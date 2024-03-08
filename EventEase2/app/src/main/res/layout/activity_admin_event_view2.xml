@@ -41,6 +41,7 @@
         android:textSize="16sp"
         android:translationX="20dp"
         android:translationY="-115dp"
+        android:visibility="invisible"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView

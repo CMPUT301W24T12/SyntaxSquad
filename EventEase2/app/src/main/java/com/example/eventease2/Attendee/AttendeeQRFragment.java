@@ -59,13 +59,13 @@ public class AttendeeQRFragment extends Fragment{
         integrator.setPrompt("Scan QR Code");
 
         //Todo:Delete this when QR scanning is fully used all the time
-        String scannedData = "d2ea4e72-5d4c-47a6-8c4b-49a442a08a41#ffffffff-8a86-b983-0000-0000380c0fa3";
-        sendDataToModel(scannedData);
-        event = viewModel.getEvent();
-        organizer = viewModel.getOrganizer();
-        firebase();
-        addAttendeeData();
-        //Todo: delete above
+//        String scannedData = "d2ea4e72-5d4c-47a6-8c4b-49a442a08a41#ffffffff-8a86-b983-0000-0000380c0fa3";
+//        sendDataToModel(scannedData);
+//        event = viewModel.getEvent();
+//        organizer = viewModel.getOrganizer();
+//        firebase();
+//        addAttendeeData();
+//        //Todo: delete above
 
         //Can delete when full implementation is done
         integrator.initiateScan();
@@ -85,8 +85,8 @@ public class AttendeeQRFragment extends Fragment{
                 sendDataToModel(scannedData);
                 event = viewModel.getEvent();
                 organizer = viewModel.getOrganizer();
-                //Todo:Uncomment this line of code in order for normal functionality to work
-                //firebase();
+                //Todo:Uncomment this line below of code in order for normal functionality to work
+                firebase();
                 addAttendeeData();
             } else {
                 // Handle if no QR code is found
