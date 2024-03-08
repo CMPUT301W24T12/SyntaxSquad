@@ -78,7 +78,8 @@ public class RoleChooseActivity extends AppCompatActivity {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(RoleChooseActivity.this, "You clicked the admin Button", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), AdminEventView.class);
+                        startActivity(intent);
                     }
                 });
             }

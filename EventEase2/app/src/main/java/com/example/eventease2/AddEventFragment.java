@@ -107,43 +107,8 @@ public class AddEventFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_image_page);
 
-//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, PackageManager.PERMISSION_GRANTED);
-//
-//        TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(TELEPHONY_SERVICE);
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//            String stringIMEI = telephonyManager.getImei();
-//            Log.d("IMEI", "IMEI Number: " + stringIMEI);
-//        }
-        tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // For Android 10 (API level 29) and above, use getImei() instead of getDeviceId()
-                try {
-                    // Attempt to get the IMEI
-                    imei = tm.getImei();
-                    Log.d("IMEI",imei );
-                } catch (SecurityException e) {
-                    // Handle the exception, possibly by requesting the permission again
-                    Log.d("IMEI", "Error getting IMEI: " + e.getMessage() + "Permission: "+ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE));
-                    // You might want to request permission again here or handle it differently based on your app's logic
-                }
-
-            } else {
-                // For devices below Android 10, use getDeviceId()
-                imei = tm.getDeviceId();
-                Log.d("IMEI",imei );
-            }
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 123);
-            Log.d("IMEI","no permission" );
-        }
-
-// Check if imei is null to avoid NullPointerException
-        if (imei != null) {
-            Log.d("IMEI", "IMEI Number: " + imei);
-        } else {
-            Log.d("IMEI", "IMEI Number not available");
-        }
+        // Copyright 2020 M. Fadli Zein
+        imei = DeviceInfoUtils.getIMEI(getApplicationContext()); // device number
 
 
         db = FirebaseFirestore.getInstance();
