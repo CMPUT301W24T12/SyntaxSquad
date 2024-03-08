@@ -90,7 +90,8 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child("images/" + id);
-        DocumentReference documentReference = db.collection("Organizer").document(organizerID).collection("Events").document(id);
+        DocumentReference documentReference = db.collection("Organizer")
+                .document(organizerID).collection("Events").document(id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

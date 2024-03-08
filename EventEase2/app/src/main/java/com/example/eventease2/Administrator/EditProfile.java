@@ -1,8 +1,10 @@
-package com.example.eventease2;
+package com.example.eventease2.Administrator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.eventease2.R;
 
 public class EditProfile extends AppCompatActivity {
 
