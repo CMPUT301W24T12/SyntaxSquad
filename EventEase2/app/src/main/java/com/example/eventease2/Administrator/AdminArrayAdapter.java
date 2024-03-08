@@ -44,25 +44,24 @@ public class AdminArrayAdapter extends ArrayAdapter<Event> {
         TextView eventName = view.findViewById(R.id.textView);
 
         eventName.setText(currentEvent.getEventName());
-
-        Button eventDetailsButton = view.findViewById(R.id.event_details);
-        Button eventAttendeesButton = view.findViewById(R.id.view_attendees);
-        eventDetailsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "event "+currentEvent.getEventName(), Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(context, AdminEditEventFragment.class);
-                context.startActivity(intent);
-            }
-        });
-        eventAttendeesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "attendee", Toast.LENGTH_SHORT).show();
-                //Intent i = new Intent(AdminArrayAdapter.this,AdminE)
-            }
-        });
+//
+//        Button eventDetailsButton = view.findViewById(R.id.event_details);
+//        Button eventAttendeesButton = view.findViewById(R.id.view_attendees);
+//        eventDetailsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, "event "+currentEvent.getEventName(), Toast.LENGTH_SHORT).show();
+////                Intent intent = new Intent(context, AdminEditEventFragment.class);
+////                context.startActivity(intent);
+//            }
+//        });
+//        eventAttendeesButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, "attendee", Toast.LENGTH_SHORT).show();
+//                //Intent i = new Intent(AdminArrayAdapter.this,AdminE)
+//            }
+//        });
         return view;
     }
 }

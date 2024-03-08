@@ -84,9 +84,6 @@ public class AdminEventView extends AppCompatActivity {
                                         String name = eventSnapshot.getString("Name");
                                         Event event = new Event(null,name,description,null,false,null,null);
                                         eventsIDs.add(event);
-
-                                        Log.d("AttendeeList length for event " + eventId + " is ", String.valueOf(attendeeListLength));
-                                        Log.d("Description for event " + eventId + " is ", description);
                                     }
                                     adminArrayAdapter = new AdminArrayAdapter(AdminEventView.this, eventsIDs);
                                     eventListView.setAdapter(adminArrayAdapter);
