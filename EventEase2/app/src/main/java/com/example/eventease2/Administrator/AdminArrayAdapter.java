@@ -1,4 +1,4 @@
-package com.example.eventease2;
+package com.example.eventease2.Administrator;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.eventease2.Event;
+import com.example.eventease2.R;
+
 import java.util.ArrayList;
 
 public class AdminArrayAdapter extends ArrayAdapter<Event> {
