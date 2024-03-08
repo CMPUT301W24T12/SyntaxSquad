@@ -26,7 +26,7 @@ import java.util.Objects;
 
 /**
  * Shows the user a default event if the QR scanner hasn't been scanned and shows the scanned event
- * if the scan was susccessful
+ * if the scan was successful
  * @author Sean
  */
 public class AttendeeEventFragment extends Fragment {

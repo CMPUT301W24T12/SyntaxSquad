@@ -7,7 +7,10 @@ import android.widget.ImageButton;
 
 import androidx.lifecycle.ViewModel;
 /**
- * This view model allows many attendee variables to be shared with other fragments.
+ * This view model allows many attendee variables to be shared with QR, Profile, and Event
+ * fragments. The Start activity also accesses the information in order to provide info provide info
+ * for other fragments.
+ * @author Sean
  */
 public class AttendeeItemViewModel extends ViewModel {
     private String event = "";

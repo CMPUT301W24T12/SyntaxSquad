@@ -15,7 +15,8 @@ import com.example.eventease2.databinding.ActivityAttendeeStartBinding;
 import java.security.SecureRandom;
 import java.util.Objects;
 /**
- * This activity holds the bottom navigation code as well as provide the user with a unique ID
+ * This activity holds the bottom navigation code, the functionality for replacing the fragments
+ * based off what the user chooses, as well as provide the user with a unique ID
  * @author Sean
  */
 public class AttendeeStartActivity extends AppCompatActivity{

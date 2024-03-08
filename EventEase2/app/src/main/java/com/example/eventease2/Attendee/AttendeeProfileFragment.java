@@ -104,6 +104,9 @@ public class AttendeeProfileFragment extends Fragment {
     }
     /**
      * On create, the fragment will find the texts and image.
+     * @param view
+     * The view of the Fragment attendee Profile so it can correctly match with the text and image
+     * fields.
      */
     public void getEditProfile(View view){
         attendeeSaveChanges = view.findViewById(R.id.AttendeeAddChanges);

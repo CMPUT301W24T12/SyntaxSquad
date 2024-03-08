@@ -25,7 +25,9 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * QR fragment is the QR scanner that allows users to scan a QR code when pressing a button.
+ * QR fragment is the responsible for showing the button that allows users
+ * to scan a QR code after pressing a button.
+ * @author Sean
  */
 public class AttendeeQRFragment extends Fragment{
     private AttendeeItemViewModel viewModel;
