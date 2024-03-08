@@ -1,4 +1,4 @@
-package com.example.eventease2;
+package com.example.eventease2.Organizer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.eventease2.R;
 
 public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
     private List<String> attendeeNames;
