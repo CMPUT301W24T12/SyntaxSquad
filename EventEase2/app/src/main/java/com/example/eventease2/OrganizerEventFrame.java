@@ -2,12 +2,14 @@ package com.example.eventease2;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +36,8 @@ public class OrganizerEventFrame extends AppCompatActivity {
     private TextView descriptionView;
     private TextView eventTitleView;
     private TextView eventBodyView;
+
+    private Button button;
     private String id;
     private String organizerID;
     private FirebaseFirestore db;
@@ -59,6 +63,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_event_frame);
 
+        button = findViewById(R.id.button3);
         imageView = findViewById(R.id.imageView2);
         descriptionView = findViewById(R.id.Description);
         eventBodyView = findViewById(R.id.eventBody);
@@ -144,6 +149,15 @@ public class OrganizerEventFrame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
+                intent.putExtra("ID",id);
+                intent.putExtra("OrganizerID",organizerID);
+                startActivity(intent);
             }
         });
     }
