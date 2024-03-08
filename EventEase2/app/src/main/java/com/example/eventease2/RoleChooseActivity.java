@@ -1,5 +1,6 @@
 package com.example.eventease2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
@@ -10,14 +11,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.telephony.TelephonyManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Collection;
@@ -29,6 +35,9 @@ public class RoleChooseActivity extends AppCompatActivity {
     ImageButton attendeeIcon;
     Button confirmButton;
     FirebaseFirestore appDb;
+    public String imei;
+    private DocumentReference organizerRef;
+    private  CollectionReference collectionRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,29 @@ public class RoleChooseActivity extends AppCompatActivity {
         appDb = FirebaseFirestore.getInstance();
         // Firebase contain info of all events on app
         CollectionReference collectionReference = appDb.collection("Events");
+
+        // Copyright 2020 M. Fadli Zein
+        imei = DeviceInfoUtils.getIMEI(getApplicationContext()); // device number
+        Log.d("IMEI", imei);
+
+        collectionRef = appDb.collection("EventEase");
+        organizerRef = collectionRef.document("Organizer");
+
+        organizerRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Document exists, check if the ID is present
+                        if (!document.contains(imei)) {
+                            // ID is not present, update the document
+                            organizerRef.update(imei, true);
+                        }
+                    }
+                }
+            }
+        });
 
         organizerIcon = findViewById(R.id.orgIcon);
         admIcon = findViewById(R.id.admIcon);
@@ -64,7 +96,8 @@ public class RoleChooseActivity extends AppCompatActivity {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), AddEventFragment.class);
+                        Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
+                        intent.putExtra("OrganizerID",imei);
                         startActivity(intent);
                     }
                 });

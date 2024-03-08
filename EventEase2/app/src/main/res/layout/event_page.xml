@@ -43,6 +43,7 @@
         android:textSize="16sp"
         android:translationX="20dp"
         android:translationY="-115dp"
+        android:visibility="invisible"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -50,7 +51,8 @@
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:background="#E8E8E8"
-        android:translationY="452dp" />
+        android:translationY="452dp"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -58,6 +60,7 @@
         android:layout_height="56dp"
         android:translationX="25dp"
         android:translationY="385dp"
+        android:visibility="invisible"
         app:srcCompat="@drawable/ic_list"
         app:tint="#00B6AA"
         tools:layout_editor_absoluteX="43dp"
@@ -69,6 +72,7 @@
         android:layout_height="55dp"
         android:translationX="300dp"
         android:translationY="330dp"
+        android:visibility="invisible"
         app:srcCompat="@drawable/ic_calender"
         tools:layout_editor_absoluteX="175dp"
         tools:layout_editor_absoluteY="668dp" />
@@ -79,6 +83,7 @@
         android:layout_height="55dp"
         android:translationX="150dp"
         android:translationY="275dp"
+        android:visibility="invisible"
         app:srcCompat="@drawable/ic_profile"
         tools:layout_editor_absoluteX="304dp"
         tools:layout_editor_absoluteY="667dp" />
@@ -98,6 +103,7 @@
         tools:layout_editor_absoluteY="0dp" />
 
     <ListView
+        android:id="@+id/event_list"
         android:layout_width="match_parent"
         android:layout_height="526dp"
         android:translationY="-391dp" />
