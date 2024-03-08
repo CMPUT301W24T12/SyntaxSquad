@@ -181,7 +181,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
                 data.put("Description", description);
                 data.put("EventBody", eventBody);
 
-                CollectionReference newRef = db.collection("EventEase").document("Organizer").collection(organizerID);
+                CollectionReference newRef = db.collection("Organizer").document(organizerID).collection("Events");
                 newRef.document(id).set(data);
 
                 StorageReference imageRef = storageRef.child("images/" + id);
