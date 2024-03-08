@@ -59,6 +59,7 @@ public class AttendeeQRFragment extends Fragment{
         firebase();
         addAttendeeData();
         //Todo: delete above
+
         //Can delete when full implementation is done
         integrator.initiateScan();
 
@@ -72,7 +73,6 @@ public class AttendeeQRFragment extends Fragment{
             if (result.getContents() != null) {
                 String scannedData = result.getContents();
                 displayScanResult(scannedData);
-
                 sendDataToModel(scannedData);
                 event = viewModel.getEvent();
                 organizer = viewModel.getOrganizer();
