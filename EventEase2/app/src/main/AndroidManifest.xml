@@ -26,9 +26,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".Attendee.AttendeeStartActivity" />
-        <activity android:name=".Attendee.QRFragment" />
-        <activity android:name=".Attendee.EventFragment" />
-        <activity android:name=".Attendee.ProfileFragment" />
+        <activity android:name=".Attendee.AttendeeQRFragment" />
+        <activity android:name=".Attendee.AttendeeEventFragment" />
+        <activity android:name=".Attendee.AttendeeProfileFragment" />
 <!--        <activity-->
 <!--            android:name=".MainActivity"-->
 <!--            android:exported="false" />-->

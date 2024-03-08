@@ -22,10 +22,10 @@ import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
+ * Use the {@link AttendeeProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public class AttendeeProfileFragment extends Fragment {
 
     private Button attendeeSaveChanges;
 
@@ -40,23 +40,20 @@ public class ProfileFragment extends Fragment {
     private EditText attendeeEmailText;
     private String event;
     private String organizer;
-    private ItemViewModel viewModel;
+    private AttendeeItemViewModel viewModel;
     private boolean flag = false;
-    public ProfileFragment() {
+    public AttendeeProfileFragment() {
         // Required empty public constructor
     }
 
-    public ProfileFragment(String eventID, String organizerID) {
+    public AttendeeProfileFragment(String eventID, String organizerID) {
         this.event = eventID;
         this.organizer = organizerID;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        appDb = FirebaseFirestore.getInstance();
-        CollectionReference collectionReference = appDb.collection("Attendee");
-        attendeeList = new ArrayList<>();
+          super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -69,11 +66,11 @@ public class ProfileFragment extends Fragment {
         Attendee user = new Attendee();
         orgainzerRef = appDb.collection("EventEase").document("Organizer");
 
-        CollectionReference collectionReference = orgainzerRef.collection("29bc643d-3a87-4d5d-8716-2b7b6a224d69");
-        //CollectionReference collectionReference = orgainzerRef.collection(organizerID);
+        //CollectionReference collectionReference = orgainzerRef.collection("29bc643d-3a87-4d5d-8716-2b7b6a224d69");
+        CollectionReference collectionReference = orgainzerRef.collection(organizer);
 
-        attendeeRef = collectionReference.document("f24e4939-4cbb-4af7-944d-51fcfdb98855");
-        //attendeeRef = collectionReference.document(eventID);
+        //attendeeRef = collectionReference.document("f24e4939-4cbb-4af7-944d-51fcfdb98855");
+        attendeeRef = collectionReference.document(event);
 
         attendeeList = new ArrayList<>();
 

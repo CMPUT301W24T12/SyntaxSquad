@@ -1,20 +1,21 @@
 package com.example.eventease2.Attendee;
 
-import android.view.View;
-
 import androidx.lifecycle.ViewModel;
 
-public class ItemViewModel extends ViewModel {
+public class AttendeeItemViewModel extends ViewModel {
     private String event = "";
 
-    public String getOrganizer() {return organizer;}
+
     private String organizer = "";
+
+    public String getOrganizer() {return organizer;}
     public String getEvent() {
         return event;
     }
-    public void setString(String string){
+    public void setEvent(String string){
         this.event = string;
     }
+    public void setOrganizer(String organizer) {this.organizer = organizer;}
 
 
 }

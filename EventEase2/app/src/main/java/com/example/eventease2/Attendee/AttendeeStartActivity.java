@@ -6,20 +6,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.eventease2.R;
 import com.example.eventease2.databinding.ActivityAttendeeStartBinding;
-import com.example.eventease2.databinding.ActivityMainBinding;
 
-import java.util.Iterator;
 import java.util.Objects;
 
 public class AttendeeStartActivity extends AppCompatActivity{
 
     ActivityAttendeeStartBinding binding;
-    private ItemViewModel viewModel;
+    private AttendeeItemViewModel viewModel;
     String eventID;
     String organizerID;
 
@@ -27,10 +24,10 @@ public class AttendeeStartActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(ItemViewModel.class);
+        viewModel = new ViewModelProvider(this).get(AttendeeItemViewModel.class);
         binding = ActivityAttendeeStartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new QRFragment());
+        replaceFragment(new AttendeeQRFragment());
 
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -40,18 +37,18 @@ public class AttendeeStartActivity extends AppCompatActivity{
             if (itemId == R.id.QR_Scanner) {
 //                Intent i = new Intent(this, QRFragment.class);
 //                startActivity(i);
-                replaceFragment(new QRFragment());
+                replaceFragment(new AttendeeQRFragment());
             } else if (itemId == R.id.Event) {
                 if(!Objects.equals(eventID, "")){
-                    replaceFragment(new EventFragment(eventID,organizerID));
+                    replaceFragment(new AttendeeEventFragment(eventID,organizerID));
                 }else{
-                    replaceFragment(new EventFragment());
+                    replaceFragment(new AttendeeEventFragment());
                 }
             } else if (itemId == R.id.Profile) {
                 if(!Objects.equals(eventID, "")){
-                    replaceFragment(new ProfileFragment(eventID,organizerID));
+                    replaceFragment(new AttendeeProfileFragment(eventID,organizerID));
                 }else {
-                    replaceFragment(new ProfileFragment());
+                    replaceFragment(new AttendeeProfileFragment());
                 }
             }
             return true;
