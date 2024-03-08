@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eventease2.DeviceInfoUtils;
+import com.example.eventease2.EventListFragment;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -56,6 +57,8 @@ public class AddEventFragment extends AppCompatActivity {
     private EditText durationView;
     private Button generateButton;
 
+    private Button backButton;
+
     String eventName;
     String description;
     String location;
@@ -64,13 +67,9 @@ public class AddEventFragment extends AppCompatActivity {
     private String id;
     private String organizerID;
     private static final int REQUEST_IMAGE_PICK = 1;
-    private DocumentReference eventsRef;
-
     private  CollectionReference collectionRef;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
-
-    public TelephonyManager tm;
 
     public String imei;
     /**
@@ -105,7 +104,11 @@ public class AddEventFragment extends AppCompatActivity {
 //        eventsRef = collectionRef.document("Organizer");
         collectionRef = db.collection("Organizer");
 
+
         imageView = findViewById(R.id.attendeeProfileImage);
+        //imageView = findViewById(R.id.imageButton);
+        backButton = findViewById(R.id.back_button);
+
         eventNameView = findViewById(R.id.editTextText);
         descriptionView = findViewById(R.id.editTextText2);
         locationView = findViewById(R.id.editTextText3);
@@ -142,6 +145,17 @@ public class AddEventFragment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectImage();
+            }
+        });
+
+        //go back to eventList
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
+                intent.putExtra("ID",id);
+                intent.putExtra("OrganizerID",organizerID);
+                startActivity(intent);
             }
         });
 
@@ -190,6 +204,12 @@ public class AddEventFragment extends AppCompatActivity {
 
                 StorageReference imageRef = storageRef.child("images/" + id);
                 StorageReference qrRef = storageRef.child("QRCode/" + id);
+
+                //check if image uploaded
+                if (imageURI==null){
+                    int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
+                    imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
+                }
 
                 // Convert QR code bitmap to byte array
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();

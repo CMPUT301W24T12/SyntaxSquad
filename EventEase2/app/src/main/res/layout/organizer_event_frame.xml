@@ -9,40 +9,12 @@
 
     <View
         android:id="@+id/driver"
-        android:layout_width="412dp"
-        android:layout_height="719dp"
-        android:layout_marginTop="56dp"
+        android:layout_width="478dp"
+        android:layout_height="1804dp"
+        android:layout_marginTop="52dp"
         android:background="@drawable/rounded_background"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-1dp" />
-
-    <EditText
-        android:id="@+id/eventTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:text="Event"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.048"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-    <EditText
-        android:id="@+id/Description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Event description"
-        android:textSize="20sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.061"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventTitle"
-        app:layout_constraintVertical_bias="0.0" />
+        tools:layout_editor_absoluteX="10dp" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -99,17 +71,45 @@
 
     <EditText
         android:id="@+id/editTextText2"
-        android:layout_width="388dp"
-        android:layout_height="333dp"
+        android:layout_width="415dp"
+        android:layout_height="428dp"
+        android:layout_marginTop="4dp"
         android:background="@android:color/background_light"
         android:backgroundTint="#B4CCCCCC"
-        android:ems="10"
+        android:gravity="top|start"
         android:hint="Event Body"
-        android:inputType="text"
+        android:textAlignment="textStart"
+        app:layout_constraintEnd_toEndOf="@+id/driver"
+        app:layout_constraintHorizontal_bias="0.095"
+        app:layout_constraintStart_toStartOf="@+id/driver"
+        app:layout_constraintTop_toBottomOf="@+id/Description" />
+
+    <EditText
+        android:id="@+id/eventTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:text="Event"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <EditText
+        android:id="@+id/Description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Event description"
+        android:textSize="20sp"
+        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="0.061"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Description" />
+        app:layout_constraintTop_toBottomOf="@+id/eventTitle"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
