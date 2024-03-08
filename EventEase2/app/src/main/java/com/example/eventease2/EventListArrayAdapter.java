@@ -25,7 +25,6 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
     private String organizerID;
     private  ArrayList<String> eventIDs;
     private Context context;
-
     private String name;
     private String description;
     private String eventID;
@@ -44,32 +43,24 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 //        return super.getView(position, convertView, parent);
         View view = convertView;
-        Log.d("Adapter", "hello");
+
         if(view == null){
             view = LayoutInflater.from(context).inflate(R.layout.event_list, parent,false);
         }
-
 
         if (!eventIDs.isEmpty()) {
             name = eventNames.get(position);
             description = eventDescription.get(position);
             eventID = eventIDs.get(position);
         }
-        Log.d("Adapter", "hello agains");
+
         TextView eventName = view.findViewById(R.id.event_title);
-        if (eventName == null) {
-            Log.e("Event List1", "ListView with ID event_list not found in layout");
-        } else {
-            Log.e("Event List2", "good");
-        }
         TextView eventDetails = view.findViewById(R.id.event_description);
-        if (eventName == null) {
-            Log.e("Event List1", "ListView with ID event_list not found in layout");
-        } else {
-            Log.e("Event List2", "good");
-        }
+
         eventName.setText(name);
         eventDetails.setText(description);
+
+        Log.d("Event ID", eventID);
 
         Button eventInfo = view.findViewById(R.id.event_details);
         eventInfo.setOnClickListener(new View.OnClickListener() {
