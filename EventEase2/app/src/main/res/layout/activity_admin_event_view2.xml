@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Administrator.AdminEventView">
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="#00B6AA"
+        android:gravity="center"
+        android:text="EventEase"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/event_header"
+        android:layout_width="409dp"
+        android:layout_height="52dp"
+        android:fontFamily="sans-serif"
+        android:paddingStart="12dp"
+        android:text="EVENTS"
+        android:textAlignment="textStart"
+        android:textColor="#000000"
+        android:textSize="34sp"/>
+
+    <Button
+        android:id="@+id/button_second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="296dp"
+        android:layout_marginBottom="27dp"
+        android:background="@android:color/transparent"
+        android:onClick="onButtonClick"
+        android:text="Back"
+        android:textSize="16sp"
+        android:translationX="20dp"
+        android:translationY="-115dp"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/bot_header"
+        android:layout_width="wrap_content"
+        android:layout_height="75dp"
+        android:background="#E8E8E8"
+        android:translationY="452dp" />
+
+
+    <ListView
+        android:id="@+id/adminEventList"
+        android:layout_width="match_parent"
+        android:layout_height="603dp"
+        android:translationY="-150dp" />
+
+
+</LinearLayout>
