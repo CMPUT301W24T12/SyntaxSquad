@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.eventease2.Organizer.OrganizerAttendeeListFragment;
+import com.example.eventease2.Organizer.OrganizerEventFrame;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
             @Override
             public void onClick(View v) {
                 // Create an Intent to navigate to the Add Event Activity
-                Intent intent = new Intent(context, EventFragment.class);
+                Intent intent = new Intent(context, OrganizerEventFrame.class);
                 intent.putExtra("ID",eventID);
                 intent.putExtra("OrganizerID",organizerID);
                 // Start the new activity
