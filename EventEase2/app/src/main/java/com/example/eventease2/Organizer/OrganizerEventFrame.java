@@ -90,7 +90,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child("images/" + id);
-        DocumentReference documentReference = db.collection("EventEase").document("Organizer").collection(organizerID).document(id);
+        DocumentReference documentReference = db.collection("Organizer").document(organizerID).collection("Events").document(id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -182,7 +182,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
                 data.put("Description", description);
                 data.put("EventBody", eventBody);
 
-                CollectionReference newRef = db.collection("EventEase").document("Organizer").collection(organizerID);
+                CollectionReference newRef = db.collection("Organizer").document(organizerID).collection("Events");
                 newRef.document(id).set(data);
 
                 StorageReference imageRef = storageRef.child("images/" + id);
