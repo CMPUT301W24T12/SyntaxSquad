@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:weightSum="4"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:shadowColor="#536061"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2.1"
+        android:text="Who are you?"
+        android:textColor="@color/black"
+        android:textSize="45sp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Organizer"
+                android:textColor="@color/black"
+                android:textSize="25dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Attendee"
+                android:textColor="@color/black"
+                android:textSize="25dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageButton
+                android:id="@+id/orgIcon"
+                android:paddingTop="@dimen/cardview_default_radius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/organizericon"
+                android:background="@color/white"
+                android:contentDescription="The individual is an Organizer"/>
+
+            <ImageButton
+                android:id="@+id/attendIcon"
+                android:paddingTop="@dimen/cardview_default_radius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/attendeeicon"
+                android:background="@color/white"
+                android:contentDescription="The individual is an Attendee"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="@dimen/cardview_default_radius"
+                android:text="Administrator"
+                android:textColor="@color/black"
+                android:textSize="25dp" />
+
+            <ImageButton
+                android:id="@+id/admIcon"
+                android:paddingTop="@dimen/cardview_default_radius"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/administratoricon"
+                android:background="@color/white"
+                android:contentDescription="The individual is an Administrator"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Welcome"
+        android:textSize="45dp"
+        android:shadowColor="#536061"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2.1"
+        android:layout_weight="1"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/confirmButton"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button_background"
+            android:textColor="@color/black"
+            android:text="Confirm"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.eventease2.R;
 import com.example.eventease2.databinding.ActivityAttendeeStartBinding;
