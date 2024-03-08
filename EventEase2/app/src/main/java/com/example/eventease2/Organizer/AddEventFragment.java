@@ -166,6 +166,7 @@ public class AddEventFragment extends AppCompatActivity {
 
                 List<String> attendeeList = new ArrayList<>();
                 attendeeList.add("attendee1");
+                attendeeList.add("attendee1");
 
                 // Put the list into the HashMap
                 data.put("Name", eventName);

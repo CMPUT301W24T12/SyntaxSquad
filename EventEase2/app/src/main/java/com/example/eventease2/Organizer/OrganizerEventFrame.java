@@ -125,6 +125,25 @@ public class OrganizerEventFrame extends AppCompatActivity {
                                     // Handle any errors that occurred while downloading the image
                                 }
                             });
+
+                            //set the URI
+                            imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    // Now you have the URI of the image
+                                    image=uri;
+                                    String uriString = uri.toString();
+                                    Log.d("URI",uriString);
+                                    // Use this imageURL as needed, for example, you can load it into an ImageView using a library like Glide or Picasso
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle any errors that occurred while getting the download URL
+                                }
+                            });
+
+
                         } else {
                             Log.d("Document: ", "Not found");
                         }
@@ -182,7 +201,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
                 data.put("EventBody", eventBody);
 
                 CollectionReference newRef = db.collection("Organizer").document(organizerID).collection("Events");
-                newRef.document(id).set(data);
+                newRef.document(id).update(data);
 
                 StorageReference imageRef = storageRef.child("images/" + id);
                 imageRef.putFile(image);
