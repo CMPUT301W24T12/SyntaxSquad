@@ -43,7 +43,6 @@
             android:layout_width="407dp"
             android:layout_height="364dp"
             android:layout_marginTop="16dp"
-            android:text="YADADADADADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"

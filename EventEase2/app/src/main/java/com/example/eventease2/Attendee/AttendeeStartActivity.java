@@ -7,14 +7,17 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.eventease2.R;
 import com.example.eventease2.databinding.ActivityAttendeeStartBinding;
 
 import java.security.SecureRandom;
 import java.util.Objects;
-
+/**
+ * This activity holds the bottom navigation code, the functionality for replacing the fragments
+ * based off what the user chooses, as well as provide the user with a unique ID
+ * @author Sean
+ */
 public class AttendeeStartActivity extends AppCompatActivity{
 
     ActivityAttendeeStartBinding binding;
@@ -58,13 +61,21 @@ public class AttendeeStartActivity extends AppCompatActivity{
             return true;
         });
     }
+    /**
+     * When a user clicks on the a different fragment, it replaces the fragment with the
+     * desired fragment
+     * @param fragment
+     * Desired fragment that the user wants to navigate to.
+     */
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout,fragment);
         fragmentTransaction.commit();
     }
-
+    /**
+     * When a user starts the app, a attendee ID is created
+     */
 
     public  String generateRandomID() {
         SecureRandom random = new SecureRandom();

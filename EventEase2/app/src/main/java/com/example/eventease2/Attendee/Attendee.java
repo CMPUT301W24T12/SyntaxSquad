@@ -2,7 +2,11 @@ package com.example.eventease2.Attendee;
 
 import android.net.Uri;
 import android.widget.ImageButton;
-
+/**
+ * This is a class that defines a Attendee. This is made for further implmentation at the final
+ * checkpoint.
+ * @author Sean
+ */
 public class Attendee {
     private String name;
     private String phone;
@@ -10,14 +14,6 @@ public class Attendee {
     private String bio;
     private Uri profileImage;
     private String eventID;
-//
-//    Attendee(String name, String phone, String email){
-//        this.name = name;
-//        this.phone = phone;
-//        this.email = email;
-//    }
-//    Attendee(String event){this.eventID = event;}
-
     public Attendee() {
         this.name = "";
         this.phone = "";
