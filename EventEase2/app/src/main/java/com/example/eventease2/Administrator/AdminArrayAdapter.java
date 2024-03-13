@@ -23,45 +23,40 @@ import com.example.eventease2.R;
 
 import java.util.ArrayList;
 
-public class AdminArrayAdapter extends ArrayAdapter<Event> {
-    private ArrayList<Event> events;
+public class AdminArrayAdapter extends ArrayAdapter<String> {
+
+    private ArrayList<String> eventNames;
+    private ArrayList<String> eventDescription;
+    private ArrayList<String> organizerID;
+    private  ArrayList<String> eventIDs;
     private Context context;
 
-    public AdminArrayAdapter(Context context, ArrayList<Event> events) {
-        super(context, 0, events);
-        this.events = events;
+
+    public AdminArrayAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, ArrayList<String> organizerID, ArrayList<String> eventIDs) {
+        super(context, 0, eventNames);
+        this.eventNames = eventNames;
+        this.eventDescription = eventDescription;
+        this.organizerID = organizerID;
+        this.eventIDs = eventIDs;
         this.context = context;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+//        return super.getView(position, convertView, parent);
         View view = convertView;
-        if(view == null){
+
+        if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.event_list, parent, false);
         }
-        Event currentEvent = events.get(position);
-        TextView eventName = view.findViewById(R.id.textView);
 
-        //currentEvent.setEventName(eventName.toString());
-//
-//        Button eventDetailsButton = view.findViewById(R.id.event_details);
-//        Button eventAttendeesButton = view.findViewById(R.id.view_attendees);
-//        eventDetailsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(context, "event "+currentEvent.getEventName(), Toast.LENGTH_SHORT).show();
-////                Intent intent = new Intent(context, AdminEditEventFragment.class);
-////                context.startActivity(intent);
-//            }
-//        });
-//        eventAttendeesButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(context, "attendee", Toast.LENGTH_SHORT).show();
-//                //Intent i = new Intent(AdminArrayAdapter.this,AdminE)
-//            }
-//        });
+        TextView eventNameView = view.findViewById(R.id.event_title);
+        TextView eventDetailsView = view.findViewById(R.id.event_description);
+        eventNameView.setText(eventNames.get(position));
+        eventDetailsView.setText(eventDescription.get(position));
+
         return view;
     }
 }
+

@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.example.eventease2.Administrator.AdminArrayAdapter;
 import com.example.eventease2.Event;
+import com.example.eventease2.EventListArrayAdapter;
+import com.example.eventease2.EventListFragment;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +33,7 @@ public class AdminEventView extends AppCompatActivity {
 
 
     ListView eventList;
+    AdminArrayAdapter adminListArrayAdapter;
     ArrayList<Event> eventDataList;
     AdminArrayAdapter adminArrayAdapter;
     private TextView eventNameText;
@@ -42,95 +45,97 @@ public class AdminEventView extends AppCompatActivity {
     private CollectionReference eventIdRefrence;
     private ImageView imageEvent;
 
+    ArrayList<String> organizerList;
+    ArrayList<String> eventNameList;
+    ArrayList<String> eventInfoList;
+    ArrayList<String> eventIDs;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_page);
 
         eventList = findViewById(R.id.event_list);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        organizerList = new ArrayList<>();
+        eventNameList = new ArrayList<>();
+        eventInfoList = new ArrayList<>();
+        eventIDs = new ArrayList<>();
 
+        FirebaseFirestore appDb = FirebaseFirestore.getInstance();
+        ArrayList<Event> eventsIDs = new ArrayList<>();
+        CollectionReference collectionRef = appDb.collection("Organizer");
 
+        collectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot organizerSnapshot : queryDocumentSnapshots) {
+                    // Access each organizer document here
+                    String organizerId = organizerSnapshot.getId();
+                    // Get a reference to the "Events" collection for this organizer
+                    CollectionReference eventsCollectionRef = appDb.collection("Organizer").document(organizerId).collection("Events");
 
-//        appDb = FirebaseFirestore.getInstance();
-//        ArrayList<Event> eventsIDs = new ArrayList<>();
-//        eventListView = findViewById(R.id.adminEventList);
-//        CollectionReference collectionRef = appDb.collection("Organizer");
-//
-//        collectionRef.get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        for (QueryDocumentSnapshot organizerSnapshot : queryDocumentSnapshots) {
-//                            // Access each organizer document here
-//                            String organizerId = organizerSnapshot.getId();
-//                            // Get a reference to the "Events" collection for this organizer
-//                            CollectionReference eventsCollectionRef = appDb.collection("Organizer").document(organizerId).collection("Events");
-//
-//                            eventsCollectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                                @Override
-//                                public void onSuccess(QuerySnapshot eventQueryDocumentSnapshots) {
-//                                    for (QueryDocumentSnapshot eventSnapshot : eventQueryDocumentSnapshots) {
-//                                        // Access each event document here
-//                                        String eventId = eventSnapshot.getId();
-//                                        Log.d("Event ID is ", eventId);
-//
-//                                        // Get the AttendeeList field from the event document
-//                                        List<String> attendeeList = (List<String>) eventSnapshot.get("AttendeeList");
-//                                        // Get the length of the AttendeeList
-//                                        int attendeeListLength = attendeeList != null ? attendeeList.size() : 0;
-//
-//                                        // Get the Description field from the event document
-//                                        String description = eventSnapshot.getString("Description");
-//
-//                                        // Get the name of the event
-//                                        String name = eventSnapshot.getString("Name");
-//                                        Event event = new Event(null,name,description,null,false,null,null);
-//                                        eventsIDs.add(event);
-//                                    }
-//                                    adminArrayAdapter = new AdminArrayAdapter(AdminEventView.this, eventsIDs);
-//                                    eventListView.setAdapter(adminArrayAdapter);
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    // Handle failures
-//                                }
-//                            });
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        // Handle failures
-//                    }
-//                });
+                    eventsCollectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot eventQueryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot eventSnapshot : eventQueryDocumentSnapshots) {
+                                // Access each event document here
+                                String eventId = eventSnapshot.getId();
+                                Log.d("Event ID is ", eventId);
 
-        //        List attendeeList = new ArrayList<>();
-        //        eventDetailsButton = findViewById(R.id.event_details);
-        //        eventAttendeeButton = findViewById(R.id.view_attendees);
-        //        adminArrayAdapter = new AdminArrayAdapter(this, eventDataList);
-        //        eventListView.setAdapter(adminArrayAdapter);
-        //        eventDetailsButton.setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View view) {
-        //
-        //            }
-        //        });
-        //
-        //        eventDetailsButton.setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View view) {
-        //
-        //            }
-        //        });
+                                // Get the AttendeeList field from the event document
+                                List<String> attendeeList = (List<String>) eventSnapshot.get("AttendeeList");
+                                // Get the length of the AttendeeList
+                                int attendeeListLength = attendeeList != null ? attendeeList.size() : 0;
+
+                                // Get the Description field from the event document
+                                String description = eventSnapshot.getString("Description");
+
+                                // Get the name of the event
+                                String name = eventSnapshot.getString("Name");
+
+                                organizerList.add(organizerId);
+                                eventNameList.add(name);
+                                eventInfoList.add(description);
+                                eventIDs.add(eventId);
+                            }
+                            iterateThroughLists();
+                            adminListArrayAdapter = new AdminArrayAdapter(AdminEventView.this, eventNameList, eventInfoList, organizerList, eventIDs);
+                            eventList.setAdapter(adminListArrayAdapter);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Handle failures
+                        }
+                    });
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("DEBUG here", "Hello there i am here");
+            }
+        });
     }
+    public void iterateThroughLists() {
+        // Check if all lists have the same size
+        if (organizerList.size() == eventNameList.size() &&
+                eventNameList.size() == eventInfoList.size() &&
+                eventInfoList.size() == eventIDs.size()) {
+
+            for (int i = 0; i < organizerList.size(); i++) {
+                String organizer = organizerList.get(i);
+                String eventName = eventNameList.get(i);
+                String eventInfo = eventInfoList.get(i);
+                String eventId = eventIDs.get(i);
+
+                // Perform some action with the elements from each list
+                Log.d("Event Info", "Organizer: " + organizer + ", Name: " + eventName + ", Info: " + eventInfo + ", ID: " + eventId);
+            }
+        } else {
+            Log.e("iterateThroughLists", "ArrayLists have different sizes");
+        }
+    }
+
+
 }
-
-
-
-

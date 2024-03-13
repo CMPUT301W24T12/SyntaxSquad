@@ -42,7 +42,7 @@ public class AdminAttendeeView extends AppCompatActivity {
         setContentView(R.layout.attendee_list);
         eventDataList = new ArrayList<>();
         listView = findViewById(R.id.listView);
-        AdminArrayAdapter AdminAttendeeListArrayAdapter = new AdminArrayAdapter(this, eventDataList);
+//        AdminArrayAdapter AdminAttendeeListArrayAdapter = new AdminArrayAdapter(this, eventDataList);
         listView.setAdapter(adminArrayAdapter);
         TextView back_text = findViewById(R.id.back_text);
         imageView.setOnClickListener(new View.OnClickListener() {
