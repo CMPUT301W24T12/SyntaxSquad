@@ -1,7 +1,5 @@
 package com.example.eventease2.Administrator;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,35 +8,35 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.example.eventease2.Event;
 import com.example.eventease2.R;
 
 import java.util.ArrayList;
 
-public class AdminArrayAdapter extends ArrayAdapter<String> {
+public class AppEventAdapter extends ArrayAdapter<String> {
 
     private ArrayList<String> eventNames;
     private ArrayList<String> eventDescription;
     private ArrayList<String> organizerID;
     private  ArrayList<String> eventIDs;
+    private ArrayList<String> participantCountList;
     private Context context;
 
+    Button eventDetailButton;
+    Button viewAttendeeButton;
 
-    public AdminArrayAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, ArrayList<String> organizerID, ArrayList<String> eventIDs) {
+
+    public AppEventAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, ArrayList<String> organizerID, ArrayList<String> eventIDs, ArrayList<String> participantCountList) {
         super(context, 0, eventNames);
         this.eventNames = eventNames;
         this.eventDescription = eventDescription;
         this.organizerID = organizerID;
         this.eventIDs = eventIDs;
         this.context = context;
+        this.participantCountList = participantCountList;
     }
 
     @NonNull
@@ -53,8 +51,26 @@ public class AdminArrayAdapter extends ArrayAdapter<String> {
 
         TextView eventNameView = view.findViewById(R.id.event_title);
         TextView eventDetailsView = view.findViewById(R.id.event_description);
+        TextView eventCountView = view.findViewById(R.id.participant_count);
+
+
         eventNameView.setText(eventNames.get(position));
         eventDetailsView.setText(eventDescription.get(position));
+        eventCountView.setText(participantCountList.get(position));
+
+
+        eventDetailButton = view.findViewById(R.id.event_details);
+        eventDetailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to navigate to the Add Event Activity
+//                Intent intent = new Intent(context, OrganizerEventFrame.class);
+//                intent.putExtra("ID",eventIDs.get(position));
+//                intent.putExtra("OrganizerID",organizerID.get(position));
+//                // Start the new activity
+//                context.startActivity(intent);
+            }
+        });
 
         return view;
     }

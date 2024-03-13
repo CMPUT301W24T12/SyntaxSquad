@@ -23,7 +23,7 @@ public class AdminAttendeeView extends AppCompatActivity {
 
     ListView listView;
     ArrayList<Event> eventDataList;
-    AdminArrayAdapter adminArrayAdapter;
+    AppEventAdapter appEventAdapter;
     private TextView eventNameText;
     private EditText eventTitle;
     private Button eventDetailsButton;
@@ -43,7 +43,7 @@ public class AdminAttendeeView extends AppCompatActivity {
         eventDataList = new ArrayList<>();
         listView = findViewById(R.id.listView);
 //        AdminArrayAdapter AdminAttendeeListArrayAdapter = new AdminArrayAdapter(this, eventDataList);
-        listView.setAdapter(adminArrayAdapter);
+        listView.setAdapter(appEventAdapter);
         TextView back_text = findViewById(R.id.back_text);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
