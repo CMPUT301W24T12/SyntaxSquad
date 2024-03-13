@@ -155,8 +155,11 @@ public class RoleChooseActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         Intent intent = new Intent(getApplicationContext(), AdminEventView.class);
                         startActivity(intent);
+//                        Toast.makeText(RoleChooseActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference collectionRef = db.collection("Organizer").document("ffffffff-8a86-b983-0000-0000380c0fa3").collection("Events");
                 collectionRef.get()
