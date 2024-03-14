@@ -46,6 +46,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
     private EditText eventTitleView;
     private EditText eventBodyView;
     private  Button editButton;
+    private Button share;
     private Button backButton;
     private Button shareButton;
     private Button doneButton;
@@ -81,6 +82,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
         doneButton = findViewById(R.id.done_button);
         doneButton.setEnabled(false);
 
+        share = findViewById(R.id.share);
         shareButton = findViewById(R.id.share_button);
         backButton = findViewById(R.id.back_button);
         editButton = findViewById(R.id.edit_button);
@@ -89,6 +91,9 @@ public class OrganizerEventFrame extends AppCompatActivity {
         descriptionView = findViewById(R.id.Description);
         eventBodyView = findViewById(R.id.editTextText2);
         eventTitleView = findViewById(R.id.eventTitle);
+
+        share.setEnabled(false);
+
         id = getIntent().getStringExtra("ID");
         organizerID = getIntent().getStringExtra("OrganizerID");
 
@@ -113,12 +118,15 @@ public class OrganizerEventFrame extends AppCompatActivity {
                             // Retrieve the value of the field by its name
                             eventTitle = document.getString("Name");
                             description = document.getString("Description");
+                            eventBody = document.getString("EventBody");
                             Log.d("Title: ", eventTitle);
                             Log.d("Description: ", description);
+                            Log.d("body",eventBody);
 
                             // Set the eventTitleView and descriptionView here
                             eventTitleView.setText(eventTitle);
                             descriptionView.setText(description);
+                            eventBodyView.setText(eventBody);
 
                             // Download the image from Firebase Storage
                             imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -198,6 +206,16 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
         });
 
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doneButton.setEnabled(false);
+                shareButton.setEnabled(true);
+                share.setEnabled(false);
+                editButton.setEnabled(true);
+            }
+        });
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,6 +230,8 @@ public class OrganizerEventFrame extends AppCompatActivity {
             public void onClick(View v) {
                 doneButton.setEnabled(true);
                 shareButton.setEnabled(false);
+                share.setEnabled(true);
+                editButton.setEnabled(false);
             }
         });
 
