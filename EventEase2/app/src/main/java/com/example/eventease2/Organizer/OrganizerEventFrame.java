@@ -45,6 +45,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
     private  Button editButton;
     private Button backButton;
     private Button doneButton;
+    private ImageView QRView;
     private String id;
     private String organizerID;
     private FirebaseFirestore db;
@@ -78,6 +79,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
         backButton = findViewById(R.id.back_button);
         editButton = findViewById(R.id.edit_button);
         imageView = findViewById(R.id.imageView2);
+        QRView = findViewById(R.id.imageView6);
         descriptionView = findViewById(R.id.Description);
         eventBodyView = findViewById(R.id.editTextText2);
         eventTitleView = findViewById(R.id.eventTitle);
@@ -90,6 +92,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child("images/" + id);
+        StorageReference QRRef = storageRef.child("QRCode/" + id);
         DocumentReference documentReference = db.collection("Organizer")
                 .document(organizerID).collection("Events").document(id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -120,6 +123,23 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
                                     // Set the Bitmap to the ImageView
                                     imageView.setImageBitmap(imageBitmap);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle any errors that occurred while downloading the image
+                                }
+                            });
+
+                            // Download the QR Code from Firebase Storage
+                            QRRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    // Convert the byte array to a Bitmap
+                                    Bitmap QRBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                                    // Set the Bitmap to the ImageView
+                                    QRView.setImageBitmap(QRBitmap);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
