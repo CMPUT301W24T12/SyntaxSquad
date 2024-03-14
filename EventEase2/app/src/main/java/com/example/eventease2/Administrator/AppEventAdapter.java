@@ -29,16 +29,17 @@ public class AppEventAdapter extends ArrayAdapter<String> {
 
     Button eventDetailButton;
     Button viewAttendeeButton;
+    AppData appData;
 
-
-    public AppEventAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, ArrayList<String> organizerID, ArrayList<String> eventIDs, ArrayList<String> participantCountList) {
-        super(context, 0, eventNames);
-        this.eventNames = eventNames;
-        this.eventDescription = eventDescription;
-        this.organizerID = organizerID;
-        this.eventIDs = eventIDs;
+    public AppEventAdapter(Context context, AppData appData) {
+        super(context, 0, appData.getEventNameList());
+        this.appData = appData;
+        this.eventNames = appData.getEventNameList();
+        this.eventDescription = appData.getEventInfoList();
+        this.organizerID = appData.getOrganizerList();
+        this.eventIDs = appData.getEventIDs();
         this.context = context;
-        this.participantCountList = participantCountList;
+        this.participantCountList = appData.getParticipantCountList();
     }
 
     @NonNull
@@ -68,8 +69,11 @@ public class AppEventAdapter extends ArrayAdapter<String> {
                 Intent intent = new Intent(context, EventEditorActivity.class);
                 intent.putExtra("ID", eventIDs.get(position));
                 intent.putExtra("OrganizerID", organizerID.get(position));
-                context.startActivity(intent);
+                intent.putExtra("posOfEvent", position);
 
+                context.startActivity(intent);
+                Log.d("BACK", "I am back");
+                notifyDataSetChanged();
             }
         });
 

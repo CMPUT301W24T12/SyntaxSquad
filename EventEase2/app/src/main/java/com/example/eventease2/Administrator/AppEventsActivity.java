@@ -30,6 +30,8 @@ public class AppEventsActivity extends AppCompatActivity {
     ArrayList<String> eventIDs;
     ArrayList<String> participantCountList;
 
+    public static AppData appData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +98,14 @@ public class AppEventsActivity extends AppCompatActivity {
                     eventIDs.add(eventId);
                     participantCountList.add(String.valueOf(attendeeListLength));
                 }
+
+                appData = new AppData();
+                appData.setOrganizerList(organizerList);
+                appData.setEventNameList(eventNameList);
+                appData.setEventInfoList(eventInfoList);
+                appData.setEventIDs(eventIDs);
+                appData.setParticipantCountList(participantCountList);
+//                logAppDataInfo(appData);
                 notifyDataAdapter();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -107,7 +117,27 @@ public class AppEventsActivity extends AppCompatActivity {
     }
 
     private void notifyDataAdapter() {
-        adminListArrayAdapter = new AppEventAdapter(AppEventsActivity.this, eventNameList, eventInfoList, organizerList, eventIDs, participantCountList);
+        adminListArrayAdapter = new AppEventAdapter(AppEventsActivity.this, appData);
         eventList.setAdapter(adminListArrayAdapter);
     }
+
+    private void logAppDataInfo(AppData appData) {
+        ArrayList<String> organizerList = appData.getOrganizerList();
+        ArrayList<String> eventNameList = appData.getEventNameList();
+        ArrayList<String> eventInfoList = appData.getEventInfoList();
+        ArrayList<String> eventIDs = appData.getEventIDs();
+        ArrayList<String> participantCountList = appData.getParticipantCountList();
+
+        // Log information for each event
+        for (int i = 0; i < eventNameList.size(); i++) {
+            Log.d("AppData Info", "Event " + (i + 1) + ":");
+            Log.d("AppData Info", "Organizer: " + organizerList.get(i));
+            Log.d("AppData Info", "Event Name: " + eventNameList.get(i));
+            Log.d("AppData Info", "Event Info: " + eventInfoList.get(i));
+            Log.d("AppData Info", "Event ID: " + eventIDs.get(i));
+            Log.d("AppData Info", "Participant Count: " + participantCountList.get(i));
+            Log.d("AppData Info", "---------------------------");
+        }
+    }
 }
+

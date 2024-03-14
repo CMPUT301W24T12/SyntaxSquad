@@ -28,7 +28,11 @@ public class EventEditorActivity extends AppCompatActivity {
     Button deleteEvent;
     String eventID;
     String organizerID;
+    String posOfEvent;
     DocumentReference eventInfoDoc;
+
+    public static AppData appData;
+
 
 
     @Override
@@ -49,6 +53,7 @@ public class EventEditorActivity extends AppCompatActivity {
         // Retrieve data from intent extras
         eventID = getIntent().getStringExtra("ID");
         organizerID = getIntent().getStringExtra("OrganizerID");
+        posOfEvent = getIntent().getStringExtra("posOfEvent");
 
         eventInfoDoc = appDb.collection("Organizer").document(organizerID).collection("Events").document(eventID);
 
@@ -56,9 +61,13 @@ public class EventEditorActivity extends AppCompatActivity {
             // Delete the event document
             eventInfoDoc.delete()
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(EventEditorActivity.this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(EventEditorActivity.this, AppEventsActivity.class);
-                        startActivity(intent);
+                        appData.deleteEventID(Integer.parseInt(posOfEvent));
+                        appData.deleteEventInfo(Integer.parseInt(posOfEvent));
+                        appData.deleteOrganizer(Integer.parseInt(posOfEvent));
+                        appData.deleteEventName(Integer.parseInt(posOfEvent));
+                        appData.deleteParticipantCount(Integer.parseInt(posOfEvent));
+                        finish();
+
                     })
                     .addOnFailureListener(e -> Log.w("TAG", "Error deleting document", e));
         });
