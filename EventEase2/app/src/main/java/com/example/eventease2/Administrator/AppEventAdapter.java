@@ -2,6 +2,7 @@ package com.example.eventease2.Administrator;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.eventease2.Organizer.OrganizerEventFrame;
 import com.example.eventease2.R;
 
 import java.util.ArrayList;
@@ -52,27 +54,28 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         TextView eventNameView = view.findViewById(R.id.event_title);
         TextView eventDetailsView = view.findViewById(R.id.event_description);
         TextView eventCountView = view.findViewById(R.id.participant_count);
+        Button eventDetailButton = view.findViewById(R.id.event_details);
 
 
         eventNameView.setText(eventNames.get(position));
         eventDetailsView.setText(eventDescription.get(position));
         eventCountView.setText(participantCountList.get(position));
 
-
-        eventDetailButton = view.findViewById(R.id.event_details);
         eventDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to navigate to the Add Event Activity
-//                Intent intent = new Intent(context, OrganizerEventFrame.class);
-//                intent.putExtra("ID",eventIDs.get(position));
-//                intent.putExtra("OrganizerID",organizerID.get(position));
-//                // Start the new activity
-//                context.startActivity(intent);
+                // Handle button click here
+                Intent intent = new Intent(context, EventEditorActivity.class);
+                intent.putExtra("ID", eventIDs.get(position));
+                intent.putExtra("OrganizerID", organizerID.get(position));
+                context.startActivity(intent);
+
             }
         });
 
+
         return view;
     }
+
 }
 

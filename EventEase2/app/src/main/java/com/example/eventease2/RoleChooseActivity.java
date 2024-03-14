@@ -13,7 +13,7 @@ import android.widget.ImageButton;
 
 import com.example.eventease2.Attendee.AttendeeStartActivity;
 
-import com.example.eventease2.Administrator.AppEventsFragment;
+import com.example.eventease2.Administrator.AppEventsActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -146,7 +146,7 @@ public class RoleChooseActivity extends AppCompatActivity {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), AppEventsFragment.class);
+                        Intent intent = new Intent(getApplicationContext(), AppEventsActivity.class);
                         startActivity(intent);
 //                        Toast.makeText(RoleChooseActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
                     }
