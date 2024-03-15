@@ -10,26 +10,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.eventease2.Attendee.AttendeeStartActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
 
-import com.example.eventease2.Administrator.AdminEventView;
-import com.example.eventease2.Organizer.AddEventFragment;
+import com.example.eventease2.Administrator.AppEventsActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import java.util.Objects;
 
 /**
  * Opening page of app, User selects their role
@@ -153,10 +146,13 @@ public class RoleChooseActivity extends AppCompatActivity {
                 confirmButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), AdminEventView.class);
+                        Intent intent = new Intent(getApplicationContext(), AppEventsActivity.class);
                         startActivity(intent);
+//                        Toast.makeText(RoleChooseActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference collectionRef = db.collection("Organizer").document("ffffffff-8a86-b983-0000-0000380c0fa3").collection("Events");
                 collectionRef.get()
