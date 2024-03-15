@@ -44,7 +44,10 @@ public class EventEaseTest {
         onView(withText("EventEase")).check(matches(isDisplayed()));
 
     }
+    @Test
+    public void testLimitAttendee(){
 
+    }
 //    /**Add a event to firebase
 //     *check if the event info are in the firebase
 //     */

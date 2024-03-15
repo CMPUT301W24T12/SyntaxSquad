@@ -2,11 +2,13 @@ package com.example.eventease2.Organizer;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
 /**A frame for the organizer
@@ -43,8 +46,11 @@ public class OrganizerEventFrame extends AppCompatActivity {
     private EditText eventTitleView;
     private EditText eventBodyView;
     private  Button editButton;
+    private Button share;
     private Button backButton;
+    private Button shareButton;
     private Button doneButton;
+    private ImageView QRView;
     private String id;
     private String organizerID;
     private FirebaseFirestore db;
@@ -55,6 +61,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
     String eventBody;
     Uri image;
     Bitmap imageBitmap;
+    Bitmap QRBitmap;
 
     ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
@@ -75,12 +82,18 @@ public class OrganizerEventFrame extends AppCompatActivity {
         doneButton = findViewById(R.id.done_button);
         doneButton.setEnabled(false);
 
+        share = findViewById(R.id.share);
+        shareButton = findViewById(R.id.share_button);
         backButton = findViewById(R.id.back_button);
         editButton = findViewById(R.id.edit_button);
         imageView = findViewById(R.id.imageView2);
+        QRView = findViewById(R.id.imageView6);
         descriptionView = findViewById(R.id.Description);
         eventBodyView = findViewById(R.id.editTextText2);
         eventTitleView = findViewById(R.id.eventTitle);
+
+        share.setEnabled(false);
+
         id = getIntent().getStringExtra("ID");
         organizerID = getIntent().getStringExtra("OrganizerID");
 
@@ -90,6 +103,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child("images/" + id);
+        StorageReference QRRef = storageRef.child("QRCode/" + id);
         DocumentReference documentReference = db.collection("Organizer")
                 .document(organizerID).collection("Events").document(id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -104,12 +118,15 @@ public class OrganizerEventFrame extends AppCompatActivity {
                             // Retrieve the value of the field by its name
                             eventTitle = document.getString("Name");
                             description = document.getString("Description");
+                            eventBody = document.getString("EventBody");
                             Log.d("Title: ", eventTitle);
                             Log.d("Description: ", description);
+                            Log.d("body",eventBody);
 
                             // Set the eventTitleView and descriptionView here
                             eventTitleView.setText(eventTitle);
                             descriptionView.setText(description);
+                            eventBodyView.setText(eventBody);
 
                             // Download the image from Firebase Storage
                             imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -120,6 +137,23 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
                                     // Set the Bitmap to the ImageView
                                     imageView.setImageBitmap(imageBitmap);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle any errors that occurred while downloading the image
+                                }
+                            });
+
+                            // Download the QR Code from Firebase Storage
+                            QRRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    // Convert the byte array to a Bitmap
+                                    QRBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                                    // Set the Bitmap to the ImageView
+                                    QRView.setImageBitmap(QRBitmap);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -172,6 +206,16 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
         });
 
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doneButton.setEnabled(false);
+                shareButton.setEnabled(true);
+                share.setEnabled(false);
+                editButton.setEnabled(true);
+            }
+        });
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +229,9 @@ public class OrganizerEventFrame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 doneButton.setEnabled(true);
+                shareButton.setEnabled(false);
+                share.setEnabled(true);
+                editButton.setEnabled(false);
             }
         });
 
@@ -211,6 +258,30 @@ public class OrganizerEventFrame extends AppCompatActivity {
                 intentToEventList();
             }
         });
+        /**
+         * Share the qr code to other apps
+         */
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent with action ACTION_SEND
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
+                // Set the MIME type for the content
+                shareIntent.setType("image/jpeg");
+
+                // Add the QR code image as an extra to the Intent
+                // Note: You need to convert the Bitmap to a URI first
+                // This example assumes you have the image as a Bitmap
+                Uri imageUri = getImageUri(getApplicationContext(),QRBitmap );
+                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+
+                // Start the chooser to select an app to share with
+                startActivity(Intent.createChooser(shareIntent, "Share QR Code"));
+            }
+        });
+
+
     }
     /**
      * Call the launcher to select image
@@ -237,6 +308,19 @@ public class OrganizerEventFrame extends AppCompatActivity {
         intent.putExtra("ID",id);
         intent.putExtra("OrganizerID",organizerID);
         startActivity(intent);
+    }
+
+    /**
+     * covert the bitmap qr code to image qr code
+     * @param context
+     * @param bitmap
+     * @return the image uri of the qr code
+     */
+    private Uri getImageUri(Context context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "QR Code", null);
+        return Uri.parse(path);
     }
 }
 
