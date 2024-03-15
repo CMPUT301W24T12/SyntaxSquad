@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,14 +55,15 @@ public class AddEventFragment extends AppCompatActivity {
     private CheckBox isAbleLocationTrackingView;
     private EditText durationView;
     private Button generateButton;
-
     private Button backButton;
-
+    private EditText maxLimitView;
     String eventName;
     String description;
     String location;
     String duration;
     Boolean isAbleLocationTracking;
+
+    int maxNumberOfAttendee;
     private String id;
     private String organizerID;
     private static final int REQUEST_IMAGE_PICK = 1;
@@ -104,17 +104,16 @@ public class AddEventFragment extends AppCompatActivity {
 //        eventsRef = collectionRef.document("Organizer");
         collectionRef = db.collection("Organizer");
 
-
+        maxNumberOfAttendee = -1;   //negative as default that is no limit
         imageView = findViewById(R.id.attendeeProfileImage);
-        //imageView = findViewById(R.id.imageButton);
         backButton = findViewById(R.id.back_button);
-
         eventNameView = findViewById(R.id.editTextText);
         descriptionView = findViewById(R.id.editTextText2);
         locationView = findViewById(R.id.editTextText3);
         isAbleLocationTrackingView = findViewById(R.id.enable_location_checkbox);
         durationView = findViewById(R.id.editTextText4);
         generateButton = findViewById(R.id.button2);
+        maxLimitView = findViewById(R.id.editTextText5);
 
         final String randomKey = UUID.randomUUID().toString();
         id = randomKey;
@@ -163,77 +162,86 @@ public class AddEventFragment extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getInfo();
-                Log.d("ANAME",eventName);
 
-                HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
+                try{
+                    getInfo();
+                    if (maxNumberOfAttendee <= 0) {
+                        // If negative, throw NumberFormatException
+                        throw new NumberFormatException();
+                    }
 
-                // Add Lists of attendees name, phoneNumbers, emails
-                List<String> emailList = new ArrayList<>();
-                emailList.add("email1");
+                    HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
 
-                List<String> phoneList = new ArrayList<>();
-                phoneList.add("phone1");
+                    // Add Lists of attendees name, phoneNumbers, emails
+//                    List<String> emailList = new ArrayList<>();
+//                    emailList.add("email1");
+//
+//                    List<String> phoneList = new ArrayList<>();
+//                    phoneList.add("phone1");
+//
+//                    List<String> nameList = new ArrayList<>();
+//                    nameList.add("name1");
+//
+//                    List<String> attendeeList = new ArrayList<>();
+//                    attendeeList.add("attendee1");
+//                    attendeeList.add("attendee1");
 
-                List<String> nameList = new ArrayList<>();
-                nameList.add("name1");
+                    // Put the list into the HashMap
+                    data.put("Max",maxNumberOfAttendee);
+                    data.put("Name", eventName);
+                    data.put("ID", id);
+                    data.put("Location", location);
+                    data.put("Description", description);
+                    data.put("Duration", duration);
+                    data.put("EventBody", "");
+                    data.put("IsAbleLocationTracking", isAbleLocationTracking);
+//                    data.put("EmailList", emailList);
+//                    data.put("PhoneList", phoneList);
+//                    data.put("NameList", nameList);
+//                    data.put("AttendeeList", attendeeList);
+                    DocumentReference docRef = collectionRef.document(organizerID);
 
-                List<String> attendeeList = new ArrayList<>();
-                attendeeList.add("attendee1");
-                attendeeList.add("attendee1");
+                    HashMap<String, Object> dataID = new HashMap<>();
+                    dataID.put("OrganizerID",organizerID);
+                    CollectionReference newRef = docRef.collection("Events");
+                    docRef.set(dataID);
+                    newRef.document(id).set(data);
 
-                // Put the list into the HashMap
-                data.put("Name", eventName);
-                data.put("ID", id);
-                data.put("Location", location);
-                data.put("Description", description);
-                data.put("Duration", duration);
-                data.put("EventBody", "");
-                data.put("IsAbleLocationTracking", isAbleLocationTracking);
-                data.put("EmailList", emailList);
-                data.put("PhoneList", phoneList);
-                data.put("NameList", nameList);
-                data.put("AttendeeList", attendeeList);
-                DocumentReference docRef = collectionRef.document(organizerID);
+                    StorageReference imageRef = storageRef.child("images/" + id);
+                    StorageReference qrRef = storageRef.child("QRCode/" + id);
 
-                HashMap<String, Object> dataID = new HashMap<>();
-                dataID.put("OrganizerID",organizerID);
-                CollectionReference newRef = docRef.collection("Events");
-                docRef.set(dataID);
-                newRef.document(id).set(data);
+                    //check if image uploaded
+                    if (imageURI==null){
+                        int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
+                        imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
+                    }
 
-                StorageReference imageRef = storageRef.child("images/" + id);
-                StorageReference qrRef = storageRef.child("QRCode/" + id);
+                    // Convert QR code bitmap to byte array
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    byte[] qrCodeByteArray = baos.toByteArray();
 
-                //check if image uploaded
-                if (imageURI==null){
-                    int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
-                    imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
+                    // Upload QR code to Firebase Storage
+                    qrRef.putBytes(qrCodeByteArray);
+                    imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(AddEventFragment.this,"Success",Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(getApplicationContext(), OrganizerEventFrame.class);
+                            intent.putExtra("ID",id);
+                            intent.putExtra("OrganizerID",organizerID);
+                            startActivity(intent);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(AddEventFragment.this,"Fail",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } catch (NumberFormatException e){
+                    Toast.makeText(AddEventFragment.this, "Invalid max limit", Toast.LENGTH_LONG).show();
                 }
-
-                // Convert QR code bitmap to byte array
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] qrCodeByteArray = baos.toByteArray();
-
-                // Upload QR code to Firebase Storage
-                qrRef.putBytes(qrCodeByteArray);
-                imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(AddEventFragment.this,"Success",Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(getApplicationContext(), OrganizerEventFrame.class);
-                        intent.putExtra("ID",id);
-                        intent.putExtra("OrganizerID",organizerID);
-                        startActivity(intent);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddEventFragment.this,"Fail",Toast.LENGTH_LONG).show();
-                    }
-                });
 
             }
         });
@@ -258,6 +266,12 @@ public class AddEventFragment extends AppCompatActivity {
         location = locationView.getText().toString();
         duration = durationView.getText().toString();
         isAbleLocationTracking = isAbleLocationTrackingView.isChecked();
+        String maxText = maxLimitView.getText().toString();
+        if (maxText.equals("")){    // if the user don't want to input the maximum num of attendee
+            maxNumberOfAttendee = Integer.MAX_VALUE;
+        } else {
+            maxNumberOfAttendee = Integer.parseInt(maxText);
+        }
     }
 
 }
