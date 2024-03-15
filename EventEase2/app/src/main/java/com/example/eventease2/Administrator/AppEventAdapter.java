@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.eventease2.Organizer.OrganizerAttendeeListFragment;
 import com.example.eventease2.Organizer.OrganizerEventFrame;
 import com.example.eventease2.R;
 
@@ -56,8 +57,8 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         TextView eventDetailsView = view.findViewById(R.id.event_description);
         TextView eventCountView = view.findViewById(R.id.participant_count);
         Button eventDetailButton = view.findViewById(R.id.event_details);
-
-
+        Button attendeeListButton = view.findViewById(R.id.view_attendees);
+        String eventID = eventIDs.get(position);
         eventNameView.setText(eventNames.get(position));
         eventDetailsView.setText(eventDescription.get(position));
         eventCountView.setText(participantCountList.get(position));
@@ -76,9 +77,19 @@ public class AppEventAdapter extends ArrayAdapter<String> {
                 notifyDataSetChanged();
             }
         });
+        attendeeListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AdminAttendeeView.class);
+                intent.putExtra("ID", eventID);
+                intent.putExtra("OrganizerID", organizerID.get(position));
+                context.startActivity(intent);
+                notifyDataSetChanged();
+            }
 
-
+        });
         return view;
+
     }
 
 }
