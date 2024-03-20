@@ -10,7 +10,7 @@
         android:layout_width="131dp"
         android:layout_height="46dp"
         android:layout_marginTop="16dp"
-        android:text="Checked In"
+        android:text="Signed Up"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -56,28 +56,15 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/checked_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:text="Checked In"
+        android:textColor="@color/white"
         android:backgroundTint="#00B6AA"
-        android:text="Send Notifications"
-        android:translationX="-20dp"
-        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/organizer_attendee_list"
-        app:layout_constraintEnd_toStartOf="@+id/button5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="#00B6AA"
-        android:text="Set Milestones"
-        android:translationX="-40dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/organizer_attendee_list"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/attendee_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

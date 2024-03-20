@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.example.eventease2.Organizer.OrganizerAttendeeListFragment;
 import com.example.eventease2.Organizer.OrganizerEventFrame;
+import com.example.eventease2.Organizer.OrganizerSignUpFragment;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
 
         Button viewAttendees = view.findViewById(R.id.view_attendees);
         viewAttendees.setOnClickListener(v -> {
-            Intent intent = new Intent(context, OrganizerAttendeeListFragment.class);
+            Intent intent = new Intent(context, OrganizerSignUpFragment.class);
             intent.putExtra("ID", eventID);
             intent.putExtra("OrganizerID", organizerID);
             context.startActivity(intent);

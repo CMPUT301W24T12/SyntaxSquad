@@ -1,15 +1,21 @@
 package com.example.eventease2.Organizer;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -44,6 +50,8 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
     ArrayList<String> attendeeNameList;
     OrganizerAttendeeListArrayAdapter attendeeArrayAdapter;
 
+    private int milestone = 0; // initialize milestone
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +79,23 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                         }
                         attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerAttendeeListFragment.this, attendeeIDs, attendeeNames);
                         attendeeList.setAdapter(attendeeArrayAdapter);
+
+                        if (attendeeIDs.size() != 0 && attendeeIDs.size() >= milestone) {
+                            Toast.makeText(OrganizerAttendeeListFragment.this, "Milestone reached!", Toast.LENGTH_SHORT).show();
+                        }
+                        // Click listener on List to send to Attendee profile
+                        /*
+                        attendeeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(OrganizerAttendeeListFragment.this, OrganizerAttendeeProfileFragment.class);
+                                // Include anything attendee profile may need
+                                // intent.putExtra("Name", name)
+                                startActivity(intent);
+                            }
+                        });
+                         */
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -79,6 +104,14 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                         Log.d("NewTag", "Error getting documents.", e);
                     }
                 });
+
+        Button milestone = findViewById(R.id.button4);
+        milestone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMilestoneDialog();
+            }
+        });
 
         TextView back = findViewById(R.id.back_text);
         back.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +125,37 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void setMilestoneDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(OrganizerAttendeeListFragment.this);
+        builder.setTitle("Set Milestone");
+        builder.setMessage("Enter the milestone number:");
+
+        // Set up the input field
+        final EditText input = new EditText(OrganizerAttendeeListFragment.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Set", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String milestoneStr = input.getText().toString();
+                if (!milestoneStr.isEmpty()) {
+                    milestone = Integer.parseInt(milestoneStr);
+                    Toast.makeText(OrganizerAttendeeListFragment.this, "Milestone set to " + milestone, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
 }
