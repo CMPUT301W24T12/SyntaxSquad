@@ -138,7 +138,9 @@ public class AttendeeEventFragment extends Fragment {
         });
     }
     private void notifyDataAdapter() {
-        attendeeListArrayAdapter = new AttendeeEventAdapter(getActivity().getApplicationContext(), appData, viewModel.getAttendeeID());
+        attendeeListArrayAdapter = new AttendeeEventAdapter(getActivity().getApplicationContext(),
+                appData, viewModel.getAttendeeID(), viewModel.getProfileName(), viewModel.getProfilePhone(),
+                viewModel.getProfileEmail());
         eventList.setAdapter(attendeeListArrayAdapter);
     }
 }

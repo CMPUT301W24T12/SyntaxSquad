@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import com.example.eventease2.Administrator.AppData;
 import com.example.eventease2.Administrator.EventEditorActivity;
 import com.example.eventease2.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -27,12 +29,14 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
     private  ArrayList<String> eventIDs;
     private ArrayList<String> participantCountList;
     private Context context;
-    String attendeeID;
+    private String attendeeID, attendeeName, attendeePhone, attendeeEmail,stringEventPhoto;
+
 
     Button eventDetailButton;
     AppData appData;
 
-    public AttendeeEventAdapter(Context context, AppData appData,String attendeeID) {
+    public AttendeeEventAdapter(Context context, AppData appData,String attendeeID,
+                                String attendeeName,String attendeePhone, String attendeeEmail) {
         super(context, 0, appData.getEventNameList());
         this.appData = appData;
         this.eventNames = appData.getEventNameList();
@@ -41,6 +45,9 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
         this.eventIDs = appData.getEventIDs();
         this.context = context;
         this.attendeeID = attendeeID;
+        this.attendeeName = attendeeName;
+        this.attendeePhone = attendeePhone;
+        this.attendeeEmail = attendeeEmail;
         //this.participantCountList = appData.getParticipantCountList();
     }
 
@@ -49,10 +56,12 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 //        return super.getView(position, convertView, parent);
         View view = convertView;
-
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.attendee_event_list, parent, false);
         }
+        StorageReference storageRef = storage.getReference();
+
 
         TextView eventNameView = view.findViewById(R.id.event_title);
         TextView eventDetailsView = view.findViewById(R.id.event_description);
@@ -73,6 +82,10 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
                 intent.putExtra("OrganizerID", organizerID.get(position));
                 intent.putExtra("posOfEvent", position);
                 intent.putExtra("AttendeeID",attendeeID);
+                intent.putExtra("AttendeeName",attendeeName);
+                intent.putExtra("AttendeePhone",attendeePhone);
+                intent.putExtra("AttendeeEmail",attendeeEmail);
+                intent.putExtra("AttendeePhoto",stringEventPhoto);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 Log.d("BACK", "I am back");
