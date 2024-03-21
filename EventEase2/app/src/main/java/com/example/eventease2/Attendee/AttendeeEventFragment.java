@@ -1,28 +1,30 @@
 package com.example.eventease2.Attendee;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.eventease2.Administrator.AppData;
 import com.example.eventease2.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Shows the user a default event if the QR scanner hasn't been scanned and shows the scanned event
@@ -32,17 +34,21 @@ import java.util.Objects;
 public class AttendeeEventFragment extends Fragment {
     private String eventID;
     private String  organizerID;
-    private TextView eventTitle;
-    private TextView eventDescription;
-    private TextView eventBody;
-    private FirebaseFirestore appDb;
-    private DocumentReference eventRef;
+    ArrayList<String> organizerList;
+    ArrayList<String> eventNameList;
+    ArrayList<String> eventInfoList;
+    ArrayList<String> eventIDs;
+    ArrayList<String> participantCountList;
+    ListView eventList;
+    AttendeeEventAdapter attendeeListArrayAdapter;
+    public static AppData appData;
+    private AttendeeItemViewModel viewModel;
 
     public String getEventID() {
         return eventID;
     }
 
-    AttendeeEventFragment(String event, String organizer){
+    public AttendeeEventFragment(String event, String organizer){
         this.eventID = event;
         this.organizerID = organizer;
     }
@@ -53,48 +59,88 @@ public class AttendeeEventFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_attendee_event, container, false);
+        View view =  inflater.inflate(R.layout.attendee_event_page, container, false);
+        viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
+        eventList = view.findViewById(R.id.event_list);
 
-        eventTitle = (TextView)view.findViewById(R.id.eventTitle);
-        eventTitle.setText("Event Title");
+        organizerList = new ArrayList<>();
+        eventNameList = new ArrayList<>();
+        eventInfoList = new ArrayList<>();
+        eventIDs = new ArrayList<>();
+        participantCountList = new ArrayList<>();
+        refreshEventData();
 
-        eventDescription = (TextView)view.findViewById(R.id.eventDescription);
-        eventDescription.setText("Event Description");
 
-        eventBody = (TextView)view.findViewById(R.id.eventBody);
-        eventBody.setText("Event Body Example");
-
-        appDb = FirebaseFirestore.getInstance();
-
-        if(!Objects.equals(eventID, "default")) {
-
-            eventRef = appDb.collection("Organizer").document(organizerID)
-                    .collection("Events").document(eventID);
-
-            eventRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    eventTitle = (TextView) view.findViewById(R.id.eventTitle);
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            String eventName = String.valueOf(document.getData().get("Name"));
-                            String eventDescript = String.valueOf(document.getData().get("Description"));
-                            String eventMainBody = String.valueOf(document.getData().get("EventBody"));
-                            //TODO: add implementation for image.
-                            eventTitle.setText(eventName);
-                            eventDescription.setText(eventDescript);
-                            eventBody.setText(eventMainBody);
-
-                        } else {
-                            Log.d(TAG, "No such document");
-                        }
-                    } else {
-                        Log.d(TAG, "get failed with ", task.getException());
-                    }
-                }
-            });
-        }
         return view;
+    }
+    public void refreshEventData() {
+        clearEventData();
+        FirebaseFirestore appDb = FirebaseFirestore.getInstance();
+        CollectionReference collectionRef = appDb.collection("Organizer");
+        fetchOrganizers(collectionRef, appDb);
+    }
+    private void clearEventData() {
+        organizerList.clear();
+        eventNameList.clear();
+        eventInfoList.clear();
+        eventIDs.clear();
+        participantCountList.clear();
+    }
+    private void fetchOrganizers(CollectionReference collectionRef, FirebaseFirestore appDb) {
+        collectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot organizerSnapshot : queryDocumentSnapshots) {
+                    String organizerId = organizerSnapshot.getId();
+                    CollectionReference eventsCollectionRef = appDb.collection("Organizer").document(organizerId).collection("Events");
+                    fetchEventsForOrganizer(eventsCollectionRef);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("DEBUG here", "Failed to fetch organizers");
+            }
+        });
+    }
+    private void fetchEventsForOrganizer(CollectionReference eventsCollectionRef) {
+        eventsCollectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot eventQueryDocumentSnapshots) {
+                for (QueryDocumentSnapshot eventSnapshot : eventQueryDocumentSnapshots) {
+                    String eventId = eventSnapshot.getId();
+                    //List<String> attendeeList = (List<String>) eventSnapshot.get("AttendeeList");
+                    //int attendeeListLength = attendeeList != null ? attendeeList.size() : 0;
+                    String description = eventSnapshot.getString("Description");
+                    String name = eventSnapshot.getString("Name");
+
+                    organizerList.add(eventSnapshot.getReference().getParent().getParent().getId());
+                    eventNameList.add(name);
+                    eventInfoList.add(description);
+                    eventIDs.add(eventId);
+                    //participantCountList.add(String.valueOf(attendeeListLength));
+                }
+
+                appData = new AppData();
+                appData.setOrganizerList(organizerList);
+                appData.setEventNameList(eventNameList);
+                appData.setEventInfoList(eventInfoList);
+                appData.setEventIDs(eventIDs);
+                //appData.setParticipantCountList(participantCountList);
+//                logAppDataInfo(appData);
+                notifyDataAdapter();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("DEBUG here", "Failed to fetch events for organizer");
+            }
+        });
+    }
+    private void notifyDataAdapter() {
+        attendeeListArrayAdapter = new AttendeeEventAdapter(getActivity().getApplicationContext(),
+                appData, viewModel.getAttendeeID(), viewModel.getProfileName(), viewModel.getProfilePhone(),
+                viewModel.getProfileEmail());
+        eventList.setAdapter(attendeeListArrayAdapter);
     }
 }
