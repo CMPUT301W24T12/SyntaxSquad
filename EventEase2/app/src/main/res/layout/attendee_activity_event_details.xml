@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Administrator.EventEditorActivity">
+
+    <View
+        android:id="@+id/blue_background"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#00B6AA" />
+
+
+    <ImageView
+        android:id="@+id/attendee_event_photo"
+        android:layout_width="364dp"
+        android:layout_height="215dp"
+        android:layout_gravity="center"
+        android:contentDescription="Event Picture" />
+
+    <TextView
+        android:id="@+id/event_title"
+        android:layout_width="350dp"
+        android:layout_height="39dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+
+
+        android:text="Event!"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/event_description"
+        android:layout_width="393dp"
+        android:layout_height="42dp"
+
+
+        android:layout_gravity="center"
+        android:text="About the Event"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/event_detail"
+        android:layout_width="399dp"
+        android:layout_height="208dp"
+        android:layout_gravity="center"
+        android:text="Labore sunt veniam amet est. Minim nisi dolor eu ad incididunt cillum elit ex ut. Dolore exercitation nulla tempor consequat aliquip occaecat. Nisi id ipsum irure aute. Deserunt sit aute irure quis nulla eu consequat fugiat Lorem sunt magna et consequat labore. Laboris incididunt id Lorem est duis deserunt nisi dolore eiusmod culpa exercitation consectetur." />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0"
+        android:text="Wanna come?" />
+
+
+</LinearLayout>

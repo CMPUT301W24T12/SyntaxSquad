@@ -2,6 +2,11 @@ package com.example.eventease2.Attendee;
 
 import android.net.Uri;
 import android.widget.ImageButton;
+
+import com.example.eventease2.Event;
+
+import java.util.ArrayList;
+
 /**
  * This is a class that defines a Attendee. This is made for further implmentation at the final
  * checkpoint.
@@ -14,6 +19,10 @@ public class Attendee {
     private String bio;
     private Uri profileImage;
     private String eventID;
+
+
+
+    private ArrayList<Event> promisedEvents;
     public Attendee() {
         this.name = "";
         this.phone = "";
@@ -38,4 +47,9 @@ public class Attendee {
     public Uri getProfileImage() {return profileImage;}
 
     public void setProfileImage(Uri profileImage) {this.profileImage = profileImage;}
+    public ArrayList<Event> getPromisedEvents() {return promisedEvents;}
+
+    public void setPromisedEvents(ArrayList<Event> promisedEvents) {
+        this.promisedEvents = promisedEvents;
+    }
 }
