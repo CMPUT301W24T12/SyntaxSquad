@@ -43,8 +43,8 @@
         <activity android:name=".EventListFragment" />
         <activity android:name=".EventListArrayAdapter" />
         <activity android:name=".Organizer.OrganizerAttendeeListFragment" />
-        <activity android:name=".Organizer.OrganizerSignUpFragment" />
-        <activity android:name=".Organizer.OrganizerAttendeeProfileFragment" />
+        <activity android:name=".Attendee.AttendeeEventDetailsActivity" />
+        <activity android:name=".Attendee.AttendeeEventAdapter" />
         <activity
             android:name=".Organizer.AddEventFragment"
             android:exported="true" />

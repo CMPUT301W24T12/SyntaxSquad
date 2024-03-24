@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.eventease2.R;
 import com.example.eventease2.databinding.ActivityAttendeeStartBinding;
@@ -37,6 +38,7 @@ public class AttendeeStartActivity extends AppCompatActivity{
 
         String randomID = generateRandomID();
         viewModel.setAttendeeID(randomID);
+        Toast.makeText(this, viewModel.getAttendeeID(), Toast.LENGTH_SHORT).show();
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             eventID = viewModel.getEvent();
