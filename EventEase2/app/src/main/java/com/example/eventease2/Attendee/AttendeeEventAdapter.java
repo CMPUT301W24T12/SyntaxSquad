@@ -1,4 +1,4 @@
-package com.example.eventease2.Administrator;
+package com.example.eventease2.Attendee;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,15 +13,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.eventease2.Organizer.OrganizerAttendeeListFragment;
-
-import com.example.eventease2.Attendee.AttendeeEventFragment;
-import com.example.eventease2.Organizer.OrganizerEventFrame;
+import com.example.eventease2.Administrator.AppData;
+import com.example.eventease2.Administrator.EventEditorActivity;
 import com.example.eventease2.R;
 
 import java.util.ArrayList;
 
-public class AppEventAdapter extends ArrayAdapter<String> {
+public class AttendeeEventAdapter extends ArrayAdapter<String> {
 
     private ArrayList<String> eventNames;
     private ArrayList<String> eventDescription;
@@ -29,12 +27,12 @@ public class AppEventAdapter extends ArrayAdapter<String> {
     private  ArrayList<String> eventIDs;
     private ArrayList<String> participantCountList;
     private Context context;
+    String attendeeID;
 
     Button eventDetailButton;
-    Button viewAttendeeButton;
     AppData appData;
 
-    public AppEventAdapter(Context context, AppData appData) {
+    public AttendeeEventAdapter(Context context, AppData appData,String attendeeID) {
         super(context, 0, appData.getEventNameList());
         this.appData = appData;
         this.eventNames = appData.getEventNameList();
@@ -42,7 +40,8 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         this.organizerID = appData.getOrganizerList();
         this.eventIDs = appData.getEventIDs();
         this.context = context;
-        this.participantCountList = appData.getParticipantCountList();
+        this.attendeeID = attendeeID;
+        //this.participantCountList = appData.getParticipantCountList();
     }
 
     @NonNull
@@ -52,46 +51,37 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         View view = convertView;
 
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.event_list, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.attendee_event_list, parent, false);
         }
 
         TextView eventNameView = view.findViewById(R.id.event_title);
         TextView eventDetailsView = view.findViewById(R.id.event_description);
-        TextView eventCountView = view.findViewById(R.id.participant_count);
+        //TextView eventCountView = view.findViewById(R.id.participant_count);
         Button eventDetailButton = view.findViewById(R.id.event_details);
-        Button attendeeListButton = view.findViewById(R.id.view_attendees);
-        String eventID = eventIDs.get(position);
+
+
         eventNameView.setText(eventNames.get(position));
         eventDetailsView.setText(eventDescription.get(position));
-        eventCountView.setText(participantCountList.get(position));
+        //eventCountView.setText(participantCountList.get(position));
 
         eventDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Handle button click here
-                Intent intent = new Intent(context, EventEditorActivity.class);
+                Intent intent = new Intent(context, AttendeeEventDetailsActivity.class);
                 intent.putExtra("ID", eventIDs.get(position));
                 intent.putExtra("OrganizerID", organizerID.get(position));
                 intent.putExtra("posOfEvent", position);
-
+                intent.putExtra("AttendeeID",attendeeID);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 Log.d("BACK", "I am back");
                 notifyDataSetChanged();
             }
         });
-        attendeeListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, AdminAttendeeView.class);
-                intent.putExtra("ID", eventID);
-                intent.putExtra("OrganizerID", organizerID.get(position));
-                context.startActivity(intent);
-                notifyDataSetChanged();
-            }
 
-        });
+
         return view;
-
     }
 
 }
