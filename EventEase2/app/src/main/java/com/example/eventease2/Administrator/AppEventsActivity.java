@@ -43,10 +43,8 @@ public class AppEventsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_event_page);
-
         eventList = findViewById(R.id.event_list);
         showMoreButton = findViewById(R.id.see_more_button);
-
         organizerList = new ArrayList<>();
         eventNameList = new ArrayList<>();
         eventInfoList = new ArrayList<>();
