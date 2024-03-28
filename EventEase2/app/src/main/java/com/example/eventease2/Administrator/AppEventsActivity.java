@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.eventease2.Event;
@@ -12,13 +14,14 @@ import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class AppEventsActivity extends AppCompatActivity {
 
     ListView eventList;
@@ -28,18 +31,21 @@ public class AppEventsActivity extends AppCompatActivity {
     ArrayList<String> eventNameList;
     ArrayList<String> eventInfoList;
     ArrayList<String> eventIDs;
-    private QueryDocumentSnapshot lastVisibleEvent;
-
     ArrayList<String> participantCountList;
 
     public static AppData appData;
+    Button showMoreButton;
+
+    // Keep track of the number of events initially displayed
+    private int initiallyDisplayedCount = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.event_page);
+        setContentView(R.layout.admin_event_page);
 
         eventList = findViewById(R.id.event_list);
+        showMoreButton = findViewById(R.id.see_more_button);
 
         organizerList = new ArrayList<>();
         eventNameList = new ArrayList<>();
@@ -48,6 +54,15 @@ public class AppEventsActivity extends AppCompatActivity {
         participantCountList = new ArrayList<>();
 
         refreshEventData();
+
+        showMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Increase the count to show more events
+                initiallyDisplayedCount += 10;
+                notifyDataAdapter();
+            }
+        });
     }
 
     public void refreshEventData() {
@@ -107,7 +122,6 @@ public class AppEventsActivity extends AppCompatActivity {
                 appData.setEventInfoList(eventInfoList);
                 appData.setEventIDs(eventIDs);
                 appData.setParticipantCountList(participantCountList);
-//                logAppDataInfo(appData);
                 notifyDataAdapter();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -119,9 +133,38 @@ public class AppEventsActivity extends AppCompatActivity {
     }
 
     private void notifyDataAdapter() {
-        adminListArrayAdapter = new AppEventAdapter(AppEventsActivity.this, appData);
-        eventList.setAdapter(adminListArrayAdapter);
+        if (adminListArrayAdapter == null) {
+            adminListArrayAdapter = new AppEventAdapter(AppEventsActivity.this, eventNameList, eventInfoList, organizerList, eventIDs, participantCountList, initiallyDisplayedCount);
+            eventList.setAdapter(adminListArrayAdapter);
+        } else {
+            // Update the data in the adapter with the new event lists
+            ArrayList<String> newEventNames = new ArrayList<>(adminListArrayAdapter.getEventNames());
+            ArrayList<String> newEventDescriptions = new ArrayList<>(adminListArrayAdapter.getEventDescription());
+            ArrayList<String> newOrganizerIDs = new ArrayList<>(adminListArrayAdapter.getOrganizerID());
+            ArrayList<String> newEventIDs = new ArrayList<>(adminListArrayAdapter.getEventIDs());
+            ArrayList<String> newParticipantCountList = new ArrayList<>(adminListArrayAdapter.getParticipantCountList());
+
+            // Add the newly fetched event data to the existing data
+            newEventNames.addAll(eventNameList.subList(adminListArrayAdapter.getCount(), eventNameList.size()));
+            newEventDescriptions.addAll(eventInfoList.subList(adminListArrayAdapter.getCount(), eventInfoList.size()));
+            newOrganizerIDs.addAll(organizerList.subList(adminListArrayAdapter.getCount(), organizerList.size()));
+            newEventIDs.addAll(eventIDs.subList(adminListArrayAdapter.getCount(), eventIDs.size()));
+            newParticipantCountList.addAll(participantCountList.subList(adminListArrayAdapter.getCount(), participantCountList.size()));
+
+            // Update the adapter with the combined data
+            adminListArrayAdapter.updateData(newEventNames, newEventDescriptions, newOrganizerIDs, newEventIDs, newParticipantCountList);
+            adminListArrayAdapter.setInitiallyDisplayedCount(initiallyDisplayedCount); // Add this line
+        }
+
+        // Show or hide the "Show More" button based on the remaining events
+        if (initiallyDisplayedCount < eventNameList.size()) {
+            showMoreButton.setVisibility(View.VISIBLE);
+        } else {
+            showMoreButton.setVisibility(View.GONE);
+        }
     }
+
+
 
     private void logAppDataInfo(AppData appData) {
         ArrayList<String> organizerList = appData.getOrganizerList();

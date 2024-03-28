@@ -26,33 +26,63 @@ public class AppEventAdapter extends ArrayAdapter<String> {
     private ArrayList<String> eventNames;
     private ArrayList<String> eventDescription;
     private ArrayList<String> organizerID;
-    private  ArrayList<String> eventIDs;
+    private ArrayList<String> eventIDs;
     private ArrayList<String> participantCountList;
     private Context context;
-    private int initiallyDisplayedCount = 10; // Change this to the number of events initially displayed
+    private int initiallyDisplayedCount; // Change this to the number of events initially displayed
 
-
-    Button eventDetailButton;
-    Button viewAttendeeButton;
-    AppData appData;
-
-    public AppEventAdapter(Context context, AppData appData) {
-        super(context, 0, appData.getEventNameList());
-        this.appData = appData;
-        this.eventNames = appData.getEventNameList();
-        this.eventDescription = appData.getEventInfoList();
-        this.organizerID = appData.getOrganizerList();
-        this.eventIDs = appData.getEventIDs();
-        this.context = context;
-        this.participantCountList = appData.getParticipantCountList();
+    // Constructor
+    public ArrayList<String> getEventNames() {
+        return eventNames;
     }
+
+    public ArrayList<String> getEventDescription() {
+        return eventDescription;
+    }
+
+    public ArrayList<String> getOrganizerID() {
+        return organizerID;
+    }
+
+    public ArrayList<String> getEventIDs() {
+        return eventIDs;
+    }
+
+    public ArrayList<String> getParticipantCountList() {
+        return participantCountList;
+    }
+    public void setInitiallyDisplayedCount(int initiallyDisplayedCount) {
+        this.initiallyDisplayedCount = initiallyDisplayedCount;
+    }
+
+    public AppEventAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, ArrayList<String> organizerID, ArrayList<String> eventIDs, ArrayList<String> participantCountList, int initiallyDisplayedCount) {
+        super(context, 0, eventNames);
+        this.eventNames = eventNames;
+        this.eventDescription = eventDescription;
+        this.organizerID = organizerID;
+        this.eventIDs = eventIDs;
+        this.participantCountList = participantCountList;
+        this.context = context;
+        this.initiallyDisplayedCount = initiallyDisplayedCount;
+    }
+    public void updateData(ArrayList<String> eventNameList, ArrayList<String> eventInfoList, ArrayList<String> organizerList, ArrayList<String> eventIDs, ArrayList<String> participantCountList) {
+        this.eventNames = eventNameList;
+        this.eventDescription = eventInfoList;
+        this.organizerID = organizerList;
+        this.eventIDs = eventIDs;
+        this.participantCountList = participantCountList;
+        notifyDataSetChanged();
+    }
+
+
+    @Override
     public int getCount() {
         return Math.min(initiallyDisplayedCount, eventNames.size());
     }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//        return super.getView(position, convertView, parent);
         View view = convertView;
 
         if (view == null) {
@@ -69,6 +99,7 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         eventDetailsView.setText(eventDescription.get(position));
         eventCountView.setText(participantCountList.get(position));
 
+
         eventDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +111,6 @@ public class AppEventAdapter extends ArrayAdapter<String> {
 
                 context.startActivity(intent);
                 Log.d("BACK", "I am back");
-                notifyDataSetChanged();
             }
         });
         attendeeListButton.setOnClickListener(new View.OnClickListener() {
@@ -90,27 +120,14 @@ public class AppEventAdapter extends ArrayAdapter<String> {
                 intent.putExtra("ID", eventID);
                 intent.putExtra("OrganizerID", organizerID.get(position));
                 context.startActivity(intent);
-                notifyDataSetChanged();
             }
-
         });
-        if (position == initiallyDisplayedCount - 1 && initiallyDisplayedCount < eventNames.size()) {
-            Button seeMoreButton = view.findViewById(R.id.see_more_button);
-            seeMoreButton.setVisibility(View.VISIBLE);
-            seeMoreButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    initiallyDisplayedCount += 5; // Increase count to show more events
-                    notifyDataSetChanged(); // Notify adapter that data set changed
-                }
-            });
-        } else {
-            // Hide "See More" button if all events are displayed
-            Button seeMoreButton = view.findViewById(R.id.see_more_button);
-            seeMoreButton.setVisibility(View.GONE);
-        }
+
+
+
+
+
 
         return view;
     }
 }
-
