@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.eventease2.Event;
 import com.example.eventease2.R;
@@ -22,6 +25,7 @@ import java.util.List;
 public class AppEventsActivity extends AppCompatActivity {
 
     ListView eventList;
+    TextView backInstruct;
     AppEventAdapter adminListArrayAdapter;
 
     ArrayList<String> organizerList;
@@ -30,14 +34,15 @@ public class AppEventsActivity extends AppCompatActivity {
     ArrayList<String> eventIDs;
     ArrayList<String> participantCountList;
 
+
     public static AppData appData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.event_page);
-
+        setContentView(R.layout.admin_event_page);
         eventList = findViewById(R.id.event_list);
+        backInstruct = findViewById(R.id.events_back_button);
 
         organizerList = new ArrayList<>();
         eventNameList = new ArrayList<>();
@@ -46,6 +51,13 @@ public class AppEventsActivity extends AppCompatActivity {
         participantCountList = new ArrayList<>();
 
         refreshEventData();
+
+        backInstruct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     public void refreshEventData() {

@@ -8,6 +8,8 @@ public class AppData {
     private ArrayList<String> eventInfoList;
     private ArrayList<String> eventIDs;
     private ArrayList<String> participantCountList;
+    private byte[] byteArray;
+
 
     public AppData() {
         organizerList = new ArrayList<String >();
@@ -48,6 +50,11 @@ public class AppData {
     public void setEventIDs(ArrayList<String> eventIDs) {
         this.eventIDs = eventIDs;
     }
+
+    public void setByteArray(byte[] byteArray) {this.byteArray = byteArray;}
+
+    public byte[] getByteArray() {return byteArray;}
+
 
     public ArrayList<String> getParticipantCountList() {
         return participantCountList;
@@ -91,4 +98,6 @@ public class AppData {
             participantCountList.remove(index);
         }
     }
+
+
 }

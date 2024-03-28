@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,10 +28,10 @@ public class AppEventAdapter extends ArrayAdapter<String> {
     private  ArrayList<String> eventIDs;
     private ArrayList<String> participantCountList;
     private Context context;
-
     Button eventDetailButton;
     Button viewAttendeeButton;
     AppData appData;
+
 
     public AppEventAdapter(Context context, AppData appData) {
         super(context, 0, appData.getEventNameList());
@@ -50,18 +51,25 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         View view = convertView;
 
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.event_list, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.indiv_event_frag, parent, false);
         }
 
         TextView eventNameView = view.findViewById(R.id.event_title);
         TextView eventDetailsView = view.findViewById(R.id.event_description);
         TextView eventCountView = view.findViewById(R.id.participant_count);
         Button eventDetailButton = view.findViewById(R.id.event_details);
+        ImageView eventImage = view.findViewById(R.id.event_editable_photo);
 
 
         eventNameView.setText(eventNames.get(position));
         eventDetailsView.setText(eventDescription.get(position));
         eventCountView.setText(participantCountList.get(position));
+
+
+
+
+
+
 
         eventDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override

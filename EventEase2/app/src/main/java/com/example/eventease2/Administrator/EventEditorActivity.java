@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +27,13 @@ public class EventEditorActivity extends AppCompatActivity {
 
     TextView eventDesciption;
     Button deleteEvent;
+    TextView backInstruct;
     String eventID;
     String organizerID;
     String posOfEvent;
+    ImageView eventPic;
     DocumentReference eventInfoDoc;
+
 
     public static AppData appData;
 
@@ -43,6 +47,8 @@ public class EventEditorActivity extends AppCompatActivity {
 
         eventDesciption = findViewById(R.id.event_detail);
         deleteEvent = findViewById(R.id.event_remove_profile_button);
+        backInstruct = findViewById(R.id.events_back_button);
+        eventPic = findViewById(R.id.event_editable_photo);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -71,5 +77,14 @@ public class EventEditorActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> Log.w("TAG", "Error deleting document", e));
         });
+
+        backInstruct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
+
+
 }

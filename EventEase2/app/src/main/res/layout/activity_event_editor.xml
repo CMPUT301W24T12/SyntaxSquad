@@ -1,53 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Administrator.EventEditorActivity">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <View
+    <RelativeLayout
         android:id="@+id/blue_background"
-        android:layout_width="416dp"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="#00B6AA"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="#00B6AA" >
 
+        <TextView
+            android:id="@+id/text_eventease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="EVENTEASE"
+            android:textColor="#FFFFFF"
+
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/events_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"/>
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/event_editable_photo"
         android:layout_width="364dp"
         android:layout_height="215dp"
         android:contentDescription="Event Picture"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/blue_background"
-        app:layout_constraintVertical_bias="0.209"
+        android:layout_gravity="center"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
 
     <Button
         android:id="@+id/event_remove_photo_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="341dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#00B6AA"
         android:padding="10dp"
-        android:text="Remove Picture"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/blue_background"
-        app:layout_constraintVertical_bias="0.0" />
-
+        android:text="Remove Picture" />
 
     <TextView
         android:id="@+id/event_title"
@@ -55,58 +61,35 @@
         android:layout_height="wrap_content"
         android:text="Event!"
         android:textColor="#000000"
-
-
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/event_detail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.083"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_editable_photo"
-        app:layout_constraintVertical_bias="0.573" />
-
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
-        android:textColor="#000000"
-
-
         android:layout_height="wrap_content"
         android:text="About the Event"
+        android:textColor="#000000"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/blue_background"
-        app:layout_constraintVertical_bias="0.613" />
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp" />
 
+    <TextView
+        android:id="@+id/event_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Labore sunt veniam amet est. Minim nisi dolor eu ad incididunt cillum elit ex ut. Dolore exercitation nulla tempor consequat aliquip occaecat. Nisi id ipsum irure aute. Deserunt sit aute irure quis nulla eu consequat fugiat Lorem sunt magna et consequat labore. Laboris incididunt id Lorem est duis deserunt nisi dolore eiusmod culpa exercitation consectetur."
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/event_remove_profile_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:backgroundTint="#00B6AA"
         android:text="Remove Event"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/blue_background"
-        app:layout_constraintVertical_bias="0.865" />
+        android:layout_marginTop="16dp" />
 
-
-    <TextView
-        android:id="@+id/event_detail"
-        android:layout_width="348dp"
-        android:layout_height="65dp"
-        android:text="Labore sunt veniam amet est. Minim nisi dolor eu ad incididunt cillum elit ex ut. Dolore exercitation nulla tempor consequat aliquip occaecat. Nisi id ipsum irure aute. Deserunt sit aute irure quis nulla eu consequat fugiat Lorem sunt magna et consequat labore. Laboris incididunt id Lorem est duis deserunt nisi dolore eiusmod culpa exercitation consectetur."
-        app:layout_constraintBottom_toTopOf="@+id/event_remove_profile_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_remove_photo_button"
-        app:layout_constraintVertical_bias="0.652" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
