@@ -86,7 +86,7 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         View view = convertView;
 
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.event_list, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.indiv_event_frag, parent, false);
         }
 
         TextView eventNameView = view.findViewById(R.id.event_title);
