@@ -29,6 +29,8 @@ public class AppEventAdapter extends ArrayAdapter<String> {
     private  ArrayList<String> eventIDs;
     private ArrayList<String> participantCountList;
     private Context context;
+    private int initiallyDisplayedCount = 10; // Change this to the number of events initially displayed
+
 
     Button eventDetailButton;
     Button viewAttendeeButton;
@@ -44,7 +46,9 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         this.context = context;
         this.participantCountList = appData.getParticipantCountList();
     }
-
+    public int getCount() {
+        return Math.min(initiallyDisplayedCount, eventNames.size());
+    }
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -90,9 +94,23 @@ public class AppEventAdapter extends ArrayAdapter<String> {
             }
 
         });
+        if (position == initiallyDisplayedCount - 1 && initiallyDisplayedCount < eventNames.size()) {
+            Button seeMoreButton = view.findViewById(R.id.see_more_button);
+            seeMoreButton.setVisibility(View.VISIBLE);
+            seeMoreButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    initiallyDisplayedCount += 5; // Increase count to show more events
+                    notifyDataSetChanged(); // Notify adapter that data set changed
+                }
+            });
+        } else {
+            // Hide "See More" button if all events are displayed
+            Button seeMoreButton = view.findViewById(R.id.see_more_button);
+            seeMoreButton.setVisibility(View.GONE);
+        }
+
         return view;
-
     }
-
 }
 

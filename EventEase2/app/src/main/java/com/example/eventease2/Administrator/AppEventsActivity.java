@@ -28,6 +28,8 @@ public class AppEventsActivity extends AppCompatActivity {
     ArrayList<String> eventNameList;
     ArrayList<String> eventInfoList;
     ArrayList<String> eventIDs;
+    private QueryDocumentSnapshot lastVisibleEvent;
+
     ArrayList<String> participantCountList;
 
     public static AppData appData;
