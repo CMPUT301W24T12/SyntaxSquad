@@ -51,13 +51,14 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
     int maxInt;
     String eventID;
     String organizerID;
-    String posOfEvent;
+    String posOfEvent,attendeeId;
     Switch promiseToGoSwitch;
     DocumentReference eventInfoDoc;
     CollectionReference attendeeList;
     Event promisedEvent;
     Bundle extras;
     StorageReference pathReference;
+    boolean sent = false;
     FirebaseStorage storageRef;
 
     public static AppData appData;
@@ -71,6 +72,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
         extras = getIntent().getExtras();
         organizerID = getIntent().getStringExtra("OrganizerID");
         eventID = getIntent().getStringExtra("ID");
+        attendeeId = getIntent().getStringExtra("AttendeeID");
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -149,6 +151,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                                     promisedEvent = new Event(eventPhoto,eventTitle.toString(),
                                             eventDescription.toString(),null,
                                             false,null, null);
+                                    sent = true;
                                 }else{
                                     //geolocation, and
                                     Toast.makeText(AttendeeEventDetailsActivity.this,
@@ -163,6 +166,23 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                         }
                     });
 
+                }else {
+                    if (sent = true){
+                        eventInfoDoc.collection("Attendees").document(attendeeId )
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error deleting document", e);
+                                    }
+                                });
+                    }
                 }
             }
         });

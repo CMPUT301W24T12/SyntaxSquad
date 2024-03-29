@@ -15,12 +15,14 @@
 
     <TextView
         android:id="@+id/event_title"
-        android:layout_width="149dp"
+        android:layout_width="329dp"
         android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:overScrollMode="ifContentScrolls"
         android:text="Event Title"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:translationX="-375dp"
+        android:translationX="-390dp"
         android:translationY="15dp"
         tools:layout_editor_absoluteX="36dp"
         tools:layout_editor_absoluteY="29dp" />
@@ -28,14 +30,54 @@
     <TextView
         android:id="@+id/event_description"
         android:layout_width="334dp"
-        android:layout_height="104dp"
+        android:layout_height="94dp"
         android:text="Event Description"
         android:textSize="14sp"
         android:textStyle="italic"
-        android:translationX="-520dp"
+        android:translationX="-710dp"
         android:translationY="40dp"
         tools:layout_editor_absoluteX="36dp"
         tools:layout_editor_absoluteY="64dp" />
+
+    <TextView
+        android:id="@+id/entriesText"
+        android:layout_width="86dp"
+        android:layout_height="wrap_content"
+        android:text="Entries"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:translationX="-1050dp"
+        android:translationY="140dp" />
+
+    <TextView
+        android:id="@+id/maxEntries"
+        android:layout_width="86dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Max Entries"
+        android:textSize="16sp"
+        android:translationX="-1025dp"
+        android:translationY="140dp" />
+
+    <TextView
+        android:id="@+id/entriesSignedUp"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="0"
+        android:textSize="24sp"
+        android:translationX="-1230dp"
+        android:translationY="175dp" />
+
+    <TextView
+        android:id="@+id/maxEntriesNum"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="8"
+        android:textSize="24sp"
+        android:translationX="-1219dp"
+        android:translationY="175dp" />
 
     <Button
         android:id="@+id/event_details"
@@ -44,8 +86,8 @@
         android:backgroundTint="#00B6AA"
         android:gravity="center|center_vertical"
         android:text="EVENT DETAILS"
-        android:textSize="11sp"
-        android:translationX="-760dp"
+        android:textSize="14sp"
+        android:translationX="-1210dp"
         android:translationY="170dp"
         tools:layout_editor_absoluteX="217dp"
         tools:layout_editor_absoluteY="179dp" />

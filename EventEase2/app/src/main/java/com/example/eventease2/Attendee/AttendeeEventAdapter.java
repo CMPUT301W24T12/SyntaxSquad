@@ -13,8 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.eventease2.Administrator.AppData;
-import com.example.eventease2.Administrator.EventEditorActivity;
 import com.example.eventease2.R;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -27,22 +25,23 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
     private ArrayList<String> eventDescription;
     private ArrayList<String> organizerID;
     private  ArrayList<String> eventIDs;
-    private ArrayList<String> participantCountList;
+    private ArrayList<String> maxAttendee;
     private Context context;
     private String attendeeID, attendeeName, attendeePhone, attendeeEmail,stringEventPhoto;
 
 
     Button eventDetailButton;
-    AppData appData;
+    AttendeeAppData attendeeAppData;
 
-    public AttendeeEventAdapter(Context context, AppData appData,String attendeeID,
+    public AttendeeEventAdapter(Context context, AttendeeAppData appData,String attendeeID,
                                 String attendeeName,String attendeePhone, String attendeeEmail) {
         super(context, 0, appData.getEventNameList());
-        this.appData = appData;
+        this.attendeeAppData = appData;
         this.eventNames = appData.getEventNameList();
         this.eventDescription = appData.getEventInfoList();
         this.organizerID = appData.getOrganizerList();
         this.eventIDs = appData.getEventIDs();
+        this.maxAttendee = appData.getMaxAttendeeList();
         this.context = context;
         this.attendeeID = attendeeID;
         this.attendeeName = attendeeName;
@@ -65,13 +64,15 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
 
         TextView eventNameView = view.findViewById(R.id.event_title);
         TextView eventDetailsView = view.findViewById(R.id.event_description);
-        //TextView eventCountView = view.findViewById(R.id.participant_count);
+        //TextView eventCountView = view.findViewById(R.id.entriesSignedUp);
+        TextView maxAttendeeCount = view.findViewById(R.id.maxEntriesNum);
         Button eventDetailButton = view.findViewById(R.id.event_details);
 
 
         eventNameView.setText(eventNames.get(position));
         eventDetailsView.setText(eventDescription.get(position));
         //eventCountView.setText(participantCountList.get(position));
+        maxAttendeeCount.setText(maxAttendee.get(position));
 
         eventDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
