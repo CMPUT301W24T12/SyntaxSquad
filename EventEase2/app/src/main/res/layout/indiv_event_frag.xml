@@ -12,6 +12,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+
         <TextView
             android:id="@+id/event_title"
             android:layout_width="match_parent"
@@ -33,10 +34,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"/>
 
+
         <TextView
             android:id="@+id/entries_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:textColor="@color/black"
             android:gravity="center"
             android:text="Entries"/>
@@ -54,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"/>
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,11 +73,12 @@
                 android:background="@drawable/rounded_button_background"
                 android:layout_weight="1"/>
 
+
             <Button
                 android:id="@+id/event_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="VIEW ATTENDEES"
+                android:text="EVENT DETAILS"
                 android:textColor="@color/white"
                 android:background="@drawable/rounded_button_background"
                 android:layout_weight="1"/>
@@ -85,3 +90,4 @@
     </LinearLayout>
 
 </LinearLayout>
+

@@ -3,6 +3,7 @@ package com.example.eventease2.Administrator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,12 +15,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -88,6 +89,8 @@ public class EditProfileActivity extends AppCompatActivity {
         eventInfoDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilepics/" + attendeeID + ".jpg");
+
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
@@ -97,6 +100,25 @@ public class EditProfileActivity extends AppCompatActivity {
                         email.setText(emailStr);
                         phone.setText(phoneStr);
                         attendeeBio.setText(bioStr);
+
+                        // Download the profile picture from Firebase Storage
+                        profilePicRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Load the image into the ImageView
+                                Glide.with(EditProfileActivity.this)
+                                        .load(uri)
+                                        .into(profile_pic);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Handle any errors
+                                Log.e("EditProfileActivity", "Failed to download profile picture: " + e.getMessage());
+                                profile_pic.setImageResource(profilePicResId);
+
+                            }
+                        });
                     } else {
                         Log.d("EditProfileActivity", "No such document");
                     }
@@ -108,10 +130,11 @@ public class EditProfileActivity extends AppCompatActivity {
         removePic.setOnClickListener(v -> {
             profile_pic.setImageResource(originalProfilePicResId);
 
-            StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profile_pics/" + attendeeID);
+            StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilepics/" + attendeeID + ".jpg");
 
             profilePicRef.delete().addOnSuccessListener(aVoid -> {
                 Log.d("EditProfileActivity", "onSuccess: deleted file");
+                profile_pic.setImageResource(profilePicResId);
             }).addOnFailureListener(exception -> {
                 // Uh-oh, an error occurred!
                 Log.d("EditProfileActivity", "onFailure: did not delete file");
@@ -139,6 +162,5 @@ public class EditProfileActivity extends AppCompatActivity {
                         });
             }
         });
-
     }
 }
