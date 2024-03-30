@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,14 +19,18 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.eventease2.EventListFragment;
 import com.example.eventease2.Organizer.AddEventFragment;
 import com.example.eventease2.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EventEditorActivity extends AppCompatActivity {
     FirebaseFirestore appDb = FirebaseFirestore.getInstance();
 
     TextView eventDesciption;
+    TextView eventTitle;
     Button deleteEvent;
     TextView backInstruct;
     String eventID;
@@ -46,6 +51,7 @@ public class EventEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_editor);
 
         eventDesciption = findViewById(R.id.event_detail);
+        eventTitle = findViewById(R.id.event_title);
         deleteEvent = findViewById(R.id.event_remove_profile_button);
         backInstruct = findViewById(R.id.events_back_button);
         eventPic = findViewById(R.id.event_editable_photo);
@@ -92,6 +98,39 @@ public class EventEditorActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Retrieve the document
+        eventInfoDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Document found, extract the fields
+                        String description = document.getString("Description");
+                        String eventBody = document.getString("EventBody");
+                        String name = document.getString("Name");
+
+                        // Do something with the extracted information
+                        if (description != null && eventBody != null && name != null) {
+                            eventDesciption.setText(eventBody);
+                            eventTitle.setText(name);
+
+                        } else {
+                            // Handle the case if any of the fields are null
+                            Log.d("Description", "Description, EventBody, or Name is null");
+                        }
+                    } else {
+                        // Document does not exist
+                        Log.d("Description", "Document does not exist");
+                    }
+                } else {
+                    // Error occurred while retrieving document
+                    Log.d("Description", "Error getting document: " + task.getException());
+                }
+            }
+        });
+
     }
 
 
