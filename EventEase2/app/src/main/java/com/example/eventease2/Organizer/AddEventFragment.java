@@ -46,7 +46,7 @@ import java.util.UUID;
 /**
  * This is the class to add a event into the event list
  */
-public class AddEventFragment extends AppCompatActivity {
+public class AddEventFragment extends AppCompatActivity implements OrganizerWarningDialog.QRCodeTypeChangeListener {
     private ImageView imageView;
     private Uri imageURI;
     private TextView eventNameView;
@@ -62,6 +62,8 @@ public class AddEventFragment extends AppCompatActivity {
     String location;
     String duration;
     Boolean isAbleLocationTracking;
+
+    public String QRCodeType;
 
     int maxNumberOfAttendee;
     private String id;
@@ -90,6 +92,9 @@ public class AddEventFragment extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
+        warningDialog.show(getSupportFragmentManager(),"Choose existing QR Code");
         setContentView(R.layout.upload_image_page);
 
         // Copyright 2020 M. Fadli Zein
@@ -163,15 +168,17 @@ public class AddEventFragment extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
+                //Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
                 //intent.putExtra("ID",id);
-                intent.putExtra("OrganizerID",organizerID);
-                startActivity(intent);
-                String result = getIntent().getStringExtra("SelectedID");
-                if (result!=null){
-                    Toast.makeText(AddEventFragment.this,result,Toast.LENGTH_LONG).show();
-                }
-
+//                intent.putExtra("OrganizerID",organizerID);
+//                startActivity(intent);
+//                String result = getIntent().getStringExtra("SelectedID");
+//                if (result!=null){
+//                    Toast.makeText(AddEventFragment.this,result,Toast.LENGTH_LONG).show();
+//                }
+//                OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
+//                warningDialog.show(getSupportFragmentManager(),"Choose existing QR Code");
+                Toast.makeText(AddEventFragment.this,QRCodeType,Toast.LENGTH_LONG).show();
 //                try{
 //                    getInfo();
 //                    if (maxNumberOfAttendee <= 0) {
@@ -285,5 +292,10 @@ public class AddEventFragment extends AppCompatActivity {
         // Upload QR code to Firebase Storage
         qrRef.putBytes(qrCodeByteArray);
         checkInRef.putBytes(checkInCodeByteArray);
+    }
+
+    @Override
+    public void onQRCodeTypeChange(String type) {
+        this.QRCodeType = type;
     }
 }
