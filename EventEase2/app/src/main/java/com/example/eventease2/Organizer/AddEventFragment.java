@@ -126,24 +126,6 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
         Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode(combinedID);
         Bitmap checkInQRCode = OrganizerQRCodeMaker.generateQRCode(checkInID);
 
-//        db.collection("collections").get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            List<String> collectionNames = new ArrayList<>();
-//                            for (DocumentSnapshot document : task.getResult()) {
-//                                // Get the name of each collection and add it to the list
-//                                String collectionName = document.getId();
-//                                collectionNames.add(collectionName);
-//                            }
-//                            Log.d(TAG, "Collections: " + collectionNames);
-//                        } else {
-//                            Log.d(TAG, "Error getting collections: ", task.getException());
-//                        }
-//                    }
-//                });
-
         // let the user click to upload an image
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,9 +160,10 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
 //                }
 //                OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
 //                warningDialog.show(getSupportFragmentManager(),"Choose existing QR Code");
-                Toast.makeText(AddEventFragment.this,id,Toast.LENGTH_LONG).show();
+                //Toast.makeText(AddEventFragment.this,id,Toast.LENGTH_LONG).show();
 
                 try{
+                    Log.d("ID_add",id);
                     getInfo();
                     if (maxNumberOfAttendee <= 0) {
                         // If negative, throw NumberFormatException
@@ -195,7 +178,7 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
 
                     //check if image uploaded
                     if (imageURI==null){
-                        int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
+                        int drawableResourceId = R.drawable.default_event; // Replace this with the actual resource ID
                         imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
                     }
                     if (QRCodeType == "new"){

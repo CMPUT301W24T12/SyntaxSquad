@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,13 +90,13 @@ public class EventListArrayAdapterReuseQRCode extends ArrayAdapter<String> {
             public void onClick(View v) {
 //                OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
 //                warningDialog.show();
-                  showWarningDialog(eventName.getText().toString());
+                  showWarningDialog(eventName.getText().toString(),eventID);
             }
         });
 
         return view;
     }
-    private void showWarningDialog(String eventName) {
+    private void showWarningDialog(String eventName,String id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Warning")
                 .setMessage("Are you sure you want to proceed with " + eventName + "?\nYou  may lose the data for all attendees and event details.")
@@ -104,9 +105,10 @@ public class EventListArrayAdapterReuseQRCode extends ArrayAdapter<String> {
                     public void onClick(DialogInterface dialog, int which) {
                         // Set the result with the string to be delivered back to the previous activity
                         Intent intent = new Intent();
-                        intent.putExtra("SelectedID", eventID);
+                        //intent.putExtra("SelectedID", eventID);
                         ((Activity) context).setResult(Activity.RESULT_OK, intent);
-                        AddEventFragment.updateEventID(eventID);
+                        Log.d("ID_reuse",id);
+                        AddEventFragment.updateEventID(id);
                         // Finish the current activity
                         ((Activity) context).finish();
                     }
