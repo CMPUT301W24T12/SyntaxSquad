@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.eventease2.DeviceInfoUtils;
 import com.example.eventease2.EventListArrayAdapter;
 import com.example.eventease2.EventListFragment;
 import com.example.eventease2.R;
@@ -40,7 +41,7 @@ public class ReuseQRCodeFragment extends EventListFragment {
         eventList = findViewById(R.id.event_list);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String organizerID = getIntent().getStringExtra("OrganizerID");
+        String organizerID = DeviceInfoUtils.getIMEI(getApplicationContext()); // device number
         Log.d("Event List", organizerID);
 
         ArrayList<String> organizerIDs = new ArrayList<>();
@@ -110,17 +111,17 @@ public class ReuseQRCodeFragment extends EventListFragment {
                     }
                 });
 
-        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String eventID = eventIDs.get(position);
-//                                    Intent intent = new Intent(EventListFragment.this, AddEventFragment.class);
-//                                    intent.putExtra("OrganizerID", organizerID);
-//                                    startActivity(intent);
-                Toast.makeText(ReuseQRCodeFragment.this,eventID,Toast.LENGTH_LONG).show();
-
-            }
-        });
+//        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String eventID = eventIDs.get(position);
+////                                    Intent intent = new Intent(EventListFragment.this, AddEventFragment.class);
+////                                    intent.putExtra("OrganizerID", organizerID);
+////                                    startActivity(intent);
+//                Toast.makeText(ReuseQRCodeFragment.this,eventID,Toast.LENGTH_LONG).show();
+//
+//            }
+//        });
 //        ImageButton add = findViewById(R.id.attendeeProfileImage);
 //        add.setOnClickListener(new View.OnClickListener() {
 //            @Override

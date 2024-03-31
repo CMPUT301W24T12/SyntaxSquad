@@ -168,10 +168,10 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
-                //intent.putExtra("ID",id);
-//                intent.putExtra("OrganizerID",organizerID);
-//                startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
+                intent.putExtra("ID",id);
+                intent.putExtra("OrganizerID",organizerID);
+                startActivity(intent);
 //                String result = getIntent().getStringExtra("SelectedID");
 //                if (result!=null){
 //                    Toast.makeText(AddEventFragment.this,result,Toast.LENGTH_LONG).show();
@@ -297,5 +297,13 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
     @Override
     public void onQRCodeTypeChange(String type) {
         this.QRCodeType = type;
+    }
+
+    @Override
+    public void intentTOReuseQRCode() {
+        Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
+        intent.putExtra("ID",id);
+        intent.putExtra("OrganizerID",organizerID);
+        startActivity(intent);
     }
 }

@@ -19,6 +19,7 @@ public class OrganizerWarningDialog extends DialogFragment {
 
     interface QRCodeTypeChangeListener {
         void onQRCodeTypeChange(String type);
+        void intentTOReuseQRCode();
     }
 
     private QRCodeTypeChangeListener mListener;
@@ -33,6 +34,10 @@ public class OrganizerWarningDialog extends DialogFragment {
         if (mListener != null) {
             mListener.onQRCodeTypeChange(newType);
         }
+    }
+
+    private void intentToReuseQR(){
+        mListener.intentTOReuseQRCode();
     }
 
     @Override
@@ -54,14 +59,12 @@ public class OrganizerWarningDialog extends DialogFragment {
         Button exist = view.findViewById(R.id.existing);
         Button newQR = view.findViewById(R.id.new_qr);
 
-
         exist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(),ReuseQRCodeFragment.class);
-//                intent.putExtra("OrganizerID",organizerID);
-//                startActivity(intent);
-
+                updateORCodeType("exist");
+                dismiss();
+                intentToReuseQR();
             }
         });
 
