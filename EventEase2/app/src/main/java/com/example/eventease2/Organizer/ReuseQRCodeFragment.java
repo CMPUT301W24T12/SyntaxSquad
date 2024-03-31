@@ -28,8 +28,9 @@ import java.util.ArrayList;
 public class ReuseQRCodeFragment extends EventListFragment {
     ListView eventList;
     ArrayList<String> eventDataList;
-    EventListArrayAdapter eventListArrayAdapter;
+    EventListArrayAdapterReuseQRCode eventListArrayAdapter;
     ArrayList<String> eventID;
+    ArrayList<String> eventIDs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,6 @@ public class ReuseQRCodeFragment extends EventListFragment {
                             Log.d("Nested", organizerIDs.get(0));
                             ArrayList<String> eventNameList = new ArrayList<>();
                             ArrayList<String> eventInfoList = new ArrayList<>();
-                            ArrayList<String> eventIDs = new ArrayList<>();
                             CollectionReference eventRef = db.collection("Organizer").document(organizerID).collection("Events");
 
                             eventRef.get()
@@ -84,7 +84,7 @@ public class ReuseQRCodeFragment extends EventListFragment {
                                             Log.d("Event IDs", eventIDs.get(0));
                                             Log.d("Name List", eventNameList.get(0));
                                             Log.d("Event Info", eventInfoList.get(0));
-                                            eventListArrayAdapter = new EventListArrayAdapter(ReuseQRCodeFragment.this, eventNameList, eventInfoList, organizerID, eventIDs);
+                                            eventListArrayAdapter = new EventListArrayAdapterReuseQRCode(ReuseQRCodeFragment.this, eventNameList, eventInfoList, organizerID, eventIDs);
                                             eventList.setAdapter(eventListArrayAdapter);
                                         }
                                     })
@@ -94,23 +94,11 @@ public class ReuseQRCodeFragment extends EventListFragment {
                                             Log.d("NewTag", "Error getting documents.", e);
                                         }
                                     });
-                            eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    String eventID = eventIDs.get(position);
-//                                    Intent intent = new Intent(EventListFragment.this, AddEventFragment.class);
-//                                    intent.putExtra("OrganizerID", organizerID);
-//                                    startActivity(intent);
-                                    Toast.makeText(ReuseQRCodeFragment.this,eventID,Toast.LENGTH_LONG).show();
-
-                                }
-                            });
-
                         } else {
                             Log.d("Not If", "new Organizer ID");
                             Log.d("Event List", organizerIDs.get(0));
                             ArrayList<String> emptyList = new ArrayList<String>();
-                            eventListArrayAdapter = new EventListArrayAdapter(ReuseQRCodeFragment.this, emptyList, emptyList, organizerID, emptyList);
+                            eventListArrayAdapter = new EventListArrayAdapterReuseQRCode(ReuseQRCodeFragment.this, emptyList, emptyList, organizerID, emptyList);
                             eventList.setAdapter(eventListArrayAdapter);
                         }
                     }
@@ -121,5 +109,24 @@ public class ReuseQRCodeFragment extends EventListFragment {
                         Log.d("NewTag", "Error getting documents.", e);
                     }
                 });
+
+        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String eventID = eventIDs.get(position);
+//                                    Intent intent = new Intent(EventListFragment.this, AddEventFragment.class);
+//                                    intent.putExtra("OrganizerID", organizerID);
+//                                    startActivity(intent);
+                Toast.makeText(ReuseQRCodeFragment.this,eventID,Toast.LENGTH_LONG).show();
+
+            }
+        });
+//        ImageButton add = findViewById(R.id.attendeeProfileImage);
+//        add.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(ReuseQRCodeFragment.this,"111",Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 }

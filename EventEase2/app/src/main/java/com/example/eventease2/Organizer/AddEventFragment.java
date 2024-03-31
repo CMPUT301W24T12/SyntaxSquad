@@ -167,6 +167,11 @@ public class AddEventFragment extends AppCompatActivity {
                 //intent.putExtra("ID",id);
                 intent.putExtra("OrganizerID",organizerID);
                 startActivity(intent);
+                String result = getIntent().getStringExtra("SelectedID");
+                if (result!=null){
+                    Toast.makeText(AddEventFragment.this,result,Toast.LENGTH_LONG).show();
+                }
+
 //                try{
 //                    getInfo();
 //                    if (maxNumberOfAttendee <= 0) {
