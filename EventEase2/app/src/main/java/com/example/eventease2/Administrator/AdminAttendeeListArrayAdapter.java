@@ -1,5 +1,6 @@
 package com.example.eventease2.Administrator;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -99,7 +100,9 @@ public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
                 intent.putExtra("Email", email);
                 intent.putExtra("Phone", phone);
                 context.startActivity(intent);
+                ((Activity) context).finish();
             }
+
         });
 
         return view;
