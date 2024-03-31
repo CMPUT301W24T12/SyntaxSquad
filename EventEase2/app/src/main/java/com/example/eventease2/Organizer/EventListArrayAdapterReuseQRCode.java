@@ -36,6 +36,7 @@ public class EventListArrayAdapterReuseQRCode extends ArrayAdapter<String> {
     private String organizerID;
     private ArrayList<String> eventIDs;
     private Context context;
+    String eventID;
 
     public EventListArrayAdapterReuseQRCode(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, String organizerID, ArrayList<String> eventIDs) {
         super(context, 0, eventNames);
@@ -57,7 +58,7 @@ public class EventListArrayAdapterReuseQRCode extends ArrayAdapter<String> {
 
         String name = eventNames.get(position);
         String description = eventDescription.get(position);
-        String eventID = eventIDs.get(position);
+        eventID = eventIDs.get(position);
 
         TextView eventName = view.findViewById(R.id.event_title);
         TextView eventDetails = view.findViewById(R.id.event_description);
@@ -103,9 +104,9 @@ public class EventListArrayAdapterReuseQRCode extends ArrayAdapter<String> {
                     public void onClick(DialogInterface dialog, int which) {
                         // Set the result with the string to be delivered back to the previous activity
                         Intent intent = new Intent();
-                        intent.putExtra("SelectedID", "Your result string here");
+                        intent.putExtra("SelectedID", eventID);
                         ((Activity) context).setResult(Activity.RESULT_OK, intent);
-
+                        AddEventFragment.updateEventID(eventID);
                         // Finish the current activity
                         ((Activity) context).finish();
                     }

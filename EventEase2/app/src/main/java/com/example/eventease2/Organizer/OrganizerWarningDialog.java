@@ -46,7 +46,7 @@ public class OrganizerWarningDialog extends DialogFragment {
         if (context instanceof QRCodeTypeChangeListener) {
             mListener = (QRCodeTypeChangeListener) context;
         } else {
-            throw new RuntimeException(context + "must implement AddBookListener");
+            throw new RuntimeException(context + "must implement QRCodeTypeListener");
         }
     }
 

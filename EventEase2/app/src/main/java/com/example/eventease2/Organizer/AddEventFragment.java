@@ -66,7 +66,7 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
     public String QRCodeType;
 
     int maxNumberOfAttendee;
-    private String id;
+    private static String id;
     private String organizerID;
     private static final int REQUEST_IMAGE_PICK = 1;
     private  CollectionReference collectionRef;
@@ -168,59 +168,60 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
-                intent.putExtra("ID",id);
-                intent.putExtra("OrganizerID",organizerID);
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
+//                intent.putExtra("ID",id);
+//                intent.putExtra("OrganizerID",organizerID);
+//                startActivity(intent);
 //                String result = getIntent().getStringExtra("SelectedID");
 //                if (result!=null){
 //                    Toast.makeText(AddEventFragment.this,result,Toast.LENGTH_LONG).show();
 //                }
 //                OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
 //                warningDialog.show(getSupportFragmentManager(),"Choose existing QR Code");
-                Toast.makeText(AddEventFragment.this,QRCodeType,Toast.LENGTH_LONG).show();
-//                try{
-//                    getInfo();
-//                    if (maxNumberOfAttendee <= 0) {
-//                        // If negative, throw NumberFormatException
-//                        throw new NumberFormatException();
-//                    }
-//
-//                    putData();
-//
-//                    StorageReference imageRef = storageRef.child("images/" + id);
-//                    StorageReference qrRef = storageRef.child("QRCode/" + id);
-//                    StorageReference checkInRef = storageRef.child("CheckInQRCode/" + id);
-//
-//                    //check if image uploaded
-//                    if (imageURI==null){
-//                        int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
-//                        imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
-//                    }
-//
-//                    putQRCode(qrCode, checkInQRCode,qrRef,checkInRef);
-//
-//                    imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            Toast.makeText(AddEventFragment.this,"Success",Toast.LENGTH_LONG).show();
-//
-//                            Intent intent = new Intent(getApplicationContext(), OrganizerEventFrame.class);
-//                            intent.putExtra("ID",id);
-//                            intent.putExtra("OrganizerID",organizerID);
-//                            startActivity(intent);
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Toast.makeText(AddEventFragment.this,"Fail",Toast.LENGTH_LONG).show();
-//                        }
-//                    });
-//                }
-//                catch (NumberFormatException e){
-//                    Toast.makeText(AddEventFragment.this, "Invalid max limit", Toast.LENGTH_LONG).show();
-//                }
+                Toast.makeText(AddEventFragment.this,id,Toast.LENGTH_LONG).show();
 
+                try{
+                    getInfo();
+                    if (maxNumberOfAttendee <= 0) {
+                        // If negative, throw NumberFormatException
+                        throw new NumberFormatException();
+                    }
+
+                    putData();
+
+                    StorageReference imageRef = storageRef.child("images/" + id);
+                    StorageReference qrRef = storageRef.child("QRCode/" + id);
+                    StorageReference checkInRef = storageRef.child("CheckInQRCode/" + id);
+
+                    //check if image uploaded
+                    if (imageURI==null){
+                        int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
+                        imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
+                    }
+                    if (QRCodeType == "new"){
+                        putQRCode(qrCode, checkInQRCode,qrRef,checkInRef);
+                    }
+
+                    imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(AddEventFragment.this,"Success",Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(getApplicationContext(), OrganizerEventFrame.class);
+                            intent.putExtra("ID",id);
+                            intent.putExtra("OrganizerID",organizerID);
+                            startActivity(intent);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(AddEventFragment.this,"Fail",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+                catch (NumberFormatException e){
+                    Toast.makeText(AddEventFragment.this, "Invalid max limit", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -305,5 +306,10 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
         intent.putExtra("ID",id);
         intent.putExtra("OrganizerID",organizerID);
         startActivity(intent);
+    }
+
+
+    public static void updateEventID(String id) {
+        AddEventFragment.id = id;
     }
 }
