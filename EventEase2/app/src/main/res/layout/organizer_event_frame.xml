@@ -19,34 +19,50 @@
         android:weightSum="3"
         android:gravity="center">
 
-        <TextView
+        <Button
             android:id="@+id/back_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="0.6"
+            android:background="@color/green"
             android:text="Back"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:layout_marginStart="16dp"
-            android:layout_weight="0.6"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/text_eventease"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1.4"
             android:text="EVENTEASE"
+            android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_weight="1.4"/>
+            android:textStyle="bold" />
 
-        <TextView
+        <Button
             android:id="@+id/share"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:backgroundTint="@color/green"
             android:text="Share"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:layout_weight="0.8"/>
+            android:visibility="gone"
+            tools:visibility="gone" />
+
+        <Button
+            android:id="@+id/edit_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:backgroundTint="@color/green"
+            android:text="Edit"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:visibility="visible" />
 
     </LinearLayout>
 
@@ -79,7 +95,7 @@
                 android:orientation="vertical"
                 android:layout_weight="2">
 
-                <TextView
+                <EditText
                     android:id="@+id/eventTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -88,7 +104,7 @@
                     android:textSize="25dp"
                     android:textStyle="bold" />
 
-                <TextView
+                <EditText
                     android:id="@+id/Description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -111,7 +127,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
+    <EditText
         android:id="@+id/editTextText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -120,7 +136,8 @@
         android:layout_weight="5"
         android:background="@drawable/ovel_bg"
         android:backgroundTint="#E9EDF1"
-        android:text="Event Body" />
+        android:text="Event Body"
+        android:gravity="top|start"/>
 
     <Button
         android:id="@+id/share_button"
@@ -130,6 +147,20 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/rounded_button_background"
         android:text="Share QR Code"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_button_background"
+        android:text="Done"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        tools:visibility="gone" />
 
 </LinearLayout>

@@ -100,8 +100,6 @@ public class AddEventFragment extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-//        collectionRef = db.collection("EventEase");
-//        eventsRef = collectionRef.document("Organizer");
         collectionRef = db.collection("Organizer");
 
         maxNumberOfAttendee = -1;   //negative as default that is no limit
@@ -123,23 +121,23 @@ public class AddEventFragment extends AppCompatActivity {
         Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode(combinedID);
         Bitmap checkInQRCode = OrganizerQRCodeMaker.generateQRCode(checkInID);
 
-        db.collection("collections").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<String> collectionNames = new ArrayList<>();
-                            for (DocumentSnapshot document : task.getResult()) {
-                                // Get the name of each collection and add it to the list
-                                String collectionName = document.getId();
-                                collectionNames.add(collectionName);
-                            }
-                            Log.d(TAG, "Collections: " + collectionNames);
-                        } else {
-                            Log.d(TAG, "Error getting collections: ", task.getException());
-                        }
-                    }
-                });
+//        db.collection("collections").get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            List<String> collectionNames = new ArrayList<>();
+//                            for (DocumentSnapshot document : task.getResult()) {
+//                                // Get the name of each collection and add it to the list
+//                                String collectionName = document.getId();
+//                                collectionNames.add(collectionName);
+//                            }
+//                            Log.d(TAG, "Collections: " + collectionNames);
+//                        } else {
+//                            Log.d(TAG, "Error getting collections: ", task.getException());
+//                        }
+//                    }
+//                });
 
         // let the user click to upload an image
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +154,8 @@ public class AddEventFragment extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
                 intent.putExtra("ID",id);
                 intent.putExtra("OrganizerID",organizerID);
-                startActivity(intent);
+//                startActivity(intent);
+                finish();
             }
         });
 
@@ -164,59 +163,51 @@ public class AddEventFragment extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                try{
-                    getInfo();
-                    if (maxNumberOfAttendee <= 0) {
-                        // If negative, throw NumberFormatException
-                        throw new NumberFormatException();
-                    }
-
-                    putData();
-
-                    StorageReference imageRef = storageRef.child("images/" + id);
-                    StorageReference qrRef = storageRef.child("QRCode/" + id);
-                    StorageReference checkInRef = storageRef.child("CheckInQRCode/" + id);
-
-//                    // generate app qr code
-//                    StorageReference appRef = storageRef.child("AppQRCode/" + id);
-//                    Bitmap appQR = OrganizerQRCodeMaker.generateAppQRCode();
-//                    ByteArrayOutputStream by = new ByteArrayOutputStream();
-//                    appQR.compress(Bitmap.CompressFormat.PNG, 100, by);
-//                    byte[] appCodeByteArray = by.toByteArray();
+                Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
+                //intent.putExtra("ID",id);
+                intent.putExtra("OrganizerID",organizerID);
+                startActivity(intent);
+//                try{
+//                    getInfo();
+//                    if (maxNumberOfAttendee <= 0) {
+//                        // If negative, throw NumberFormatException
+//                        throw new NumberFormatException();
+//                    }
 //
-//                    // Upload QR code to Firebase Storage
-//                    appRef.putBytes(appCodeByteArray);
-//                    //
-
-                    //check if image uploaded
-                    if (imageURI==null){
-                        int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
-                        imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
-                    }
-
-                    putQRCode(qrCode, checkInQRCode,qrRef,checkInRef);
-
-                    imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(AddEventFragment.this,"Success",Toast.LENGTH_LONG).show();
-
-                            Intent intent = new Intent(getApplicationContext(), OrganizerEventFrame.class);
-                            intent.putExtra("ID",id);
-                            intent.putExtra("OrganizerID",organizerID);
-                            startActivity(intent);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(AddEventFragment.this,"Fail",Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-                catch (NumberFormatException e){
-                    Toast.makeText(AddEventFragment.this, "Invalid max limit", Toast.LENGTH_LONG).show();
-                }
+//                    putData();
+//
+//                    StorageReference imageRef = storageRef.child("images/" + id);
+//                    StorageReference qrRef = storageRef.child("QRCode/" + id);
+//                    StorageReference checkInRef = storageRef.child("CheckInQRCode/" + id);
+//
+//                    //check if image uploaded
+//                    if (imageURI==null){
+//                        int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
+//                        imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
+//                    }
+//
+//                    putQRCode(qrCode, checkInQRCode,qrRef,checkInRef);
+//
+//                    imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            Toast.makeText(AddEventFragment.this,"Success",Toast.LENGTH_LONG).show();
+//
+//                            Intent intent = new Intent(getApplicationContext(), OrganizerEventFrame.class);
+//                            intent.putExtra("ID",id);
+//                            intent.putExtra("OrganizerID",organizerID);
+//                            startActivity(intent);
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(AddEventFragment.this,"Fail",Toast.LENGTH_LONG).show();
+//                        }
+//                    });
+//                }
+//                catch (NumberFormatException e){
+//                    Toast.makeText(AddEventFragment.this, "Invalid max limit", Toast.LENGTH_LONG).show();
+//                }
 
             }
         });
