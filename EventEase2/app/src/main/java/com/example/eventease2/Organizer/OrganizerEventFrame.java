@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -33,9 +35,21 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**A frame for the organizer
  * Show the event info, and the user is able to to edit the text in this frame
@@ -103,7 +117,8 @@ public class OrganizerEventFrame extends AppCompatActivity {
 
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child("images/" + id);
-        StorageReference QRRef = storageRef.child("QRCode/" + id);
+        //StorageReference QRRef = storageRef.child("QRCode/" + id);
+        StorageReference CheckInRef = storageRef.child("CheckInQRCode/" + id);
         DocumentReference documentReference = db.collection("Organizer")
                 .document(organizerID).collection("Events").document(id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -146,7 +161,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
                             });
 
                             // Download the QR Code from Firebase Storage
-                            QRRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            CheckInRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
                                     // Convert the byte array to a Bitmap
@@ -271,8 +286,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
                 shareIntent.setType("image/jpeg");
 
                 // Add the QR code image as an extra to the Intent
-                // Note: You need to convert the Bitmap to a URI first
-                // This example assumes you have the image as a Bitmap
+                // share the qr code that link to the download page
                 Uri imageUri = getImageUri(getApplicationContext(),QRBitmap );
                 shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
 

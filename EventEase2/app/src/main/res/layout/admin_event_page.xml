@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/blue_background"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#00B6AA"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/events_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="0.6"/>
+
+        <TextView
+            android:id="@+id/text_eventease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EVENTEASE"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_weight="1.52"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/event_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:dividerHeight="8dp"
+        android:divider="@android:color/white"/>
+
+    <!-- Adding Show More Button -->
+    <Button
+        android:id="@+id/see_more_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show More"
+        android:layout_gravity="center"
+        />
+
+</LinearLayout>
