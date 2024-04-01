@@ -37,6 +37,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -46,7 +48,8 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
     FirebaseFirestore appDb = FirebaseFirestore.getInstance();
     TextView eventTitle;
     TextView eventDescription;
-    TextView eventDetails;
+    TextView eventDetails,entriesTextView;
+    String entries;
     ImageView eventPhoto;
     int maxInt;
     String eventID;
@@ -59,6 +62,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
     Bundle extras;
     StorageReference pathReference;
     boolean sent = false;
+    boolean entered;
     FirebaseStorage storageRef;
 
     public static AppData appData;
@@ -91,11 +95,8 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
 
             }
         });
-        eventTitle = findViewById(R.id.event_title);
-        eventDescription = findViewById(R.id.event_description);
-        eventDetails = findViewById(R.id.event_detail);
-        eventPhoto = findViewById(R.id.attendee_event_photo);
-        promiseToGoSwitch = findViewById(R.id.switch1);
+
+
         //extras = getIntent().getExtras();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -110,56 +111,102 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
         eventInfoDoc = appDb.collection("Organizer").document(organizerID).collection("Events").document(eventID);
         attendeeList = eventInfoDoc.collection("Attendees");
 
-
+        eventTitle = (TextView)findViewById(R.id.event_title);
+        entriesTextView = findViewById(R.id.numOfSpotLeft);
+        eventDescription = (TextView)findViewById(R.id.event_description);
+        eventDetails = (TextView)findViewById(R.id.event_detail);
+        eventPhoto = findViewById(R.id.attendee_event_photo);
+        promiseToGoSwitch = findViewById(R.id.switch1);
+        eventInfoDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        eventTitle.setText((CharSequence) document.get("Name"));
+                        eventDescription.setText((CharSequence) document.get("Description"));
+                        eventDetails.setText((CharSequence) document.get("EventBody"));
+                        String max = document.get("Max").toString();
+                        maxInt = Integer.parseInt(max);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        attendeeList.document(attendeeId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        promiseToGoSwitch.setChecked(true);
+                        maxInt++;
+                        sent = true;
+                    } else {
+                        sent = false;
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        Query query = attendeeList;
+        AggregateQuery countQuery = query.count();
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Count fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Count: " + snapshot.getCount());
+                    entries = String.valueOf(maxInt - snapshot.getCount());
+                    entriesTextView.setText(entries);
+                } else {
+                    Log.d(TAG, "Count failed: ", task.getException());
+                }
+            }
+        });
 
         promiseToGoSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //Toast.makeText(AttendeeEventDetailsActivity.this, "Switch Checked "+isChecked, Toast.LENGTH_SHORT).show();
-                if(isChecked){
-                    eventInfoDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            DocumentSnapshot document = task.getResult();
-                            if (task.isSuccessful()) {
-                            if (document.exists()) {
-                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                String max = document.get("Max").toString();
-                                maxInt = Integer.parseInt(max);
 
-                            } else {
-                                Log.d(TAG, "No such document");
-                            }
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
-                        }
-                    }
-                });
+                if(isChecked){
                     Query query = eventInfoDoc.collection("Attendees");
                     AggregateQuery countQuery = query.count();
                     countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                // Count fetched successfully
-                                AggregateQuerySnapshot snapshot = task.getResult();
-                                Log.d(TAG, "Count: " + snapshot.getCount());
-                                if(maxInt > snapshot.getCount()){
-                                    Toast.makeText(AttendeeEventDetailsActivity.this,
-                                            extras.getString("AttendeeID"), Toast.LENGTH_SHORT).show();
-                                    addAttendeeData();
-                                    promisedEvent = new Event(eventPhoto,eventTitle.toString(),
-                                            eventDescription.toString(),null,
-                                            false,null, null);
-                                    sent = true;
+                                if(!sent){
+                                    // Count fetched successfully
+                                    AggregateQuerySnapshot snapshot = task.getResult();
+                                    Log.d(TAG, "Count: " + snapshot.getCount());
+                                    if(maxInt > snapshot.getCount()){
+                                        addAttendeeData();
+                                        promisedEvent = new Event(eventPhoto,eventTitle.toString(),
+                                                eventDescription.toString(),null,
+                                                false,null, null);
+                                        entries = String.valueOf(Integer.parseInt(entries)-1);
+                                        entriesTextView.setText(entries);
+                                        sent = true;
+                                    }else{
+                                        //geolocation, and
+                                        Toast.makeText(AttendeeEventDetailsActivity.this,
+                                                "Sorry. All spots for this event are taken.",
+                                                Toast.LENGTH_SHORT).show();
+                                        promiseToGoSwitch.setChecked(false);
+                                        sent = false;
+                                    }
                                 }else{
-                                    //geolocation, and
-                                    Toast.makeText(AttendeeEventDetailsActivity.this,
-                                            "Sorry. All spots for this event are taken.",
-                                            Toast.LENGTH_SHORT).show();
-                                    promiseToGoSwitch.setChecked(false);
+                                    sent = true;
                                 }
-
                             } else {
                                 Log.d(TAG, "Count failed: ", task.getException());
                             }
@@ -167,13 +214,16 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                     });
 
                 }else {
-                    if (sent = true){
+                    if (sent){
                         eventInfoDoc.collection("Attendees").document(attendeeId )
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        entries = String.valueOf(Integer.parseInt(entries)+1);
+                                        entriesTextView.setText(entries);
                                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                        sent = false;
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {

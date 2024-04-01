@@ -1,5 +1,7 @@
 package com.example.eventease2.Attendee;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,12 +13,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.eventease2.Event;
 import com.example.eventease2.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -30,12 +42,12 @@ import java.util.Objects;
  */
 public class AttendeeEventFragment extends Fragment {
     private String eventID;
-    private String  organizerID;
+    private String  organizerID,eventEntries;
     ArrayList<String> organizerList;
     ArrayList<String> eventNameList;
     ArrayList<String> eventInfoList;
     ArrayList<String> eventIDs;
-    ArrayList<String> maxAttendeeList;
+    ArrayList<String> maxAttendeeList,entriesAttendeeList;
     ListView eventList;
     AttendeeEventAdapter attendeeListArrayAdapter;
     public static AttendeeAppData attendeeAppData;
@@ -65,6 +77,7 @@ public class AttendeeEventFragment extends Fragment {
         eventInfoList = new ArrayList<>();
         eventIDs = new ArrayList<>();
         maxAttendeeList = new ArrayList<>();
+        entriesAttendeeList = new ArrayList<>();
         refreshEventData();
 
 
@@ -82,6 +95,7 @@ public class AttendeeEventFragment extends Fragment {
         eventInfoList.clear();
         eventIDs.clear();
         maxAttendeeList.clear();
+        entriesAttendeeList.clear();
     }
     private void fetchOrganizers(CollectionReference collectionRef, FirebaseFirestore appDb) {
         collectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -109,6 +123,7 @@ public class AttendeeEventFragment extends Fragment {
                     String description = eventSnapshot.getString("Description");
                     String name = eventSnapshot.getString("Name");
                     String maxAttendees;
+
                     if(eventSnapshot.get("Max") != null) {
                         maxAttendees= eventSnapshot.get("Max").toString();
                     }else {
@@ -128,8 +143,7 @@ public class AttendeeEventFragment extends Fragment {
                 attendeeAppData.setEventInfoList(eventInfoList);
                 attendeeAppData.setEventIDs(eventIDs);
                 attendeeAppData.setMaxAttendeeList(maxAttendeeList);
-                //DocumentReference attendeeRef = eventsCollectionRef.document(eventID);
-                //appData.setParticipantCountList(participantCountList);
+                //attendeeAppData.setEntriesAttendeeList(entriesAttendeeList);
                 notifyDataAdapter();
             }
         }).addOnFailureListener(new OnFailureListener() {

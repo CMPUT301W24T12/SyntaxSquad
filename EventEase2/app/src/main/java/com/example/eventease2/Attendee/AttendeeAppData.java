@@ -8,6 +8,7 @@ public class AttendeeAppData {
     private ArrayList<String> eventInfoList;
     private ArrayList<String> eventIDs;
     private ArrayList<String> maxAttendeeList;
+    private ArrayList<String> entriesAttendeeList;
 
     public AttendeeAppData() {
         organizerList = new ArrayList<String >();
@@ -15,6 +16,7 @@ public class AttendeeAppData {
         eventInfoList = new ArrayList<>();
         eventIDs = new ArrayList<>();
         maxAttendeeList = new ArrayList<>();
+        entriesAttendeeList = new ArrayList<>();
     }
 
     public ArrayList<String> getOrganizerList() {
@@ -90,5 +92,13 @@ public class AttendeeAppData {
         if (index >= 0 && index < maxAttendeeList.size()) {
             maxAttendeeList.remove(index);
         }
+    }
+
+    public ArrayList<String> getEntriesAttendeeList() {
+        return entriesAttendeeList;
+    }
+
+    public void setEntriesAttendeeList(ArrayList<String> entriesAttendeeList) {
+        this.entriesAttendeeList = entriesAttendeeList;
     }
 }
