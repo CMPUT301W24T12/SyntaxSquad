@@ -166,7 +166,14 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                     AggregateQuerySnapshot snapshot = task.getResult();
                     Log.d(TAG, "Count: " + snapshot.getCount());
                     entries = String.valueOf(maxInt - snapshot.getCount());
-                    entriesTextView.setText(entries);
+                    //found some errors when retrieving getCount. Getting the count twice seems to
+                    //fix most of the problems.
+                    if (Integer.parseInt(entries) < 0){
+                        entries = String.valueOf(maxInt - snapshot.getCount());
+                        entriesTextView.setText(entries);
+                    }else{
+                        entriesTextView.setText(entries);
+                    }
                 } else {
                     Log.d(TAG, "Count failed: ", task.getException());
                 }
