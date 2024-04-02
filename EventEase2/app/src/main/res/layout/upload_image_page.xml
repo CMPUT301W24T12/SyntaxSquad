@@ -161,6 +161,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_button_background"
         android:backgroundTint="#00B6AA"
         android:text="Generate Event"
         app:layout_constraintBottom_toBottomOf="parent"
