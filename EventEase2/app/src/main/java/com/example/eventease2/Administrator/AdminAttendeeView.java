@@ -91,12 +91,13 @@ public class AdminAttendeeView extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an Intent to navigate to the Add Event Activity
                 Intent intent = new Intent(AdminAttendeeView.this, AppEventsActivity.class);
                 intent.putExtra("OrganizerID", organizerID);
                 intent.putExtra("EventID", eventID);
                 // Start the new activity
                 startActivity(intent);
+                // Finish the current activity
+                finish();
             }
         });
 //        attendeeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -115,6 +115,8 @@ public class EditProfileActivity extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
                                 // Handle any errors
                                 Log.e("EditProfileActivity", "Failed to download profile picture: " + e.getMessage());
+                                profile_pic.setImageResource(profilePicResId);
+
                             }
                         });
                     } else {
@@ -132,6 +134,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
             profilePicRef.delete().addOnSuccessListener(aVoid -> {
                 Log.d("EditProfileActivity", "onSuccess: deleted file");
+                profile_pic.setImageResource(profilePicResId);
             }).addOnFailureListener(exception -> {
                 // Uh-oh, an error occurred!
                 Log.d("EditProfileActivity", "onFailure: did not delete file");
