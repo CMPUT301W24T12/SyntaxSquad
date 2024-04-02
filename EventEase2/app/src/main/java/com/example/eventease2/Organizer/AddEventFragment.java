@@ -46,7 +46,7 @@ import java.util.UUID;
 /**
  * This is the class to add a event into the event list
  */
-public class AddEventFragment extends AppCompatActivity {
+public class AddEventFragment extends AppCompatActivity implements OrganizerWarningDialog.QRCodeTypeChangeListener {
     private ImageView imageView;
     private Uri imageURI;
     private TextView eventNameView;
@@ -63,8 +63,10 @@ public class AddEventFragment extends AppCompatActivity {
     String duration;
     Boolean isAbleLocationTracking;
 
+    public String QRCodeType;
+
     int maxNumberOfAttendee;
-    private String id;
+    private static String id;
     private String organizerID;
     private static final int REQUEST_IMAGE_PICK = 1;
     private  CollectionReference collectionRef;
@@ -90,6 +92,9 @@ public class AddEventFragment extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
+        warningDialog.show(getSupportFragmentManager(),"Choose existing QR Code");
         setContentView(R.layout.upload_image_page);
 
         // Copyright 2020 M. Fadli Zein
@@ -100,8 +105,6 @@ public class AddEventFragment extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-//        collectionRef = db.collection("EventEase");
-//        eventsRef = collectionRef.document("Organizer");
         collectionRef = db.collection("Organizer");
 
         maxNumberOfAttendee = -1;   //negative as default that is no limit
@@ -119,25 +122,9 @@ public class AddEventFragment extends AppCompatActivity {
         id = randomKey;
         organizerID = imei;
         String combinedID = id+"#"+organizerID;
+        String checkInID = "*"+combinedID;
         Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode(combinedID);
-
-        db.collection("collections").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<String> collectionNames = new ArrayList<>();
-                            for (DocumentSnapshot document : task.getResult()) {
-                                // Get the name of each collection and add it to the list
-                                String collectionName = document.getId();
-                                collectionNames.add(collectionName);
-                            }
-                            Log.d(TAG, "Collections: " + collectionNames);
-                        } else {
-                            Log.d(TAG, "Error getting collections: ", task.getException());
-                        }
-                    }
-                });
+        Bitmap checkInQRCode = OrganizerQRCodeMaker.generateQRCode(checkInID);
 
         // let the user click to upload an image
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +141,8 @@ public class AddEventFragment extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
                 intent.putExtra("ID",id);
                 intent.putExtra("OrganizerID",organizerID);
-                startActivity(intent);
+//                startActivity(intent);
+                finish();
             }
         });
 
@@ -162,67 +150,41 @@ public class AddEventFragment extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
+//                intent.putExtra("ID",id);
+//                intent.putExtra("OrganizerID",organizerID);
+//                startActivity(intent);
+//                String result = getIntent().getStringExtra("SelectedID");
+//                if (result!=null){
+//                    Toast.makeText(AddEventFragment.this,result,Toast.LENGTH_LONG).show();
+//                }
+//                OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
+//                warningDialog.show(getSupportFragmentManager(),"Choose existing QR Code");
+                //Toast.makeText(AddEventFragment.this,id,Toast.LENGTH_LONG).show();
 
                 try{
+                    Log.d("ID_add",id);
                     getInfo();
                     if (maxNumberOfAttendee <= 0) {
                         // If negative, throw NumberFormatException
                         throw new NumberFormatException();
                     }
 
-                    HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
-
-                    // Add Lists of attendees name, phoneNumbers, emails
-//                    List<String> emailList = new ArrayList<>();
-//                    emailList.add("email1");
-//
-//                    List<String> phoneList = new ArrayList<>();
-//                    phoneList.add("phone1");
-//
-//                    List<String> nameList = new ArrayList<>();
-//                    nameList.add("name1");
-//
-//                    List<String> attendeeList = new ArrayList<>();
-//                    attendeeList.add("attendee1");
-//                    attendeeList.add("attendee1");
-
-                    // Put the list into the HashMap
-                    data.put("Max",maxNumberOfAttendee);
-                    data.put("Name", eventName);
-                    data.put("ID", id);
-                    data.put("Location", location);
-                    data.put("Description", description);
-                    data.put("Duration", duration);
-                    data.put("EventBody", "");
-                    data.put("IsAbleLocationTracking", isAbleLocationTracking);
-//                    data.put("EmailList", emailList);
-//                    data.put("PhoneList", phoneList);
-//                    data.put("NameList", nameList);
-//                    data.put("AttendeeList", attendeeList);
-                    DocumentReference docRef = collectionRef.document(organizerID);
-
-                    HashMap<String, Object> dataID = new HashMap<>();
-                    dataID.put("OrganizerID",organizerID);
-                    CollectionReference newRef = docRef.collection("Events");
-                    docRef.set(dataID);
-                    newRef.document(id).set(data);
+                    putData();
 
                     StorageReference imageRef = storageRef.child("images/" + id);
                     StorageReference qrRef = storageRef.child("QRCode/" + id);
+                    StorageReference checkInRef = storageRef.child("CheckInQRCode/" + id);
 
                     //check if image uploaded
                     if (imageURI==null){
-                        int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
+                        int drawableResourceId = R.drawable.default_event; // Replace this with the actual resource ID
                         imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
                     }
+                    if (QRCodeType == "new"){
+                        putQRCode(qrCode, checkInQRCode,qrRef,checkInRef);
+                    }
 
-                    // Convert QR code bitmap to byte array
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    byte[] qrCodeByteArray = baos.toByteArray();
-
-                    // Upload QR code to Firebase Storage
-                    qrRef.putBytes(qrCodeByteArray);
                     imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -239,10 +201,10 @@ public class AddEventFragment extends AppCompatActivity {
                             Toast.makeText(AddEventFragment.this,"Fail",Toast.LENGTH_LONG).show();
                         }
                     });
-                } catch (NumberFormatException e){
+                }
+                catch (NumberFormatException e){
                     Toast.makeText(AddEventFragment.this, "Invalid max limit", Toast.LENGTH_LONG).show();
                 }
-
             }
         });
 
@@ -274,4 +236,63 @@ public class AddEventFragment extends AppCompatActivity {
         }
     }
 
+    /**
+     * put data to the firebase
+     */
+    void putData(){
+        HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
+
+        // Put the list into the HashMap
+        data.put("Max",maxNumberOfAttendee);
+        data.put("Name", eventName);
+        data.put("ID", id);
+        data.put("Location", location);
+        data.put("Description", description);
+        data.put("Duration", duration);
+        data.put("EventBody", "");
+        data.put("IsAbleLocationTracking", isAbleLocationTracking);
+        DocumentReference docRef = collectionRef.document(organizerID);
+
+        HashMap<String, Object> dataID = new HashMap<>();
+        dataID.put("OrganizerID",organizerID);
+        CollectionReference newRef = docRef.collection("Events");
+        docRef.set(dataID);
+        newRef.document(id).set(data);
+    }
+
+    /**
+     * put QR code to firebase storage
+     */
+    void putQRCode(Bitmap qrCode, Bitmap checkInQRCode, StorageReference qrRef, StorageReference checkInRef){
+        // Convert QR code bitmap to byte array
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] qrCodeByteArray = baos.toByteArray();
+
+        ByteArrayOutputStream check = new ByteArrayOutputStream();
+        checkInQRCode.compress(Bitmap.CompressFormat.PNG, 100,check);
+        byte[] checkInCodeByteArray = check.toByteArray();
+
+        // Upload QR code to Firebase Storage
+        qrRef.putBytes(qrCodeByteArray);
+        checkInRef.putBytes(checkInCodeByteArray);
+    }
+
+    @Override
+    public void onQRCodeTypeChange(String type) {
+        this.QRCodeType = type;
+    }
+
+    @Override
+    public void intentTOReuseQRCode() {
+        Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
+        intent.putExtra("ID",id);
+        intent.putExtra("OrganizerID",organizerID);
+        startActivity(intent);
+    }
+
+
+    public static void updateEventID(String id) {
+        AddEventFragment.id = id;
+    }
 }

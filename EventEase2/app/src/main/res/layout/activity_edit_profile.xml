@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Administrator.EditProfile">
+    tools:context=".Administrator.EditProfileActivity">
 
     <View
         android:id="@+id/blue_background"
@@ -32,18 +33,19 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="180dp"
-        android:layout_height="225dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="154dp"
+        android:layout_height="181dp"
+        android:layout_marginTop="72dp"
         android:layout_marginEnd="116dp"
         android:contentDescription="@string/todo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.907"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/blue_background"
         app:srcCompat="@drawable/ellipse_9" />
 
     <Button
+        android:id="@+id/remove_pic"
         android:layout_width="239dp"
         android:layout_height="37dp"
         android:layout_gravity="center_horizontal"
@@ -66,11 +68,12 @@
         android:text="@string/editable_name"
         android:textSize="25sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.479"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toTopOf="@+id/blue_background"
+        app:layout_constraintVertical_bias="0.385" />
 
     <TextView
         android:id="@+id/textView3"
@@ -101,14 +104,14 @@
         app:layout_constraintTop_toBottomOf="@+id/blue_background"
         app:layout_constraintVertical_bias="0.171" />
 
-    <EditText
+    <TextView
         android:id="@+id/editTextText3"
         android:layout_width="332dp"
         android:layout_height="54dp"
         android:layout_marginBottom="96dp"
         android:autofillHints=""
         android:ems="10"
-        android:inputType="text"
+        android:textSize="20sp"
         android:text="Phone: "
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -119,13 +122,13 @@
         app:layout_constraintVertical_bias="0.086"
         tools:ignore="DuplicateIds" />
 
-    <EditText
+    <TextView
         android:id="@+id/editTextText2"
         android:layout_width="330dp"
         android:layout_height="55dp"
         android:autofillHints=""
         android:ems="10"
-        android:inputType="text"
+        android:textSize="20sp"
         android:text="Email: "
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -137,6 +140,7 @@
         tools:ignore="LabelFor" />
 
     <Button
+        android:id="@+id/remove_profile"
         android:layout_width="239dp"
         android:layout_height="37dp"
         android:layout_gravity="center_horizontal"

@@ -36,28 +36,16 @@
         tools:layout_editor_absoluteX="36dp"
         tools:layout_editor_absoluteY="64dp" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="68dp"
+    <Button
+        android:id="@+id/chooseButton"
+        android:layout_width="163dp"
         android:layout_height="wrap_content"
-        android:text="ENTRIES"
-        android:translationX="-510dp"
-        android:translationY="75dp"
+        android:backgroundTint="@color/green"
+        android:text="Choose this QR code"
+        android:translationX="-560dp"
+        android:translationY="100dp"
         tools:layout_editor_absoluteX="178dp"
         tools:layout_editor_absoluteY="100dp" />
-
-    <TextView
-        android:id="@+id/participant_count"
-        android:layout_width="54dp"
-        android:layout_height="wrap_content"
-        android:text="123"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:translationX="-580dp"
-        android:translationY="100dp"
-        tools:layout_editor_absoluteX="188dp"
-        tools:layout_editor_absoluteY="131dp" />
 
     <Button
         android:id="@+id/button15"
@@ -73,7 +61,7 @@
         android:backgroundTint="#00B6AA"
         android:text="VIEW ATTENDEES"
         android:textSize="11sp"
-        android:translationX="-600dp"
+        android:translationX="-620dp"
         android:translationY="170dp"
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="179dp" />
@@ -85,19 +73,9 @@
         android:backgroundTint="#00B6AA"
         android:text="EVENT DETAILS"
         android:textSize="11sp"
-        android:translationX="-930dp"
+        android:translationX="-950dp"
         android:translationY="170dp"
         tools:layout_editor_absoluteX="217dp"
         tools:layout_editor_absoluteY="179dp" />
-
-
-    <Button
-        android:id="@+id/see_more_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/see_more"
-        android:visibility="visible" />
-
 
 </LinearLayout>

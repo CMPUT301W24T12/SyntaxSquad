@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00B6AA"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:weightSum="5"
     tools:context=".RoleChooseActivity">
 
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="404dp"
-        android:layout_height="1008dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/rounded_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="0.5"
+        android:background="#00B6AA">
 
-    <Button
-        android:id="@+id/back_button"
-        android:layout_width="85dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#00FFFFFF"
-        android:text="Back"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.013"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00FFFFFF"
+            android:text="Back"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:gravity="center"
+            android:text="EVENTEASE"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 
     <TextView
-        android:id="@+id/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="EVENTEASE"
+        android:text="Upload an image for the event"
         android:textAllCaps="false"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/black"
         android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.872" />
+        android:layout_gravity="center"
+        />
 
     <ImageButton
         android:id="@+id/attendeeProfileImage"
@@ -59,102 +59,93 @@
         android:layout_marginTop="20dp"
         android:background="#00000000"
         android:scaleType="fitCenter"
+        android:layout_gravity="center"
         android:src="@drawable/upload_image_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        />
 
-    <EditText
-        android:id="@+id/editTextText"
-        android:layout_width="360dp"
-        android:layout_height="51dp"
-        android:background="@android:color/background_light"
-        android:backgroundTint="#B4CCCCCC"
-        android:ems="10"
-        android:hint="Enter the name of the event:"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/editTextText2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.952" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_weight="4.6"
+        android:weightSum="6"
+        android:paddingTop="16dp">
 
-    <EditText
-        android:id="@+id/editTextText2"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:background="@android:color/background_light"
-        android:backgroundTint="#B4CCCCCC"
-        android:ems="10"
-        android:hint="Edit descripton:"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/editTextText3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.965" />
+        <EditText
+            android:id="@+id/editTextText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/background_light"
+            android:backgroundTint="#F6F6F6"
+            android:ems="10"
+            android:layout_weight="1"
+            android:hint="Enter the name of the event:"
+            android:inputType="text" />
 
-    <EditText
-        android:id="@+id/editTextText3"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:background="@android:color/background_light"
-        android:backgroundTint="#B4CCCCCC"
-        android:ems="10"
-        android:hint="Enter the location:"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/enable_location_checkbox"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.966" />
+        <EditText
+            android:id="@+id/editTextText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/background_light"
+            android:backgroundTint="#F6F6F6"
+            android:ems="10"
+            android:layout_weight="1"
+            android:hint="Edit descripton:"
+            android:inputType="text" />
 
-    <EditText
-        android:id="@+id/editTextText5"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/background_light"
-        android:backgroundTint="#B4CCCCCC"
-        android:ems="10"
-        android:hint="Maximum Attendees:"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
+        <EditText
+            android:id="@+id/editTextText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/background_light"
+            android:backgroundTint="#F6F6F6"
+            android:ems="10"
+            android:layout_weight="1"
 
-    <CheckBox
-        android:id="@+id/enable_location_checkbox"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:background="@android:color/background_light"
-        android:backgroundTint="#B4CCCCCC"
-        android:text="Enable Geolocation Tracking"
-        app:layout_constraintBottom_toTopOf="@+id/editTextText4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.972" />
+            android:hint="Enter the location:"
+            android:inputType="text" />
 
-    <EditText
-        android:id="@+id/editTextText4"
-        android:layout_width="360dp"
-        android:layout_height="50dp"
-        android:background="@android:color/background_light"
-        android:backgroundTint="#B4CCCCCC"
-        android:ems="10"
-        android:hint="Duration:"
-        android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.782" />
+        <CheckBox
+            android:id="@+id/enable_location_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/background_light"
+            android:backgroundTint="#F6F6F6"
+            android:layout_weight="1"
+            android:text="Enable Geolocation Tracking" />
+
+
+        <EditText
+            android:id="@+id/editTextText4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light"
+            android:backgroundTint="#F6F6F6"
+            android:hint="Duration:"
+            android:layout_weight="1"
+            android:inputType="text"/>
+
+
+        <EditText
+            android:id="@+id/editTextText5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/background_light"
+            android:backgroundTint="#F6F6F6"
+            android:ems="10"
+            android:hint="Maximum Attendees:"
+            android:inputType="text"
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/button2"
@@ -163,34 +154,6 @@
         android:layout_marginBottom="16dp"
         android:backgroundTint="#00B6AA"
         android:text="Generate Event"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_gravity="center" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Upload an image for the event using the icon below"
-        app:layout_constraintBottom_toTopOf="@+id/editTextText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/divider"
-        app:layout_constraintVertical_bias="0.091" />
-
-    <ImageButton
-        android:id="@+id/imageButton5"
-        android:layout_width="54dp"
-        android:layout_height="50dp"
-        android:background="#00000000"
-        android:scaleType="fitCenter"
-        android:src="@drawable/duration_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextText4"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText4"
-        app:layout_constraintHorizontal_bias="0.985"
-        app:layout_constraintStart_toStartOf="@+id/editTextText4"
-        app:layout_constraintTop_toTopOf="@+id/editTextText4"
-        app:layout_constraintVertical_bias="0.0" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
