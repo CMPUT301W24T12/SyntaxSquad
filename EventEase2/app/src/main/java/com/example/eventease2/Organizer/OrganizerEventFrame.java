@@ -94,7 +94,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
         setContentView(R.layout.organizer_event_frame);
 
         doneButton = findViewById(R.id.done_button);
-        doneButton.setEnabled(false);
+        //doneButton.setEnabled(false);
 
         share = findViewById(R.id.share);
         shareButton = findViewById(R.id.share_button);
@@ -106,7 +106,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
         eventBodyView = findViewById(R.id.editTextText2);
         eventTitleView = findViewById(R.id.eventTitle);
 
-        share.setEnabled(false);
+        //share.setEnabled(false);
 
         id = getIntent().getStringExtra("ID");
         organizerID = getIntent().getStringExtra("OrganizerID");
@@ -224,10 +224,10 @@ public class OrganizerEventFrame extends AppCompatActivity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doneButton.setEnabled(false);
-                shareButton.setEnabled(true);
-                share.setEnabled(false);
-                editButton.setEnabled(true);
+                doneButton.setVisibility(View.GONE);
+                shareButton.setVisibility(View.VISIBLE);
+                share.setVisibility(View.GONE);
+                editButton.setVisibility(View.VISIBLE);
             }
         });
 
@@ -243,10 +243,10 @@ public class OrganizerEventFrame extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doneButton.setEnabled(true);
-                shareButton.setEnabled(false);
-                share.setEnabled(true);
-                editButton.setEnabled(false);
+                doneButton.setVisibility(View.VISIBLE);
+                shareButton.setVisibility(View.GONE);
+                share.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.GONE);
             }
         });
 

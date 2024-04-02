@@ -50,6 +50,7 @@
         <activity android:name=".Organizer.OrganizerNotificationFragment" />
         <activity android:name=".Attendee.AttendeeEventDetailsActivity" />
         <activity android:name=".Attendee.AttendeeEventAdapter" />
+        <activity android:name=".Organizer.ReuseQRCodeFragment"/>
         <activity
             android:name=".Organizer.AddEventFragment"
             android:exported="true" />
