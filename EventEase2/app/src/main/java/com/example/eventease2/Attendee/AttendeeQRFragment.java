@@ -1,26 +1,29 @@
 package com.example.eventease2.Attendee;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.eventease2.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.internal.FirebaseInstanceIdInternal;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import java.security.SecureRandom;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -29,7 +32,7 @@ import java.util.Objects;
  * to scan a QR code after pressing a button.
  * @author Sean
  */
-public class AttendeeQRFragment extends Fragment{
+public class AttendeeQRFragment extends Fragment {
     private AttendeeItemViewModel viewModel;
     private boolean flag = false;
     private FirebaseFirestore appDb;
@@ -136,6 +139,35 @@ public class AttendeeQRFragment extends Fragment{
         data.put("Email", viewModel.getProfileEmail());
         data.put("Phone", viewModel.getProfilePhone());
         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+
+        // Subscribing Attendee to event notifications
+        Context context = requireContext();
+        FirebaseMessaging.getInstance().subscribeToTopic(event)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Subscribed";
+                        if (!task.isSuccessful()) {
+                            msg = "Subscribe failed";
+                        }
+                        Log.d("Notification Subscription", msg);
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        /*
+        @Override
+        public void onTokenRefresh() {
+            // Get updated InstanceID token.
+            String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+            Log.d("TAG", "Refreshed token: " + refreshedToken);
+
+            // If you want to send messages to this application instance or
+            // manage this apps subscriptions on the server side, send the
+            // Instance ID token to your app server.
+            sendRegistrationToServer(refreshedToken);
+        }
+         */
     }
     /**
      * Firebase connecting function.

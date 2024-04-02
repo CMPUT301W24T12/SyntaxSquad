@@ -91,9 +91,9 @@ public class EventListFragment extends AppCompatActivity {
                                                 eventInfoList.add(description);
                                                 eventIDs.add(documentSnapshot.getId());
                                             }
-                                            Log.d("Event IDs", eventIDs.get(0));
-                                            Log.d("Name List", eventNameList.get(0));
-                                            Log.d("Event Info", eventInfoList.get(0));
+                                            //Log.d("Event IDs", eventIDs.get(0));
+                                            //Log.d("Name List", eventNameList.get(0));
+                                            //Log.d("Event Info", eventInfoList.get(0));
                                             eventListArrayAdapter = new EventListArrayAdapter(EventListFragment.this, eventNameList, eventInfoList, organizerID, eventIDs);
                                             eventList.setAdapter(eventListArrayAdapter);
                                         }

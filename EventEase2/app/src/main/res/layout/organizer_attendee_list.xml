@@ -76,7 +76,7 @@
         android:backgroundTint="#00B6AA"
         android:text="Set Milestones"
         android:translationX="-40dp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/organizer_attendee_list"
         app:layout_constraintEnd_toEndOf="parent" />
 

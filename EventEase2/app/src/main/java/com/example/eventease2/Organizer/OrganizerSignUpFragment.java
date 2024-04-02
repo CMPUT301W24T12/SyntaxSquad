@@ -41,7 +41,7 @@ public class OrganizerSignUpFragment extends AppCompatActivity {
 
         // Change to sign-Up list in Firebase
         CollectionReference attendeeRef = db.collection("Organizer").document(organizerID).collection("Events").document(eventID).collection("Attendees");
-        ArrayList<String> attendeeIDs = new ArrayList<>();                                                   //replace with organizer ID                                                                        //replace with event ID
+        ArrayList<String> attendeeIDs = new ArrayList<>();
         ArrayList<String> attendeeNames = new ArrayList<>();
         attendeeRef.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -88,7 +88,8 @@ public class OrganizerSignUpFragment extends AppCompatActivity {
                 intent.putExtra("OrganizerID", organizerID);
                 intent.putExtra("EventID", eventID);
                 // Start the new activity
-                startActivity(intent);
+                //startActivity(intent);
+                finish();
             }
         });
     }

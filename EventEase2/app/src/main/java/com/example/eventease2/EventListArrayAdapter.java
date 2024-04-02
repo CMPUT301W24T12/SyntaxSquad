@@ -16,7 +16,12 @@ import androidx.annotation.Nullable;
 import com.example.eventease2.Organizer.OrganizerAttendeeListFragment;
 import com.example.eventease2.Organizer.OrganizerEventFrame;
 import com.example.eventease2.Organizer.OrganizerSignUpFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -36,6 +41,8 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
     private ArrayList<String> eventIDs;
     private Context context;
 
+    private Integer count;
+
     public EventListArrayAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, String organizerID, ArrayList<String> eventIDs) {
         super(context, 0, eventNames);
         this.eventNames = eventNames;
@@ -54,6 +61,8 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
             view = LayoutInflater.from(context).inflate(R.layout.event_list, parent, false);
         }
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         String name = eventNames.get(position);
         String description = eventDescription.get(position);
         String eventID = eventIDs.get(position);
@@ -63,6 +72,42 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
 
         eventName.setText(name);
         eventDetails.setText(description);
+
+        ArrayList<Integer> attendeeIDs = new ArrayList<>();
+        for (String event : eventIDs) {
+            ArrayList<String> attendeeID = new ArrayList<>();
+            CollectionReference attendeeRef = db.collection("Organizer").document(organizerID)
+                    .collection("Events").document(event).collection("Attendees");
+
+            attendeeRef.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                // Access each document here
+                                Log.d("Event List", documentSnapshot.getId());
+                                //                        attendee id's
+                                String attendees = documentSnapshot.getId();
+                                attendeeID.add(attendees);
+                            }
+                            attendeeIDs.add(attendeeID.size());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("NewTag", "Error getting documents.", e);
+                        }
+                    });
+        }
+
+        TextView eventCount = view.findViewById(R.id.participant_count);
+        if (attendeeIDs.isEmpty()) {
+            count = 0;
+        } else {
+            count = attendeeIDs.get(position);
+        }
+        eventCount.setText(count.toString());
 
         Button eventInfo = view.findViewById(R.id.event_details);
         eventInfo.setOnClickListener(v -> {

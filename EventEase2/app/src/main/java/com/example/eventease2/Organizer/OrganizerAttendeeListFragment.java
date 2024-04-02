@@ -58,7 +58,7 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
         setContentView(R.layout.organizer_attendee_list);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String eventID = getIntent().getStringExtra("ID");
+        String eventID = getIntent().getStringExtra("EventID");
         String organizerID = getIntent().getStringExtra("OrganizerID");
 
         attendeeList = findViewById(R.id.organizer_attendee_list);
@@ -105,11 +105,24 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                     }
                 });
 
-        Button milestone = findViewById(R.id.button4);
+        Button milestone = findViewById(R.id.button5);
         milestone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setMilestoneDialog();
+            }
+        });
+
+        Button notifications = findViewById(R.id.button4);
+        notifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to navigate to the Add Event Activity
+                Intent intent = new Intent(OrganizerAttendeeListFragment.this, OrganizerNotificationFragment.class);
+                intent.putExtra("OrganizerID", organizerID);
+                intent.putExtra("EventID", eventID);
+                // Start the new activity
+                startActivity(intent);
             }
         });
 
@@ -122,7 +135,8 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                 intent.putExtra("OrganizerID", organizerID);
                 intent.putExtra("EventID", eventID);
                 // Start the new activity
-                startActivity(intent);
+                //startActivity(intent);
+                finish();
             }
         });
     }
@@ -135,6 +149,7 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
         // Set up the input field
         final EditText input = new EditText(OrganizerAttendeeListFragment.this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
+
         builder.setView(input);
 
         // Set up the buttons
