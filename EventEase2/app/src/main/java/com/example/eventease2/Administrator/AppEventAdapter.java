@@ -1,5 +1,6 @@
 package com.example.eventease2.Administrator;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -120,6 +121,8 @@ public class AppEventAdapter extends ArrayAdapter<String> {
                 intent.putExtra("ID", eventID);
                 intent.putExtra("OrganizerID", organizerID.get(position));
                 context.startActivity(intent);
+                ((Activity) context).finish();
+
             }
         });
 
