@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -78,10 +79,9 @@ public class AttendeeProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setModelItems();
-
                 if(!Objects.equals(event, "")) {
                     addAttendeeData();
-                    Toast.makeText(getContext(), "Clicked!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Clicked!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -92,6 +92,30 @@ public class AttendeeProfileFragment extends Fragment {
                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i,3);
 
+            }
+        });
+        Button deleteButton = view.findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Drawable defaultPhoto = getResources().getDrawable(R.drawable.upload_image_button);
+                gallery.setImageDrawable(defaultPhoto);
+
+                storage = FirebaseStorage.getInstance();
+                storageRef = storage.getReference();
+                StorageReference attendeeProfile = storageRef.child("profilepics/"+viewModel.getAttendeeID());
+
+                attendeeProfile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("DeletePhoto","Photo successfully deleted");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("DeletePhoto","Photo NOT deleted");
+                    }
+                });
             }
         });
 

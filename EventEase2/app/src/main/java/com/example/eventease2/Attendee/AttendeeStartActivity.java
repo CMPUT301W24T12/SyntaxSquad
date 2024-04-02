@@ -1,16 +1,24 @@
 package com.example.eventease2.Attendee;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.DownloadManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.eventease2.R;
 import com.example.eventease2.databinding.ActivityAttendeeStartBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +41,7 @@ public class AttendeeStartActivity extends AppCompatActivity{
     private String organizerID;
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int ID_LENGTH = 15;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +120,7 @@ public class AttendeeStartActivity extends AppCompatActivity{
         File path = getApplicationContext().getFilesDir();
         try {
             FileOutputStream writer = new FileOutputStream(new File(path,"AttendeeInfo.txt"));
+            FileOutputStream writerImage = new FileOutputStream(new File(path,"AttendeeUri.png"));
             ArrayList<String> attendeeInfo = new ArrayList<String>();
             attendeeInfo.add(viewModel.getAttendeeID());
             attendeeInfo.add(viewModel.getProfileName());
@@ -118,6 +128,7 @@ public class AttendeeStartActivity extends AppCompatActivity{
             attendeeInfo.add(viewModel.getProfileEmail());
             attendeeInfo.add(viewModel.getProfileBio());
             writer.write(attendeeInfo.toString().getBytes());
+
             writer.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -145,6 +156,7 @@ public class AttendeeStartActivity extends AppCompatActivity{
                 viewModel.setProfilePhone(split[2]);
                 viewModel.setProfileEmail(split[3]);
                 viewModel.setProfileBio(split[4]);
+                // Create a storage reference from our app
             }
         } catch (Exception e) {
             e.printStackTrace();
