@@ -58,6 +58,8 @@ public class EventListArrayAdapterReuseQRCode extends ArrayAdapter<String> {
         }
 
         String name = eventNames.get(position);
+        String pos = String.valueOf(position);
+        Log.d("position",pos);
         String description = eventDescription.get(position);
         eventID = eventIDs.get(position);
 
@@ -90,6 +92,7 @@ public class EventListArrayAdapterReuseQRCode extends ArrayAdapter<String> {
             public void onClick(View v) {
 //                OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
 //                warningDialog.show();
+                  eventID = eventIDs.get(position);
                   showWarningDialog(eventName.getText().toString(),eventID);
             }
         });
