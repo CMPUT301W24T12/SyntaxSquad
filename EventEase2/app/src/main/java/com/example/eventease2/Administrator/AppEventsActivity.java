@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.eventease2.Event;
 import com.example.eventease2.R;
@@ -32,6 +33,7 @@ public class AppEventsActivity extends AppCompatActivity {
     ArrayList<String> eventInfoList;
     ArrayList<String> eventIDs;
     ArrayList<String> participantCountList;
+    TextView backInstruct;
 
     public static AppData appData;
     Button showMoreButton;
@@ -44,6 +46,7 @@ public class AppEventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_event_page);
         eventList = findViewById(R.id.event_list);
+        backInstruct = findViewById(R.id.events_back_button);
         showMoreButton = findViewById(R.id.see_more_button);
         organizerList = new ArrayList<>();
         eventNameList = new ArrayList<>();
@@ -59,6 +62,14 @@ public class AppEventsActivity extends AppCompatActivity {
                 // Increase the count to show more events
                 initiallyDisplayedCount += 10;
                 notifyDataAdapter();
+            }
+        });
+
+
+        backInstruct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
@@ -183,4 +194,3 @@ public class AppEventsActivity extends AppCompatActivity {
         }
     }
 }
-

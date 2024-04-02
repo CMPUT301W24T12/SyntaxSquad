@@ -6,24 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="10"
     tools:context=".Administrator.EventEditorActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/blue_background"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#00B6AA" >
-
-        <TextView
-            android:id="@+id/text_eventease"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="EVENTEASE"
-            android:textColor="#FFFFFF"
-
-            android:textSize="24sp"
-            android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:layout_weight="0.9"
+        android:background="#00B6AA"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/events_back_button"
@@ -32,15 +26,26 @@
             android:text="Back"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"/>
-    </RelativeLayout>
+            android:layout_marginStart="16dp"
+            android:layout_weight="0.6"/>
+
+        <TextView
+            android:id="@+id/text_eventease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EVENTEASE"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_weight="1.52"/>
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/event_editable_photo"
-        android:layout_width="364dp"
-        android:layout_height="215dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="6.2"
         android:contentDescription="Event Picture"
         android:layout_gravity="center"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
