@@ -15,7 +15,4 @@
     <string name="todo2">TODO</string>
     <string name="todo3">TODO</string>
     <string name="todo5">TODO</string>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-        AIzaSyChAxAHQAZQuqwN9dcsAhFXH_693aoZQcQ
-    </string>
 </resources>
