@@ -101,9 +101,9 @@ public class RoleChooseActivity extends AppCompatActivity {
 
                                                 String name = eventSnapshot.getString("Name");
 
-                                                Log.d("AttendeeList length for event " + eventId + " is ", String.valueOf(attendeeListLength));
-                                                Log.d("Description for event " + eventId + " is ", description);
-                                                Log.d("The name for the event is", name);
+//                                                Log.d("AttendeeList length for event " + eventId + " is ", String.valueOf(attendeeListLength));
+//                                                Log.d("Description for event " + eventId + " is ", description);
+//                                                Log.d("The name for the event is", name);
                                             }
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {

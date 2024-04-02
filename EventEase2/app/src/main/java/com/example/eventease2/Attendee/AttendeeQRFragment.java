@@ -107,21 +107,26 @@ public class AttendeeQRFragment extends Fragment{
     /**
      * Sends data to the view model of the organizer ID and the event ID for firebase use.
      * @param scannedData
-     * Sends the viewModel so the Attendee fragments can recieve information for the firebase
+     * Sends the viewModel so the Attendee fragments can receive information for the firebase
      */
     private void sendDataToModel(String scannedData){
         String eventIDAppend ="";
         String organizerIDAppend ="";
-        for(int i = 0; i < scannedData.length();i++){
-            if(!flag){
-                if(scannedData.charAt(i) != '#'){
-                    eventIDAppend+=scannedData.charAt(i);
-                }else{
-                    flag = true;
+        //NEed to update information so it sends checks in user at certain event.
+        if (scannedData.charAt(0) == '*') {
+            for (int i = 0; i < scannedData.length(); i++) {
+                if (!flag) {
+                    if (scannedData.charAt(i) != '#') {
+                        eventIDAppend += scannedData.charAt(i);
+                    } else {
+                        flag = true;
+                    }
+                } else {
+                    organizerIDAppend += scannedData.charAt(i);
                 }
-            }else{
-                organizerIDAppend+=scannedData.charAt(i);
             }
+        }else{
+            //send user to the promotional part in the page
         }
         viewModel.setEvent(eventIDAppend);
         viewModel.setOrganizer(organizerIDAppend);

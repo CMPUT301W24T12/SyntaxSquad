@@ -21,6 +21,7 @@ public class AttendeeItemViewModel extends ViewModel {
     private String profileBio = "";
     private String attendeeID = "";
     private Uri profileImage= null;
+    private int checkIN = 0;
 
     public String getProfileName() {return profileName;}
 
@@ -53,4 +54,8 @@ public class AttendeeItemViewModel extends ViewModel {
     public String getAttendeeID() {return attendeeID;}
 
     public void setAttendeeID(String attendeeID) {this.attendeeID = attendeeID;}
+
+    public int getCheckIN() {return checkIN;}
+
+    public void setCheckIN(int checkIN) {this.checkIN = checkIN;}
 }
