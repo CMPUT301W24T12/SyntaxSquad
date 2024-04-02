@@ -100,7 +100,7 @@ public class AttendeeProfileFragment extends Fragment {
             public void onClick(View v) {
                 Drawable defaultPhoto = getResources().getDrawable(R.drawable.upload_image_button);
                 gallery.setImageDrawable(defaultPhoto);
-
+                viewModel.setProfileImage(null);
                 storage = FirebaseStorage.getInstance();
                 storageRef = storage.getReference();
                 StorageReference attendeeProfile = storageRef.child("profilepics/"+viewModel.getAttendeeID());

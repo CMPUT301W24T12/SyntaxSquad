@@ -19,6 +19,7 @@ public class Attendee {
     private String bio;
     private Uri profileImage;
     private String eventID;
+    private int checkIN;
 
 
 
@@ -28,7 +29,6 @@ public class Attendee {
         this.phone = "";
         this.email = "";
         this.bio = "";
-
     }
 
     String getName(){return this.name;}
