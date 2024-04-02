@@ -2,25 +2,36 @@ package com.example.eventease2.Attendee;
 
 import static android.app.Activity.RESULT_OK;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.eventease2.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -38,6 +49,9 @@ public class AttendeeProfileFragment extends Fragment {
     private String event,organizer;
     private AttendeeItemViewModel viewModel;
     private CollectionReference attendeeCollect;
+    FirebaseStorage storage;
+    StorageReference storageRef,profileRef;
+
     public AttendeeProfileFragment() {
         event = "";
         organizer = "";
@@ -67,6 +81,7 @@ public class AttendeeProfileFragment extends Fragment {
                 setModelItems();
                 if(!Objects.equals(event, "")) {
                     addAttendeeData();
+                    //Toast.makeText(getContext(), "Clicked!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -76,6 +91,31 @@ public class AttendeeProfileFragment extends Fragment {
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i,3);
+
+            }
+        });
+        Button deleteButton = view.findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Drawable defaultPhoto = getResources().getDrawable(R.drawable.upload_image_button);
+                gallery.setImageDrawable(defaultPhoto);
+                viewModel.setProfileImage(null);
+                storage = FirebaseStorage.getInstance();
+                storageRef = storage.getReference();
+                StorageReference attendeeProfile = storageRef.child("profilepics/"+viewModel.getAttendeeID());
+
+                attendeeProfile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("DeletePhoto","Photo successfully deleted");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("DeletePhoto","Photo NOT deleted");
+                    }
+                });
             }
         });
 
@@ -101,6 +141,7 @@ public class AttendeeProfileFragment extends Fragment {
         data.put("Email", viewModel.getProfileEmail());
         data.put("Phone", viewModel.getProfilePhone());
         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+
     }
     /**
      * On create, the fragment will find the texts and image.
@@ -127,6 +168,22 @@ public class AttendeeProfileFragment extends Fragment {
         viewModel.setProfileBio(attendeeBioText.getText().toString());
         if(selectedImage != null){
             viewModel.setProfileImage(selectedImage);
+            storage = FirebaseStorage.getInstance();
+            storageRef = storage.getReference();
+            String s = selectedImage.getLastPathSegment();
+            StorageReference attendeeProfile = storageRef.child("profilepics/"+viewModel.getAttendeeID());
+            UploadTask uploadTask = attendeeProfile.putFile(selectedImage);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "pic did not upload!");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d(TAG, "pic did upload!");
+                }
+            });
         }
     }
     /**
