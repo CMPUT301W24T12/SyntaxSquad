@@ -96,12 +96,12 @@
 
         <Button
             android:id="@+id/AttendeeAddChanges"
+            android:background="@drawable/rounded_button_background"
             android:layout_width="198dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/checkBox"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:background="#00B5A9"
             android:text="Save Changes"
             android:textAlignment="center"
             android:textColor="#FEFEFE" />
