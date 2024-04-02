@@ -46,7 +46,7 @@ import java.util.UUID;
 /**
  * This is the class to add a event into the event list
  */
-public class AddEventFragment extends AppCompatActivity {
+public class AddEventFragment extends AppCompatActivity implements OrganizerWarningDialog.QRCodeTypeChangeListener {
     private ImageView imageView;
     private Uri imageURI;
     private TextView eventNameView;
@@ -63,8 +63,10 @@ public class AddEventFragment extends AppCompatActivity {
     String duration;
     Boolean isAbleLocationTracking;
 
+    public String QRCodeType;
+
     int maxNumberOfAttendee;
-    private String id;
+    private static String id;
     private String organizerID;
     private static final int REQUEST_IMAGE_PICK = 1;
     private  CollectionReference collectionRef;
@@ -90,6 +92,9 @@ public class AddEventFragment extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
+        warningDialog.show(getSupportFragmentManager(),"Choose existing QR Code");
         setContentView(R.layout.upload_image_page);
 
         // Copyright 2020 M. Fadli Zein
@@ -100,8 +105,6 @@ public class AddEventFragment extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-//        collectionRef = db.collection("EventEase");
-//        eventsRef = collectionRef.document("Organizer");
         collectionRef = db.collection("Organizer");
 
         maxNumberOfAttendee = -1;   //negative as default that is no limit
@@ -123,24 +126,6 @@ public class AddEventFragment extends AppCompatActivity {
         Bitmap qrCode = OrganizerQRCodeMaker.generateQRCode(combinedID);
         Bitmap checkInQRCode = OrganizerQRCodeMaker.generateQRCode(checkInID);
 
-        db.collection("collections").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<String> collectionNames = new ArrayList<>();
-                            for (DocumentSnapshot document : task.getResult()) {
-                                // Get the name of each collection and add it to the list
-                                String collectionName = document.getId();
-                                collectionNames.add(collectionName);
-                            }
-                            Log.d(TAG, "Collections: " + collectionNames);
-                        } else {
-                            Log.d(TAG, "Error getting collections: ", task.getException());
-                        }
-                    }
-                });
-
         // let the user click to upload an image
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +141,8 @@ public class AddEventFragment extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), EventListFragment.class);
                 intent.putExtra("ID",id);
                 intent.putExtra("OrganizerID",organizerID);
-                startActivity(intent);
+//                startActivity(intent);
+                finish();
             }
         });
 
@@ -164,8 +150,20 @@ public class AddEventFragment extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
+//                intent.putExtra("ID",id);
+//                intent.putExtra("OrganizerID",organizerID);
+//                startActivity(intent);
+//                String result = getIntent().getStringExtra("SelectedID");
+//                if (result!=null){
+//                    Toast.makeText(AddEventFragment.this,result,Toast.LENGTH_LONG).show();
+//                }
+//                OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
+//                warningDialog.show(getSupportFragmentManager(),"Choose existing QR Code");
+                //Toast.makeText(AddEventFragment.this,id,Toast.LENGTH_LONG).show();
 
                 try{
+                    Log.d("ID_add",id);
                     getInfo();
                     if (maxNumberOfAttendee <= 0) {
                         // If negative, throw NumberFormatException
@@ -178,24 +176,14 @@ public class AddEventFragment extends AppCompatActivity {
                     StorageReference qrRef = storageRef.child("QRCode/" + id);
                     StorageReference checkInRef = storageRef.child("CheckInQRCode/" + id);
 
-//                    // generate app qr code
-//                    StorageReference appRef = storageRef.child("AppQRCode/" + id);
-//                    Bitmap appQR = OrganizerQRCodeMaker.generateAppQRCode();
-//                    ByteArrayOutputStream by = new ByteArrayOutputStream();
-//                    appQR.compress(Bitmap.CompressFormat.PNG, 100, by);
-//                    byte[] appCodeByteArray = by.toByteArray();
-//
-//                    // Upload QR code to Firebase Storage
-//                    appRef.putBytes(appCodeByteArray);
-//                    //
-
                     //check if image uploaded
                     if (imageURI==null){
-                        int drawableResourceId = R.drawable._920px_the_event_2010_intertitle_svg; // Replace this with the actual resource ID
+                        int drawableResourceId = R.drawable.default_event; // Replace this with the actual resource ID
                         imageURI = Uri.parse("android.resource://" + getPackageName() + "/" + drawableResourceId);
                     }
-
-                    putQRCode(qrCode, checkInQRCode,qrRef,checkInRef);
+                    if (QRCodeType == "new"){
+                        putQRCode(qrCode, checkInQRCode,qrRef,checkInRef);
+                    }
 
                     imageRef.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -217,7 +205,6 @@ public class AddEventFragment extends AppCompatActivity {
                 catch (NumberFormatException e){
                     Toast.makeText(AddEventFragment.this, "Invalid max limit", Toast.LENGTH_LONG).show();
                 }
-
             }
         });
 
@@ -289,5 +276,23 @@ public class AddEventFragment extends AppCompatActivity {
         // Upload QR code to Firebase Storage
         qrRef.putBytes(qrCodeByteArray);
         checkInRef.putBytes(checkInCodeByteArray);
+    }
+
+    @Override
+    public void onQRCodeTypeChange(String type) {
+        this.QRCodeType = type;
+    }
+
+    @Override
+    public void intentTOReuseQRCode() {
+        Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
+        intent.putExtra("ID",id);
+        intent.putExtra("OrganizerID",organizerID);
+        startActivity(intent);
+    }
+
+
+    public static void updateEventID(String id) {
+        AddEventFragment.id = id;
     }
 }
