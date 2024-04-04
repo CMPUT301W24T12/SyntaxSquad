@@ -120,29 +120,96 @@
             android:text="Enable Geolocation Tracking" />
 
 
-        <EditText
-            android:id="@+id/editTextText4"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/background_light"
-            android:backgroundTint="#F6F6F6"
-            android:hint="Duration:"
+            android:layout_height="30dp"
             android:layout_weight="1"
-            android:inputType="text"/>
+            android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="Start Time:" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical" />
+
+            <Spinner
+                android:id="@+id/StartSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2" />
+
+            <ImageButton
+                android:id="@+id/startCalender"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.3"
+                android:adjustViewBounds="true"
+                android:background="#00000000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/calendar_icon" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="EndTime:" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical" />
+
+            <Spinner
+                android:id="@+id/EndSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2" />
+
+            <ImageButton
+                android:id="@+id/EndCalender"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.3"
+                android:adjustViewBounds="true"
+                android:background="#00000000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/calendar_icon" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextText5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
             android:background="@android:color/background_light"
             android:backgroundTint="#F6F6F6"
             android:ems="10"
             android:hint="Maximum Attendees:"
-            android:inputType="text"
-            android:layout_weight="1"
-            android:layout_gravity="center"/>
+            android:inputType="text" />
 
     </LinearLayout>
 
