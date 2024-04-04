@@ -1,20 +1,32 @@
 package com.example.eventease2.Attendee;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.eventease2.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -31,6 +43,9 @@ public class AttendeeQRFragment extends Fragment{
     private boolean flag = false;
     private FirebaseFirestore appDb;
     private CollectionReference attendeeCollect;
+    private DocumentReference event;
+    private int maxAttendees;
+    private long currentAttendees;
     public AttendeeQRFragment() {
         // Required empty public constructor
     }
@@ -52,17 +67,6 @@ public class AttendeeQRFragment extends Fragment{
         // Initialize QR code scanner
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
         integrator.setPrompt("Scan QR Code");
-
-        //Todo:Delete this when QR scanning is fully used all the time
-//        String scannedData = "d2ea4e72-5d4c-47a6-8c4b-49a442a08a41#ffffffff-8a86-b983-0000-0000380c0fa3";
-//        sendDataToModel(scannedData);
-//        event = viewModel.getEvent();
-//        organizer = viewModel.getOrganizer();
-//        firebase();
-//        addAttendeeData();
-//        //Todo: delete above
-
-        //Can delete when full implementation is done
         integrator.initiateScan();
 
     }
@@ -167,15 +171,51 @@ public class AttendeeQRFragment extends Fragment{
      * When initial scan is complete, add the current profile to the firebase
      */
     public void checkIn(){
-        HashMap<String,String> data = new HashMap<>();
-        data.put("Name", viewModel.getProfileName());
-        data.put("Email", viewModel.getProfileEmail());
-        data.put("Phone", viewModel.getProfilePhone());
-        viewModel.setCheckIN(viewModel.getCheckIN()+1);
-        Toast.makeText(this.getActivity(), "viewmodel Organizer: "+viewModel.getOrganizer(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(this.getActivity(), "viewmodel Organizer: "+viewModel.getEvent(), Toast.LENGTH_SHORT).show();
-        data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
-        attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+        event = appDb.collection("Organizer").document(viewModel.getOrganizer())
+                .collection("Events")
+                .document(viewModel.getEvent());
+        event.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        if(document.get("Max")!= null){
+                            maxAttendees = Integer.parseInt(document.get("Max").toString());
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+        Query query = attendeeCollect;
+        AggregateQuery countQuery = query.count();
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Count fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Count: " + snapshot.getCount());
+                    currentAttendees = snapshot.getCount();
+                } else {
+                    Log.d(TAG, "Count failed: ", task.getException());
+                }
+            }
+        });
+        if(currentAttendees < maxAttendees){
+            HashMap<String,String> data = new HashMap<>();
+            data.put("Name", viewModel.getProfileName());
+            data.put("Email", viewModel.getProfileEmail());
+            data.put("Phone", viewModel.getProfilePhone());
+            viewModel.setCheckIN(viewModel.getCheckIN()+1);
+            data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
+            attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+        }
     }
     /**
      * Firebase connecting function.
