@@ -78,7 +78,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
         organizerID = getIntent().getStringExtra("OrganizerID");
         eventID = getIntent().getStringExtra("ID");
         attendeeId = getIntent().getStringExtra("AttendeeID");
-        Toast.makeText(this, "event ID: "+eventID, Toast.LENGTH_SHORT).show();
+
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         pathReference = storageRef.child("images").child(eventID);

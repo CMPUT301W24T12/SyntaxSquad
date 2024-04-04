@@ -31,8 +31,6 @@ public class AttendeeQRFragment extends Fragment{
     private boolean flag = false;
     private FirebaseFirestore appDb;
     private CollectionReference attendeeCollect;
-    private String event ="";
-    private String organizer="";
     public AttendeeQRFragment() {
         // Required empty public constructor
     }
@@ -78,11 +76,10 @@ public class AttendeeQRFragment extends Fragment{
         if (result != null) {
             if (result.getContents() != null) {
                 String scannedData = result.getContents();
-                firebase();
-                displayScanResult(scannedData);
+
+                //displayScanResult(scannedData);
                 sendDataToModel(scannedData);
-                event = viewModel.getEvent();
-                organizer = viewModel.getOrganizer();
+
                 //Todo:Uncomment this line below of code in order for normal functionality to work
 
                 //checkIn();
@@ -112,7 +109,7 @@ public class AttendeeQRFragment extends Fragment{
         String organizerIDAppend ="";
         //NEed to update information so it sends checks in user at certain event.
         if (scannedData.charAt(0) == '*') {
-            for (int i = 0; i < scannedData.length(); i++) {
+            for (int i = 1; i < scannedData.length(); i++) {
                 if (scannedData.charAt(i) != '#' && !flag) {
                        eventIDAppend += scannedData.charAt(i);
                 } else if(scannedData.charAt(i) == '#') {
@@ -124,6 +121,7 @@ public class AttendeeQRFragment extends Fragment{
             viewModel.setEvent(eventIDAppend);
             viewModel.setOrganizer(organizerIDAppend);
             flag = false;
+            firebase();
             checkIn();
         }else{
             for (int i = 0; i < scannedData.length(); i++) {
@@ -138,6 +136,7 @@ public class AttendeeQRFragment extends Fragment{
             viewModel.setEvent(eventIDAppend);
             viewModel.setOrganizer(organizerIDAppend);
             flag = false;
+            firebase();
             sendToPromotion();
             //send user to the
             // promotional part in the page
@@ -173,6 +172,8 @@ public class AttendeeQRFragment extends Fragment{
         data.put("Email", viewModel.getProfileEmail());
         data.put("Phone", viewModel.getProfilePhone());
         viewModel.setCheckIN(viewModel.getCheckIN()+1);
+        Toast.makeText(this.getActivity(), "viewmodel Organizer: "+viewModel.getOrganizer(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getActivity(), "viewmodel Organizer: "+viewModel.getEvent(), Toast.LENGTH_SHORT).show();
         data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
     }
@@ -180,12 +181,12 @@ public class AttendeeQRFragment extends Fragment{
      * Firebase connecting function.
      */
     public void firebase(){
-        if(!Objects.equals(event, "")){
+        if(!Objects.equals(viewModel.getEvent(), "")){
             appDb = FirebaseFirestore.getInstance();
 
-            attendeeCollect = appDb.collection("Organizer").document(organizer)
+            attendeeCollect = appDb.collection("Organizer").document(viewModel.getOrganizer())
                     .collection("Events")
-                    .document(event)
+                    .document(viewModel.getEvent())
                     .collection("Attendees");
         }
     }
