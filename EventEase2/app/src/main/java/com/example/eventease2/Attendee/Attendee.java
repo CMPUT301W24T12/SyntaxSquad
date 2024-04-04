@@ -20,9 +20,6 @@ public class Attendee {
     private Uri profileImage;
     private String eventID;
     private int checkIN;
-
-
-
     private ArrayList<Event> promisedEvents;
     public Attendee() {
         this.name = "";
