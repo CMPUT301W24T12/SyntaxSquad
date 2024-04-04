@@ -1,5 +1,6 @@
 package com.example.eventease2.Attendee;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,14 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.eventease2.R;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import java.security.SecureRandom;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -81,13 +78,14 @@ public class AttendeeQRFragment extends Fragment{
         if (result != null) {
             if (result.getContents() != null) {
                 String scannedData = result.getContents();
+                firebase();
                 displayScanResult(scannedData);
                 sendDataToModel(scannedData);
                 event = viewModel.getEvent();
                 organizer = viewModel.getOrganizer();
                 //Todo:Uncomment this line below of code in order for normal functionality to work
-                firebase();
-                addAttendeeData();
+
+                //checkIn();
             } else {
                 // Handle if no QR code is found
             }
@@ -102,7 +100,7 @@ public class AttendeeQRFragment extends Fragment{
      */
     private void displayScanResult(String scannedData) {
         // Display a message using a Toast
-        Toast.makeText(getContext(), "Scan Successful: " + scannedData, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Scan Successful: " + scannedData, Toast.LENGTH_SHORT).show();
     }
     /**
      * Sends data to the view model of the organizer ID and the event ID for firebase use.
@@ -115,31 +113,67 @@ public class AttendeeQRFragment extends Fragment{
         //NEed to update information so it sends checks in user at certain event.
         if (scannedData.charAt(0) == '*') {
             for (int i = 0; i < scannedData.length(); i++) {
-                if (!flag) {
-                    if (scannedData.charAt(i) != '#') {
-                        eventIDAppend += scannedData.charAt(i);
-                    } else {
-                        flag = true;
-                    }
-                } else {
+                if (scannedData.charAt(i) != '#' && !flag) {
+                       eventIDAppend += scannedData.charAt(i);
+                } else if(scannedData.charAt(i) == '#') {
+                    flag = true;
+                }else{
                     organizerIDAppend += scannedData.charAt(i);
                 }
             }
+            viewModel.setEvent(eventIDAppend);
+            viewModel.setOrganizer(organizerIDAppend);
+            flag = false;
+            checkIn();
         }else{
-            //send user to the promotional part in the page
+            for (int i = 0; i < scannedData.length(); i++) {
+                if (scannedData.charAt(i) != '#' && !flag) {
+                    eventIDAppend += scannedData.charAt(i);
+                } else if(scannedData.charAt(i) == '#') {
+                    flag = true;
+                }else{
+                    organizerIDAppend += scannedData.charAt(i);
+                }
+            }
+            viewModel.setEvent(eventIDAppend);
+            viewModel.setOrganizer(organizerIDAppend);
+            flag = false;
+            sendToPromotion();
+            //send user to the
+            // promotional part in the page
         }
-        viewModel.setEvent(eventIDAppend);
-        viewModel.setOrganizer(organizerIDAppend);
-        flag =false;
+
     }
+
+    private void sendToPromotion() {
+        Intent intent = new Intent(AttendeeQRFragment.this.getActivity(), AttendeeEventDetailsActivity.class);
+        intent.putExtra("ID", viewModel.getEvent());
+
+        intent.putExtra("OrganizerID", viewModel.getOrganizer());;
+
+        intent.putExtra("AttendeeID",viewModel.getAttendeeID());
+
+        intent.putExtra("AttendeeName",viewModel.getProfileName());
+
+        intent.putExtra("AttendeePhone",viewModel.getProfilePhone());
+        intent.putExtra("AttendeeEmail", viewModel.getProfileEmail());
+        intent.putExtra("AttendeeCheckInTimes",viewModel.getCheckIN());
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        AttendeeQRFragment.this.getActivity().startActivity(intent);
+    }
+
     /**
      * When initial scan is complete, add the current profile to the firebase
      */
-    public void addAttendeeData(){
+    public void checkIn(){
         HashMap<String,String> data = new HashMap<>();
         data.put("Name", viewModel.getProfileName());
         data.put("Email", viewModel.getProfileEmail());
         data.put("Phone", viewModel.getProfilePhone());
+        viewModel.setCheckIN(viewModel.getCheckIN()+1);
+        data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
     }
     /**
@@ -155,5 +189,6 @@ public class AttendeeQRFragment extends Fragment{
                     .collection("Attendees");
         }
     }
+
 
 }

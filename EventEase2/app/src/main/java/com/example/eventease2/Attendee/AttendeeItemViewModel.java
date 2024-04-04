@@ -1,9 +1,8 @@
 package com.example.eventease2.Attendee;
 
-import android.graphics.drawable.Drawable;
-import android.media.Image;
+import android.annotation.SuppressLint;
 import android.net.Uri;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.lifecycle.ViewModel;
 /**
@@ -21,6 +20,8 @@ public class AttendeeItemViewModel extends ViewModel {
     private String profileBio = "";
     private String attendeeID = "";
     private Uri profileImage= null;
+    @SuppressLint("StaticFieldLeak")
+    private ImageView tempProfileImage;
     private int checkIN = 0;
 
     public String getProfileName() {return profileName;}
@@ -58,4 +59,10 @@ public class AttendeeItemViewModel extends ViewModel {
     public int getCheckIN() {return checkIN;}
 
     public void setCheckIN(int checkIN) {this.checkIN = checkIN;}
+
+    public ImageView getTempProfileImage() {return tempProfileImage;
+    }
+
+    public void setTempProfileImage(ImageView tempProfileImage) {this.tempProfileImage = tempProfileImage;}
+
 }

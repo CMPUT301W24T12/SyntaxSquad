@@ -109,9 +109,6 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
 
         eventNameView.setText(eventNames.get(position));
         eventDetailsView.setText(eventDescription.get(position));
-
-        //maxAttendeeCount.setText(maxAttendee.get(position));
-
         eventDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

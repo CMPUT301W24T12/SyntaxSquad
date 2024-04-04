@@ -5,6 +5,8 @@ import static android.app.Activity.RESULT_OK;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +38,14 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Objects;
+
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * This fragments shows the user the empty profile unless saved changes were updated.
@@ -50,7 +61,8 @@ public class AttendeeProfileFragment extends Fragment {
     private AttendeeItemViewModel viewModel;
     private CollectionReference attendeeCollect;
     FirebaseStorage storage;
-    StorageReference storageRef,profileRef;
+    StorageReference storageRef,profileRef,pathReference;
+    String eventID;
 
     public AttendeeProfileFragment() {
         event = "";
@@ -141,7 +153,6 @@ public class AttendeeProfileFragment extends Fragment {
         data.put("Email", viewModel.getProfileEmail());
         data.put("Phone", viewModel.getProfilePhone());
         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
-
     }
     /**
      * On create, the fragment will find the texts and image.
@@ -156,6 +167,11 @@ public class AttendeeProfileFragment extends Fragment {
         attendeeEmailText = view.findViewById(R.id.editProfileEmail);
         attendeeImage = view.findViewById(R.id.attendeeProfileImage);
         attendeeBioText = view.findViewById(R.id.editBioText);
+        if(!Objects.equals(viewModel.getProfileName(), "") && viewModel.getProfileImage()== null) {
+            String identiconURL = "http://www.gravatar.com/avatar/" + viewModel.getProfileName() + "?s=55&d=identicon&r=PG";
+            Picasso.get().load(identiconURL).into(attendeeImage);
+
+        }
     }
     /**
      * When called, set the current text of the edit text field and image to the viewModel for
@@ -166,13 +182,21 @@ public class AttendeeProfileFragment extends Fragment {
         viewModel.setProfileEmail(attendeeEmailText.getText().toString());
         viewModel.setProfilePhone(attendeePhoneText.getText().toString());
         viewModel.setProfileBio(attendeeBioText.getText().toString());
-        if(selectedImage != null){
+
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+        StorageReference attendeeProfile = storageRef.child("profilepics/"+viewModel.getAttendeeID());
+        UploadTask uploadTask = null;
+
+        if(selectedImage != null) {
             viewModel.setProfileImage(selectedImage);
-            storage = FirebaseStorage.getInstance();
-            storageRef = storage.getReference();
-            String s = selectedImage.getLastPathSegment();
-            StorageReference attendeeProfile = storageRef.child("profilepics/"+viewModel.getAttendeeID());
-            UploadTask uploadTask = attendeeProfile.putFile(selectedImage);
+            uploadTask = attendeeProfile.putFile(selectedImage);
+        }else{
+            //Below does not update to the firebase since I don't know how to switch imageview to URI
+            String identiconURL = "http://www.gravatar.com/avatar/" + viewModel.getProfileName() + "?s=55&d=identicon&r=PG";
+            Picasso.get().load(identiconURL).into(attendeeImage);
+            uploadTask = attendeeProfile.putFile(Uri.parse(identiconURL));
+        }
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
@@ -184,7 +208,7 @@ public class AttendeeProfileFragment extends Fragment {
                     Log.d(TAG, "pic did upload!");
                 }
             });
-        }
+
     }
     /**
      * Set the text that was saved on the viewModel when users switch back and forth from their
@@ -195,7 +219,12 @@ public class AttendeeProfileFragment extends Fragment {
         attendeePhoneText.setText(viewModel.getProfilePhone());
         attendeeEmailText.setText(viewModel.getProfileEmail());
         attendeeBioText.setText(viewModel.getProfileBio());
-        attendeeImage.setImageURI(viewModel.getProfileImage());
+        if(viewModel.getProfileImage() == null){
+            getFirebaseProfileImage();
+        }else{
+            attendeeImage.setImageURI(viewModel.getProfileImage());
+        }
+
     }
     /**
      * Firebase implementation necessary for communicating with the database.
@@ -209,5 +238,24 @@ public class AttendeeProfileFragment extends Fragment {
                     .document(event)
                     .collection("Attendees");
         }
+    }
+    public void getFirebaseProfileImage(){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        pathReference = storageRef.child("profilepics").child(viewModel.getAttendeeID());
+
+            final long ONE_MEGABYTE = 1024 * 1024;
+            pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    attendeeImage.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+
+                }
+            });
     }
 }
