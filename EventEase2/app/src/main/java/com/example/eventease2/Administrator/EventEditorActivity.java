@@ -61,7 +61,7 @@ public class EventEditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_event_editor);
-
+        appData = new AppData();
         storage = FirebaseStorage.getInstance();
         eventDesciption = findViewById(R.id.event_detail);
         eventTitle = findViewById(R.id.event_title);
@@ -91,6 +91,7 @@ public class EventEditorActivity extends AppCompatActivity {
 
         deleteEvent.setOnClickListener(v -> {
             // Delete the event document
+            if (posOfEvent != null){
             eventInfoDoc.delete()
                     .addOnSuccessListener(aVoid -> {
                         appData.deleteEventID(Integer.parseInt(posOfEvent));
@@ -102,7 +103,11 @@ public class EventEditorActivity extends AppCompatActivity {
 
                     })
                     .addOnFailureListener(e -> Log.w("TAG", "Error deleting document", e));
-        });
+        }
+        else{
+                Toast.makeText(this, "Can't have a null position!", Toast.LENGTH_SHORT).show();
+        }}
+        );
 
         getBackInstruct.setOnClickListener(new View.OnClickListener() {
             @Override

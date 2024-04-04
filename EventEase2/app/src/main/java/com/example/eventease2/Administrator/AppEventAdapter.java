@@ -108,8 +108,7 @@ public class AppEventAdapter extends ArrayAdapter<String> {
                 Intent intent = new Intent(context, EventEditorActivity.class);
                 intent.putExtra("ID", eventIDs.get(position));
                 intent.putExtra("OrganizerID", organizerID.get(position));
-                intent.putExtra("posOfEvent", position);
-
+                intent.putExtra("posOfEvent", String.valueOf(position));
                 context.startActivity(intent);
                 Log.d("BACK", "I am back");
             }
