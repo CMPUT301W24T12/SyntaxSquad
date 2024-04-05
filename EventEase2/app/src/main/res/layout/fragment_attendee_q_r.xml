@@ -8,7 +8,7 @@
         android:id="@+id/btnScanQR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scan QR Code"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:text="Scan QR Code" />
 
 </RelativeLayout>
