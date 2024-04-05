@@ -1,10 +1,7 @@
 package com.example.eventease2.Attendee;
 
-<<<<<<< HEAD
-=======
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
->>>>>>> 9474777821177046d5b54d70a5cea15879768db8
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,12 +19,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-<<<<<<< HEAD
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.internal.FirebaseInstanceIdInternal;
 import com.google.firebase.messaging.FirebaseMessaging;
-=======
 import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
@@ -36,7 +31,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
->>>>>>> 9474777821177046d5b54d70a5cea15879768db8
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -180,8 +174,8 @@ public class AttendeeQRFragment extends Fragment {
     /**
      * When initial scan is complete, add the current profile to the firebase
      */
-    public void addAttendeeData(){
-        HashMap<String,String> data = new HashMap<>();
+    public void addAttendeeData() {
+        HashMap<String, String> data = new HashMap<>();
         data.put("Name", viewModel.getProfileName());
         data.put("Email", viewModel.getProfileEmail());
         data.put("Phone", viewModel.getProfilePhone());
@@ -215,66 +209,66 @@ public class AttendeeQRFragment extends Fragment {
             sendRegistrationToServer(refreshedToken);
         }
          */
-    public void checkIn(){
-        event = appDb.collection("Organizer").document(viewModel.getOrganizer())
-                .collection("Events")
-                .document(viewModel.getEvent());
-        event.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        if(document.get("Max")!= null){
-                            maxAttendees = Integer.parseInt(document.get("Max").toString());
+
+        public void checkIn() {
+            event = appDb.collection("Organizer").document(viewModel.getOrganizer())
+                    .collection("Events")
+                    .document(viewModel.getEvent());
+            event.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                            if (document.get("Max") != null) {
+                                maxAttendees = Integer.parseInt(document.get("Max").toString());
+                            }
+                        } else {
+                            Log.d(TAG, "No such document");
                         }
                     } else {
-                        Log.d(TAG, "No such document");
+                        Log.d(TAG, "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
                 }
-            }
-        });
-        Query query = attendeeCollect;
-        AggregateQuery countQuery = query.count();
-        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    // Count fetched successfully
-                    AggregateQuerySnapshot snapshot = task.getResult();
-                    Log.d(TAG, "Count: " + snapshot.getCount());
-                    currentAttendees = snapshot.getCount();
-                } else {
-                    Log.d(TAG, "Count failed: ", task.getException());
+            });
+            Query query = attendeeCollect;
+            AggregateQuery countQuery = query.count();
+            countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        // Count fetched successfully
+                        AggregateQuerySnapshot snapshot = task.getResult();
+                        Log.d(TAG, "Count: " + snapshot.getCount());
+                        currentAttendees = snapshot.getCount();
+                    } else {
+                        Log.d(TAG, "Count failed: ", task.getException());
+                    }
                 }
+            });
+            if (currentAttendees < maxAttendees) {
+                HashMap<String, String> data = new HashMap<>();
+                data.put("Name", viewModel.getProfileName());
+                data.put("Email", viewModel.getProfileEmail());
+                data.put("Phone", viewModel.getProfilePhone());
+                viewModel.setCheckIN(viewModel.getCheckIN() + 1);
+                data.put("Number of Check ins:", String.valueOf(viewModel.getCheckIN()));
+                attendeeCollect.document(viewModel.getAttendeeID()).set(data);
             }
-        });
-        if(currentAttendees < maxAttendees){
-            HashMap<String,String> data = new HashMap<>();
-            data.put("Name", viewModel.getProfileName());
-            data.put("Email", viewModel.getProfileEmail());
-            data.put("Phone", viewModel.getProfilePhone());
-            viewModel.setCheckIN(viewModel.getCheckIN()+1);
-            data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
-            attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+        }
+        /**
+         * Firebase connecting function.
+         */
+        public void firebase() {
+            if (!Objects.equals(viewModel.getEvent(), "")) {
+                appDb = FirebaseFirestore.getInstance();
+
+                attendeeCollect = appDb.collection("Organizer").document(viewModel.getOrganizer())
+                        .collection("Events")
+                        .document(viewModel.getEvent())
+                        .collection("Attendees");
+            }
         }
     }
-    /**
-     * Firebase connecting function.
-     */
-    public void firebase(){
-        if(!Objects.equals(viewModel.getEvent(), "")){
-            appDb = FirebaseFirestore.getInstance();
-
-            attendeeCollect = appDb.collection("Organizer").document(viewModel.getOrganizer())
-                    .collection("Events")
-                    .document(viewModel.getEvent())
-                    .collection("Attendees");
-        }
-    }
-
-
 }
