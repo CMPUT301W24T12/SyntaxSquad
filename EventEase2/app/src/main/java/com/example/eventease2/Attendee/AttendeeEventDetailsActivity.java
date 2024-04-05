@@ -43,6 +43,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class AttendeeEventDetailsActivity extends AppCompatActivity {
     FirebaseFirestore appDb = FirebaseFirestore.getInstance();
@@ -107,7 +108,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
 
         // Retrieve data from intent extras
 
-        posOfEvent = getIntent().getStringExtra("posOfEvent");
+        //posOfEvent = getIntent().getStringExtra("posOfEvent");
         eventInfoDoc = appDb.collection("Organizer").document(organizerID).collection("Events").document(eventID);
         attendeeList = eventInfoDoc.collection("Attendees");
 
@@ -127,7 +128,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                         eventTitle.setText((CharSequence) document.get("Name"));
                         eventDescription.setText((CharSequence) document.get("Description"));
                         eventDetails.setText((CharSequence) document.get("EventBody"));
-                        String max = document.get("Max").toString();
+                        String max = Objects.requireNonNull(document.get("Max")).toString();
                         maxInt = Integer.parseInt(max);
                     } else {
                         Log.d(TAG, "No such document");

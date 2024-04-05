@@ -1,18 +1,22 @@
 package com.example.eventease2.Organizer;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,23 +28,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.eventease2.DeviceInfoUtils;
 import com.example.eventease2.EventListFragment;
 import com.example.eventease2.R;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -53,14 +54,24 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
     private TextView descriptionView;
     private  TextView locationView;
     private CheckBox isAbleLocationTrackingView;
-    private EditText durationView;
+    private ImageButton startCalender;
+    private ImageButton endCalender;
+    private Spinner startSpinner;
+    private Spinner endSpinner;
+    private  TextView startTimeView;
+    private TextView endTimeView;
     private Button generateButton;
     private Button backButton;
     private EditText maxLimitView;
     String eventName;
     String description;
     String location;
-    String duration;
+    String startHour;
+    String endHour;
+    String startDate;
+    String endDate;
+    String startTime;
+    String endTime;
     Boolean isAbleLocationTracking;
 
     public String QRCodeType;
@@ -114,9 +125,33 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
         descriptionView = findViewById(R.id.editTextText2);
         locationView = findViewById(R.id.editTextText3);
         isAbleLocationTrackingView = findViewById(R.id.enable_location_checkbox);
-        durationView = findViewById(R.id.editTextText4);
+        startSpinner = findViewById(R.id.StartSpinner);
+        endSpinner = findViewById(R.id.EndSpinner);
+        startCalender = findViewById(R.id.startCalender);
+        endCalender = findViewById(R.id.EndCalender);
         generateButton = findViewById(R.id.button2);
         maxLimitView = findViewById(R.id.editTextText5);
+
+        startTimeView = findViewById(R.id.textView10);
+        endTimeView = findViewById(R.id.textView11);
+
+        // Define an array of options
+        String[] hours = {
+                "0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00",
+                "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"
+        };
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, hours);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        startSpinner.setAdapter(adapter);
+        endSpinner.setAdapter(adapter);
 
         final String randomKey = UUID.randomUUID().toString();
         id = randomKey;
@@ -143,6 +178,47 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
                 intent.putExtra("OrganizerID",organizerID);
 //                startActivity(intent);
                 finish();
+            }
+        });
+
+        startSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Perform action based on the selected item
+                startHour = (String) parentView.getItemAtPosition(position);
+                //Toast.makeText(AddEventFragment.this, "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing
+            }
+        });
+        endSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Perform action based on the selected item
+                endHour = (String) parentView.getItemAtPosition(position);
+                //Toast.makeText(AddEventFragment.this, "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing
+            }
+        });
+
+        startCalender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog("start");
+            }
+        });
+
+        endCalender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog("end");
             }
         });
 
@@ -226,7 +302,9 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
         eventName = eventNameView.getText().toString();
         description = descriptionView.getText().toString();
         location = locationView.getText().toString();
-        duration = durationView.getText().toString();
+        //duration = durationView.getText().toString();
+        startTime = startTimeView.getText().toString()+"/"+startHour;
+        endTime = endTimeView.getText().toString()+"/"+endHour;
         isAbleLocationTracking = isAbleLocationTrackingView.isChecked();
         String maxText = maxLimitView.getText().toString();
         if (maxText.equals("")){    // if the user don't want to input the maximum num of attendee
@@ -248,7 +326,9 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
         data.put("ID", id);
         data.put("Location", location);
         data.put("Description", description);
-        data.put("Duration", duration);
+        //data.put("Duration", duration);
+        data.put("StartTime",startTime);
+        data.put("EndTime",endTime);
         data.put("EventBody", "");
         data.put("IsAbleLocationTracking", isAbleLocationTracking);
         DocumentReference docRef = collectionRef.document(organizerID);
@@ -289,6 +369,33 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
         intent.putExtra("ID",id);
         intent.putExtra("OrganizerID",organizerID);
         startActivity(intent);
+    }
+
+    private void showDatePickerDialog(String time) {
+        final Calendar currentDate = Calendar.getInstance();
+        int year = currentDate.get(Calendar.YEAR);
+        int month = currentDate.get(Calendar.MONTH);
+        int day = currentDate.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddEventFragment.this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // Do something with the selected date
+                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        //Toast.makeText(AddEventFragment.this, "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
+                        if (time.equals("start")){
+                            startDate = selectedDate;
+                            startTimeView.setText(selectedDate);
+                        } else if (time.equals("end")){
+                            endDate = selectedDate;
+                            endTimeView.setText(selectedDate);
+                        }
+                    }
+                }, year, month, day);
+
+        // Show DatePickerDialog
+        datePickerDialog.show();
     }
 
 
