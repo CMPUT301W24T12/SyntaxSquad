@@ -4,11 +4,17 @@ import static android.app.Activity.RESULT_OK;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -42,10 +49,11 @@ import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import android.Manifest;
+
 
 /**
  * This fragments shows the user the empty profile unless saved changes were updated.
@@ -60,9 +68,14 @@ public class AttendeeProfileFragment extends Fragment {
     private String event,organizer;
     private AttendeeItemViewModel viewModel;
     private CollectionReference attendeeCollect;
+    private CheckBox checkBox;
     FirebaseStorage storage;
     StorageReference storageRef,profileRef,pathReference;
     String eventID;
+    private boolean isGeoLocationEnabled = false;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
 
     public AttendeeProfileFragment() {
         event = "";
@@ -87,6 +100,17 @@ public class AttendeeProfileFragment extends Fragment {
         firebase();
         getEditProfile(view);
         setTextFromModel();
+
+        // Set up checkbox listener
+        checkBox = view.findViewById(R.id.checkBox);
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            isGeoLocationEnabled = isChecked;
+            if (isChecked) {
+                requestLocationPermission();
+            } else {
+                stopLocationUpdates();
+            }
+        });
         attendeeSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,6 +263,8 @@ public class AttendeeProfileFragment extends Fragment {
                     .collection("Attendees");
         }
     }
+
+
     public void getFirebaseProfileImage(){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -257,5 +283,76 @@ public class AttendeeProfileFragment extends Fragment {
 
                 }
             });
+    }
+    /**
+     * Requests location permission.
+     */
+    private void requestLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // If the permission is not granted, request it
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+            } else {
+                // If the permission is already granted, start location updates
+                requestLocationUpdates();
+            }
+        }
+    }
+
+
+
+    /**
+     * Handles permission request result.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestLocationUpdates();
+            } else {
+                Toast.makeText(getContext(), "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Starts location updates.
+     */
+    private void requestLocationUpdates() {
+        if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    if (isGeoLocationEnabled) {
+                        // Display current coordinates in a toast message
+                        Toast.makeText(getContext(), "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onProviderEnabled(@NonNull String provider) {
+                }
+
+                @Override
+                public void onProviderDisabled(@NonNull String provider) {
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                }
+            };
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
+    }
+
+    /**
+     * Stops location updates.
+     */
+    private void stopLocationUpdates() {
+        if (locationManager != null) {
+            locationManager.removeUpdates(locationListener);
+        }
     }
 }
