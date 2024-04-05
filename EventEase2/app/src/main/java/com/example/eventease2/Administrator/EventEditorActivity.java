@@ -180,7 +180,7 @@ public class EventEditorActivity extends AppCompatActivity {
 
                         // Do something with the extracted information
                         if (description != null && eventBody != null && name != null) {
-                            eventDesciption.setText(eventBody);
+                            eventDesciption.setText(description);
                             eventTitle.setText(name);
 
 
