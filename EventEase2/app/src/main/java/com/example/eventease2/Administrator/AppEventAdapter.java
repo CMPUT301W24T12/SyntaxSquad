@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -72,7 +73,7 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         this.organizerID = organizerList;
         this.eventIDs = eventIDs;
         this.participantCountList = participantCountList;
-        notifyDataSetChanged();
+        notifyDataSetChanged(); // use notifyItemRemoved(int position)
     }
 
 
@@ -110,7 +111,7 @@ public class AppEventAdapter extends ArrayAdapter<String> {
                 intent.putExtra("OrganizerID", organizerID.get(position));
                 intent.putExtra("posOfEvent", String.valueOf(position));
                 context.startActivity(intent);
-                Log.d("BACK", "I am back");
+                Log.d("BACKKKK", "I am back");
             }
         });
         attendeeListButton.setOnClickListener(new View.OnClickListener() {
