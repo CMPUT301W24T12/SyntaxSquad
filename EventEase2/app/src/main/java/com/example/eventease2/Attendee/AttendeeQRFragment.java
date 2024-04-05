@@ -215,6 +215,7 @@ public class AttendeeQRFragment extends Fragment{
             viewModel.setCheckIN(viewModel.getCheckIN()+1);
             data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
             attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+            Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
         }
     }
     /**

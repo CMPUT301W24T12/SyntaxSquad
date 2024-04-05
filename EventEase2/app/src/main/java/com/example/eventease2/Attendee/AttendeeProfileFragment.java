@@ -93,7 +93,7 @@ public class AttendeeProfileFragment extends Fragment {
                 setModelItems();
                 if(!Objects.equals(event, "")) {
                     addAttendeeData();
-                    //Toast.makeText(getContext(), "Clicked!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Profile Saved!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
