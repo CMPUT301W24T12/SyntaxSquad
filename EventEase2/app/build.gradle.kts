@@ -41,6 +41,8 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.2.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 

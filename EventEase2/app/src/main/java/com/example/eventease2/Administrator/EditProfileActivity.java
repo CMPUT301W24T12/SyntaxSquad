@@ -1,4 +1,5 @@
 package com.example.eventease2.Administrator;
+import com.bumptech.glide.request.RequestOptions;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -89,8 +90,29 @@ public class EditProfileActivity extends AppCompatActivity {
         eventInfoDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilepics/" + attendeeID + ".jpg");
-
+                StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilepics");
+                profilePicRef.listAll().addOnSuccessListener(listResult -> {
+                    for (StorageReference itemRef : listResult.getItems()) {
+                        // Check if the item name starts with attendeeID
+                        if (itemRef.getName().startsWith(attendeeID)) {
+                            itemRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                                // Load the image into the ImageView
+                                Glide.with(EditProfileActivity.this)
+                                        .load(uri)
+                                        .apply(RequestOptions.circleCropTransform())
+                                        .into(profile_pic);
+                            }).addOnFailureListener(e -> {
+                                // Handle any errors
+                                Log.e("EditProfileActivity", "Failed to download profile picture: " + e.getMessage());
+                                profile_pic.setImageResource(profilePicResId);
+                            });
+                            break; // Found the file with the right ID, so no need to continue the loop
+                        }
+                    }
+                }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    Log.d("EditProfileActivity", "Error: " + exception.getMessage());
+                });
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
@@ -108,6 +130,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                 // Load the image into the ImageView
                                 Glide.with(EditProfileActivity.this)
                                         .load(uri)
+                                        .apply(RequestOptions.circleCropTransform())
                                         .into(profile_pic);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -160,6 +183,20 @@ public class EditProfileActivity extends AppCompatActivity {
                                 Log.w("EditProfileActivity", "Error deleting document", e);
                             }
                         });
+            }
+
+        });
+        TextView back = findViewById(R.id.profile_back_button);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditProfileActivity.this, AdminAttendeeView.class);
+                intent.putExtra("OrganizerID", organizerID);
+                intent.putExtra("EventID", eventID);
+                // Start the new activity
+                startActivity(intent);
+                // Finish the current activity
+                finish();
             }
         });
     }
