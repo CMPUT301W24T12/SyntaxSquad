@@ -1,8 +1,11 @@
 package com.example.eventease2.Administrator;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,8 +13,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+
 import com.example.eventease2.Event;
 import com.example.eventease2.R;
+import com.example.eventease2.RoleChooseActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,12 +26,15 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import java.util.ArrayList;
 import java.util.List;
 public class AppEventsActivity extends AppCompatActivity {
 
+
     ListView eventList;
-    public static AppEventAdapter  adminListArrayAdapter;
+    AppEventAdapter adminListArrayAdapter;
+
 
     ArrayList<String> organizerList;
     ArrayList<String> eventNameList;
@@ -35,11 +43,14 @@ public class AppEventsActivity extends AppCompatActivity {
     ArrayList<String> participantCountList;
     TextView backInstruct;
 
+
     public static AppData appData;
     Button showMoreButton;
 
+
     // Keep track of the number of events initially displayed
     private int initiallyDisplayedCount = 10;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +65,9 @@ public class AppEventsActivity extends AppCompatActivity {
         eventIDs = new ArrayList<>();
         participantCountList = new ArrayList<>();
 
+
         refreshEventData();
+
 
         showMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,13 +79,18 @@ public class AppEventsActivity extends AppCompatActivity {
         });
 
 
+
+
         backInstruct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(AppEventsActivity.this, RoleChooseActivity.class);
+                startActivity(intent);
             }
         });
+
     }
+
 
     public void refreshEventData() {
         clearEventData();
@@ -81,6 +99,7 @@ public class AppEventsActivity extends AppCompatActivity {
         fetchOrganizers(collectionRef, appDb);
     }
 
+
     private void clearEventData() {
         organizerList.clear();
         eventNameList.clear();
@@ -88,6 +107,7 @@ public class AppEventsActivity extends AppCompatActivity {
         eventIDs.clear();
         participantCountList.clear();
     }
+
 
     private void fetchOrganizers(CollectionReference collectionRef, FirebaseFirestore appDb) {
         collectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -107,6 +127,7 @@ public class AppEventsActivity extends AppCompatActivity {
         });
     }
 
+
     private void fetchEventsForOrganizer(CollectionReference eventsCollectionRef) {
         eventsCollectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -118,12 +139,14 @@ public class AppEventsActivity extends AppCompatActivity {
                     String description = eventSnapshot.getString("Description");
                     String name = eventSnapshot.getString("Name");
 
+
                     organizerList.add(eventSnapshot.getReference().getParent().getParent().getId());
                     eventNameList.add(name);
                     eventInfoList.add(description);
                     eventIDs.add(eventId);
                     participantCountList.add(String.valueOf(attendeeListLength));
                 }
+
 
                 appData = new AppData();
                 appData.setOrganizerList(organizerList);
@@ -141,6 +164,7 @@ public class AppEventsActivity extends AppCompatActivity {
         });
     }
 
+
     private void notifyDataAdapter() {
         if (adminListArrayAdapter == null) {
             adminListArrayAdapter = new AppEventAdapter(AppEventsActivity.this, eventNameList, eventInfoList, organizerList, eventIDs, participantCountList, initiallyDisplayedCount);
@@ -153,6 +177,7 @@ public class AppEventsActivity extends AppCompatActivity {
             ArrayList<String> newEventIDs = new ArrayList<>(adminListArrayAdapter.getEventIDs());
             ArrayList<String> newParticipantCountList = new ArrayList<>(adminListArrayAdapter.getParticipantCountList());
 
+
             // Add the newly fetched event data to the existing data
             newEventNames.addAll(eventNameList.subList(adminListArrayAdapter.getCount(), eventNameList.size()));
             newEventDescriptions.addAll(eventInfoList.subList(adminListArrayAdapter.getCount(), eventInfoList.size()));
@@ -160,10 +185,12 @@ public class AppEventsActivity extends AppCompatActivity {
             newEventIDs.addAll(eventIDs.subList(adminListArrayAdapter.getCount(), eventIDs.size()));
             newParticipantCountList.addAll(participantCountList.subList(adminListArrayAdapter.getCount(), participantCountList.size()));
 
+
             // Update the adapter with the combined data
             adminListArrayAdapter.updateData(newEventNames, newEventDescriptions, newOrganizerIDs, newEventIDs, newParticipantCountList);
             adminListArrayAdapter.setInitiallyDisplayedCount(initiallyDisplayedCount); // Add this line
         }
+
 
         // Show or hide the "Show More" button based on the remaining events
         if (initiallyDisplayedCount < eventNameList.size()) {
@@ -175,12 +202,16 @@ public class AppEventsActivity extends AppCompatActivity {
 
 
 
+
+
+
     private void logAppDataInfo(AppData appData) {
         ArrayList<String> organizerList = appData.getOrganizerList();
         ArrayList<String> eventNameList = appData.getEventNameList();
         ArrayList<String> eventInfoList = appData.getEventInfoList();
         ArrayList<String> eventIDs = appData.getEventIDs();
         ArrayList<String> participantCountList = appData.getParticipantCountList();
+
 
         // Log information for each event
         for (int i = 0; i < eventNameList.size(); i++) {
@@ -194,3 +225,4 @@ public class AppEventsActivity extends AppCompatActivity {
         }
     }
 }
+
