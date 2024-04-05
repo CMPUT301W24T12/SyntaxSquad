@@ -26,7 +26,7 @@ import java.util.List;
 public class AppEventsActivity extends AppCompatActivity {
 
     ListView eventList;
-    AppEventAdapter adminListArrayAdapter;
+    public static AppEventAdapter  adminListArrayAdapter;
 
     ArrayList<String> organizerList;
     ArrayList<String> eventNameList;

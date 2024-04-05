@@ -1,5 +1,7 @@
 package com.example.eventease2.Administrator;
 
+import static com.example.eventease2.Administrator.AppEventsActivity.adminListArrayAdapter;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,13 +56,15 @@ public class EventEditorActivity extends AppCompatActivity {
 
     public static AppData appData;
 
-
+    String resultIntent = "No Delete";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_event_editor);
+
+        appData = new AppData();
 
         storage = FirebaseStorage.getInstance();
         eventDesciption = findViewById(R.id.event_detail);
@@ -91,6 +95,7 @@ public class EventEditorActivity extends AppCompatActivity {
 
         deleteEvent.setOnClickListener(v -> {
             // Delete the event document
+            if (posOfEvent != null){
             eventInfoDoc.delete()
                     .addOnSuccessListener(aVoid -> {
                         appData.deleteEventID(Integer.parseInt(posOfEvent));
@@ -98,11 +103,15 @@ public class EventEditorActivity extends AppCompatActivity {
                         appData.deleteOrganizer(Integer.parseInt(posOfEvent));
                         appData.deleteEventName(Integer.parseInt(posOfEvent));
                         appData.deleteParticipantCount(Integer.parseInt(posOfEvent));
+                        adminListArrayAdapter.notifyAll();
                         finish();
-
                     })
                     .addOnFailureListener(e -> Log.w("TAG", "Error deleting document", e));
-        });
+        }
+        else{
+                Toast.makeText(this, "Can't have a null position!", Toast.LENGTH_SHORT).show();
+        }}
+        );
 
         getBackInstruct.setOnClickListener(new View.OnClickListener() {
             @Override
