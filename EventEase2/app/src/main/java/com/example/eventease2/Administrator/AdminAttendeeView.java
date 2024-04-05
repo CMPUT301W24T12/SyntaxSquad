@@ -72,9 +72,12 @@ public class AdminAttendeeView extends AppCompatActivity {
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             // Access each document here
                             Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                            //                         attendee id's                            attendee info
-                            attendeeIDs.add(documentSnapshot.getId());
-                            attendeeNames.add(documentSnapshot.getString("Name"));
+                            String checkIns = documentSnapshot.getString("Number of Check ins:");
+                            if (checkIns != null && checkIns.equals("1")) {
+                                // Only include attendees who have checked in
+                                attendeeIDs.add(documentSnapshot.getId());
+                                attendeeNames.add(documentSnapshot.getString("Name"));
+                            }
                         }
                         attendeeArrayAdapter = new AdminAttendeeListArrayAdapter(AdminAttendeeView.this, attendeeIDs, attendeeNames, eventID, organizerID,profile_pic, email, phone );
                         attendeeList.setAdapter(attendeeArrayAdapter);

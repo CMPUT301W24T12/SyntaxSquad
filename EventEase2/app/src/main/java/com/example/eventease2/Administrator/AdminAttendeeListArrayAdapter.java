@@ -1,4 +1,5 @@
 package com.example.eventease2.Administrator;
+import com.bumptech.glide.request.RequestOptions;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,24 +70,50 @@ public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
 
         // Load profile picture from Firebase Storage
         ImageView attendeePicture = view.findViewById(R.id.attendeePortrait);
-        StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilepics/" + attendeeIDs.get(position) + ".jpg");
-        profilePicRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                // Load the image into the ImageView
-                Glide.with(context)
-                        .load(uri)
-                        .placeholder(R.drawable.frame_4) // Placeholder image while loading
-                        .error(R.drawable.frame_4) // Image to display in case of error
-                        .into(attendeePicture);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle any errors
-                Log.e("AdminAttendeeList", "Failed to load profile picture: " + e.getMessage());
-            }
-        });
+        String fileNameWithExtension = attendeeIDs.get(position) + ".jpg";
+        String fileNameWithoutExtension = attendeeIDs.get(position);
+        StorageReference profilePicRefWithExtension = FirebaseStorage.getInstance().getReference().child("profilepics/" + fileNameWithExtension);
+        StorageReference profilePicRefWithoutExtension = FirebaseStorage.getInstance().getReference().child("profilepics/" + fileNameWithoutExtension);
+
+        profilePicRefWithExtension.getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        // Load the image into the ImageView with extension
+                        Glide.with(context)
+                                .load(uri)
+                                .apply(RequestOptions.circleCropTransform())
+                                .placeholder(R.drawable.frame_4)
+                                .error(R.drawable.frame_4)
+                                .into(attendeePicture);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // If failed to load with extension, try without extension
+                        profilePicRefWithoutExtension.getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        // Load the image into the ImageView without extension
+                                        Glide.with(context)
+                                                .load(uri)
+                                                .apply(RequestOptions.circleCropTransform())
+                                                .placeholder(R.drawable.frame_4)
+                                                .error(R.drawable.frame_4)
+                                                .into(attendeePicture);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Handle any errors
+                                        Log.e("AdminAttendeeList", "Failed to load profile picture without extension: " + e.getMessage());
+                                    }
+                                });
+                    }
+                });
 
         attendeeName.setOnClickListener(new View.OnClickListener() {
             @Override
