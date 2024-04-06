@@ -38,10 +38,10 @@ public class EditProfileActivity extends AppCompatActivity {
     TextView phone;
     Button removePic;
     Button removeProfile;
-    String attendeeID;
+    public String attendeeID;
     String name;
-    String eventID; // Add eventID variable
-    String organizerID; // Add organizerID variable
+    public String eventID; // Add eventID variable
+    public String organizerID; // Add organizerID variable
     String posOfEvent;
     DocumentReference eventInfoDoc;
     ImageView profile_pic;
@@ -50,7 +50,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceType")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
@@ -119,8 +119,10 @@ public class EditProfileActivity extends AppCompatActivity {
                         String emailStr = document.getString("Email");
                         String phoneStr = document.getString("Phone");
                         String bioStr = document.getString("Bio");
-                        email.setText(emailStr);
-                        phone.setText(phoneStr);
+                        String fullemail = "Email: "+ emailStr;
+                        String fullphone = "Phone: " + phoneStr;
+                        email.setText(fullemail);
+                        phone.setText(fullphone);
                         attendeeBio.setText(bioStr);
 
                         // Download the profile picture from Firebase Storage
@@ -191,11 +193,9 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EditProfileActivity.this, AdminAttendeeView.class);
+                intent.putExtra("ID", eventID);
                 intent.putExtra("OrganizerID", organizerID);
-                intent.putExtra("EventID", eventID);
-                // Start the new activity
                 startActivity(intent);
-                // Finish the current activity
                 finish();
             }
         });

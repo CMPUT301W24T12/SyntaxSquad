@@ -108,8 +108,11 @@ public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        // Handle any errors
-                                        Log.e("AdminAttendeeList", "Failed to load profile picture without extension: " + e.getMessage());
+                                        // Load default image (ellipse_9) when no profile picture found
+                                        Glide.with(context)
+                                                .load(R.drawable.ellipse_9)
+                                                .apply(RequestOptions.circleCropTransform())
+                                                .into(attendeePicture);
                                     }
                                 });
                     }
