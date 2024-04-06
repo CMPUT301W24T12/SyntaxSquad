@@ -181,9 +181,13 @@ public class AttendeeQRFragment extends Fragment {
         data.put("Phone", viewModel.getProfilePhone());
         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
 
+        /*
         // Subscribing Attendee to event notifications
         Context context = requireContext();
-        FirebaseMessaging.getInstance().subscribeToTopic(event)
+        event = appDb.collection("Organizer").document(viewModel.getOrganizer())
+                .collection("Events")
+                .document(viewModel.getEvent());
+        FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -195,6 +199,7 @@ public class AttendeeQRFragment extends Fragment {
                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
+         */
 
         /*
         @Override
@@ -209,6 +214,8 @@ public class AttendeeQRFragment extends Fragment {
             sendRegistrationToServer(refreshedToken);
         }
          */
+    }
+
 
         public void checkIn() {
             event = appDb.collection("Organizer").document(viewModel.getOrganizer())
@@ -257,6 +264,7 @@ public class AttendeeQRFragment extends Fragment {
                 attendeeCollect.document(viewModel.getAttendeeID()).set(data);
             }
         }
+
         /**
          * Firebase connecting function.
          */
@@ -270,5 +278,4 @@ public class AttendeeQRFragment extends Fragment {
                         .collection("Attendees");
             }
         }
-    }
 }
