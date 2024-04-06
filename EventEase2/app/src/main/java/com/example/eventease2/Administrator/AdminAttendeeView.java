@@ -72,11 +72,14 @@ public class AdminAttendeeView extends AppCompatActivity {
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             // Access each document here
                             Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                            String checkIns = documentSnapshot.getString("Number of Check ins:");
-                            if (checkIns != null && checkIns.equals("1")) {
-                                // Only include attendees who have checked in
-                                attendeeIDs.add(documentSnapshot.getId());
-                                attendeeNames.add(documentSnapshot.getString("Name"));
+                            String checkInsStr = documentSnapshot.getString("Number of Check ins:");
+                            if (checkInsStr != null) {
+                                int checkIns = Integer.parseInt(checkInsStr);
+                                if (checkIns >= 1) {
+                                    // Only include attendees who have checked in at least once
+                                    attendeeIDs.add(documentSnapshot.getId());
+                                    attendeeNames.add(documentSnapshot.getString("Name"));
+                                }
                             }
                         }
                         attendeeArrayAdapter = new AdminAttendeeListArrayAdapter(AdminAttendeeView.this, attendeeIDs, attendeeNames, eventID, organizerID,profile_pic, email, phone );
@@ -94,13 +97,10 @@ public class AdminAttendeeView extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Navigate to the AppEvent activity
                 Intent intent = new Intent(AdminAttendeeView.this, AppEventsActivity.class);
-                intent.putExtra("OrganizerID", organizerID);
-                intent.putExtra("EventID", eventID);
-                // Start the new activity
                 startActivity(intent);
-                // Finish the current activity
-                finish();
+                finish(); // Finish the current activity
             }
         });
 //        attendeeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

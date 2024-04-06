@@ -48,23 +48,25 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="154dp"
-        android:layout_height="181dp"
+        android:layout_width="152dp"
+        android:layout_height="175dp"
         android:layout_marginTop="72dp"
         android:layout_marginEnd="116dp"
+        android:layout_marginBottom="24dp"
         android:contentDescription="@string/todo"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.907"
+        app:layout_constraintHorizontal_bias="0.951"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/blue_background"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ellipse_9" />
 
     <Button
         android:id="@+id/remove_pic"
-        android:layout_width="239dp"
-        android:layout_height="37dp"
+        android:layout_width="231dp"
+        android:layout_height="31dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="44dp"
         android:background="@drawable/rounded_button_background"
         android:shadowColor="#536061"
         android:shadowDx="2"
@@ -72,23 +74,25 @@
         android:shadowRadius="2.1"
         android:text="Remove Picture"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/blue_background" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.327" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="171dp"
+        android:layout_width="wrap_content"
         android:layout_height="28dp"
         android:text="@string/editable_name"
-        android:textSize="25sp"
+        android:textSize="23sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/blue_background"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/blue_background"
-        app:layout_constraintVertical_bias="0.385" />
+        app:layout_constraintVertical_bias="1.80" />
 
     <TextView
         android:id="@+id/textView3"
@@ -97,7 +101,7 @@
         android:layout_marginTop="316dp"
         android:text="@string/editable_bio"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/participant_count"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
@@ -126,8 +130,8 @@
         android:layout_marginBottom="96dp"
         android:autofillHints=""
         android:ems="10"
-        android:textSize="20sp"
         android:text="Phone: "
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -143,8 +147,8 @@
         android:layout_height="55dp"
         android:autofillHints=""
         android:ems="10"
-        android:textSize="20sp"
         android:text="Email: "
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
