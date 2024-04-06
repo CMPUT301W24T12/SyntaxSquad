@@ -136,8 +136,9 @@
         android:layout_weight="5"
         android:background="@drawable/ovel_bg"
         android:backgroundTint="#E9EDF1"
-        android:text="Event Body"
-        android:gravity="top|start"/>
+        android:gravity="top|start"
+        android:hint="Event Body"
+        android:text="Event Body" />
 
     <Button
         android:id="@+id/share_button"
