@@ -11,7 +11,7 @@ public class EventListFragmentTest {
     @Before
     public void setUp() {
         // Initialize Firebase Firestore for testing
-        FirebaseApp.initializeApp(InstrumentationRegistry.getInstrumentation().getContext());
+//        FirebaseApp.initializeApp(InstrumentationRegistry.getInstrumentation().getContext());
         db = FirebaseFirestore.getInstance();
     }
 }
