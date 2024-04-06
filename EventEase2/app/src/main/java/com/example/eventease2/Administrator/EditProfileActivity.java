@@ -38,10 +38,10 @@ public class EditProfileActivity extends AppCompatActivity {
     TextView phone;
     Button removePic;
     Button removeProfile;
-    String attendeeID;
+    public String attendeeID;
     String name;
-    String eventID; // Add eventID variable
-    String organizerID; // Add organizerID variable
+    public String eventID; // Add eventID variable
+    public String organizerID; // Add organizerID variable
     String posOfEvent;
     DocumentReference eventInfoDoc;
     ImageView profile_pic;
@@ -50,7 +50,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceType")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
