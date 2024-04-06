@@ -1,4 +1,7 @@
+
+
 package com.example.eventease2.Administrator;
+
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,12 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 
 import com.example.eventease2.EventListFragment;
 import com.example.eventease2.Organizer.AddEventFragment;
@@ -33,10 +38,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+
 import java.io.ByteArrayOutputStream;
+
 
 public class EventEditorActivity extends AppCompatActivity {
     FirebaseFirestore appDb = FirebaseFirestore.getInstance();
+
 
     TextView eventDesciption;
     TextView eventTitle;
@@ -52,7 +60,11 @@ public class EventEditorActivity extends AppCompatActivity {
     FirebaseStorage storage;
     Button removeImg;
 
+
     public static AppData appData;
+
+
+
 
 
 
@@ -61,7 +73,7 @@ public class EventEditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_event_editor);
-
+        appData = new AppData();
         storage = FirebaseStorage.getInstance();
         eventDesciption = findViewById(R.id.event_detail);
         eventTitle = findViewById(R.id.event_title);
@@ -72,37 +84,48 @@ public class EventEditorActivity extends AppCompatActivity {
         getBackInstruct = findViewById(R.id.events_back_button);
         removeImg = findViewById(R.id.event_remove_photo_button);
 
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+
         // Retrieve data from intent extras
         eventID = getIntent().getStringExtra("ID");
         organizerID = getIntent().getStringExtra("OrganizerID");
         posOfEvent = getIntent().getStringExtra("posOfEvent");
 
+
         // Get the StorageReference of the image using its ID
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child("images/" + eventID);
 
+
         eventInfoDoc = appDb.collection("Organizer").document(organizerID).collection("Events").document(eventID);
+
 
         deleteEvent.setOnClickListener(v -> {
             // Delete the event document
-            eventInfoDoc.delete()
-                    .addOnSuccessListener(aVoid -> {
-                        appData.deleteEventID(Integer.parseInt(posOfEvent));
-                        appData.deleteEventInfo(Integer.parseInt(posOfEvent));
-                        appData.deleteOrganizer(Integer.parseInt(posOfEvent));
-                        appData.deleteEventName(Integer.parseInt(posOfEvent));
-                        appData.deleteParticipantCount(Integer.parseInt(posOfEvent));
-                        finish();
+            if (posOfEvent != null){
+                eventInfoDoc.delete()
+                        .addOnSuccessListener(aVoid -> {
+                            appData.deleteEventID(Integer.parseInt(posOfEvent));
+                            appData.deleteEventInfo(Integer.parseInt(posOfEvent));
+                            appData.deleteOrganizer(Integer.parseInt(posOfEvent));
+                            appData.deleteEventName(Integer.parseInt(posOfEvent));
+                            appData.deleteParticipantCount(Integer.parseInt(posOfEvent));
+                            Intent intent = new Intent(this, AppEventsActivity.class);
+                            this.startActivity(intent);
+                        })
+                        .addOnFailureListener(e -> Log.w("TAG", "Error deleting document", e));
+            }
+            else{
+                Toast.makeText(this, "Can't have a null position!", Toast.LENGTH_SHORT).show();
+            }}
+        );
 
-                    })
-                    .addOnFailureListener(e -> Log.w("TAG", "Error deleting document", e));
-        });
 
         getBackInstruct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +133,8 @@ public class EventEditorActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
 
 
         // Download the image data
@@ -121,6 +146,7 @@ public class EventEditorActivity extends AppCompatActivity {
                     byte[] bytes = task.getResult();
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
+
                     // Set the Bitmap to the ImageView
                     eventPic.setImageBitmap(bitmap);
                 } else {
@@ -130,12 +156,14 @@ public class EventEditorActivity extends AppCompatActivity {
             }
         });
 
+
         backInstruct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
 
         // Retrieve the document
         eventInfoDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -149,10 +177,12 @@ public class EventEditorActivity extends AppCompatActivity {
                         String eventBody = document.getString("EventBody");
                         String name = document.getString("Name");
 
+
                         // Do something with the extracted information
                         if (description != null && eventBody != null && name != null) {
-                            eventDesciption.setText(eventBody);
+                            eventDesciption.setText(description);
                             eventTitle.setText(name);
+
 
                         } else {
                             // Handle the case if any of the fields are null
@@ -170,12 +200,15 @@ public class EventEditorActivity extends AppCompatActivity {
         });
 
 
+
+
         removeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get the StorageReference of the image using its ID
                 StorageReference storageRef = storage.getReference();
                 StorageReference imageRef = storageRef.child("images/" + eventID);
+
 
                 // Delete the existing image from Firebase Storage
                 imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -187,6 +220,7 @@ public class EventEditorActivity extends AppCompatActivity {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         defaultBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                         byte[] data = baos.toByteArray();
+
 
                         defaultImageRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
@@ -216,7 +250,11 @@ public class EventEditorActivity extends AppCompatActivity {
         });
 
 
+
+
     }
+
+
 
 
 }

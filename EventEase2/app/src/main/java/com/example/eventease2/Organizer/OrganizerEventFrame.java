@@ -59,6 +59,9 @@ public class OrganizerEventFrame extends AppCompatActivity {
     private EditText descriptionView;
     private EditText eventTitleView;
     private EditText eventBodyView;
+    private TextView fromView;
+    private TextView toView;
+    private EditText locationView;
     private  Button editButton;
     private Button share;
     private Button backButton;
@@ -71,7 +74,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
     private FirebaseStorage storage;
     String eventTitle;
     String description;
-
+    String location;
     String eventBody;
     Uri image;
     Bitmap imageBitmap;
@@ -105,6 +108,9 @@ public class OrganizerEventFrame extends AppCompatActivity {
         descriptionView = findViewById(R.id.Description);
         eventBodyView = findViewById(R.id.editTextText2);
         eventTitleView = findViewById(R.id.eventTitle);
+        fromView = findViewById(R.id.FromView);
+        toView = findViewById(R.id.ToView);
+        locationView = findViewById(R.id.eventLocation);
 
         //share.setEnabled(false);
 
@@ -134,6 +140,16 @@ public class OrganizerEventFrame extends AppCompatActivity {
                             eventTitle = document.getString("Name");
                             description = document.getString("Description");
                             eventBody = document.getString("EventBody");
+                            location = document.getString("Location");
+                            String from="";
+                            String to="";
+                            try{
+                                from = document.getString("StartTime");
+                                to =  document.getString("EndTime");
+                            }catch (Exception e){
+                                Log.d("time","Missing data for Start time or end time");
+                            }
+
                             Log.d("Title: ", eventTitle);
                             Log.d("Description: ", description);
                             Log.d("body",eventBody);
@@ -142,6 +158,11 @@ public class OrganizerEventFrame extends AppCompatActivity {
                             eventTitleView.setText(eventTitle);
                             descriptionView.setText(description);
                             eventBodyView.setText(eventBody);
+                            fromView.setText(from);
+                            if(!location.equals("")){
+                                locationView.setText(location);
+                            }
+                            toView.setText(to);
 
                             // Download the image from Firebase Storage
                             imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -263,6 +284,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
                 data.put("Name", eventTitle);
                 data.put("Description", description);
                 data.put("EventBody", eventBody);
+                data.put("Location",location);
 
                 CollectionReference newRef = db.collection("Organizer").document(organizerID).collection("Events");
                 newRef.document(id).update(data);
@@ -312,6 +334,7 @@ public class OrganizerEventFrame extends AppCompatActivity {
         eventTitle = eventTitleView.getText().toString();
         description = descriptionView.getText().toString();
         eventBody = eventBodyView.getText().toString();
+        location = locationView.getText().toString();
     }
 
     /**
