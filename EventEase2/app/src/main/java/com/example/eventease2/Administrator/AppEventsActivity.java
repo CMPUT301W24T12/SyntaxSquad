@@ -139,30 +139,44 @@ public class  AppEventsActivity extends AppCompatActivity {
                     String description = eventSnapshot.getString("Description");
                     String name = eventSnapshot.getString("Name");
 
+                    ArrayList<String> attendeeIDs = new ArrayList<>(); // Moved inside the loop
 
-                    organizerList.add(eventSnapshot.getReference().getParent().getParent().getId());
-                    eventNameList.add(name);
-                    eventInfoList.add(description);
-                    eventIDs.add(eventId);
-                    participantCountList.add(String.valueOf(attendeeListLength));
+                    CollectionReference attendeeRef = eventsCollectionRef.document(eventId).collection("Attendees");
+                    attendeeRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                String checkIns = documentSnapshot.getString("Number of Check ins:");
+                                if (checkIns != null && Integer.parseInt(checkIns) > 0) {
+                                    attendeeIDs.add(documentSnapshot.getId());
+                                }
+                            }
+
+                            organizerList.add(eventSnapshot.getReference().getParent().getParent().getId());
+                            eventNameList.add(name);
+                            eventInfoList.add(description);
+                            eventIDs.add(eventId);
+                            participantCountList.add(String.valueOf(attendeeIDs.size()));
+
+                            appData = new AppData();
+                            appData.setOrganizerList(organizerList);
+                            appData.setEventNameList(eventNameList);
+                            appData.setEventInfoList(eventInfoList);
+                            appData.setEventIDs(eventIDs);
+                            appData.setParticipantCountList(participantCountList);
+                            notifyDataAdapter();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("DEBUG here", "Failed to fetch events for organizer");
+                        }
+                    });
                 }
-
-
-                appData = new AppData();
-                appData.setOrganizerList(organizerList);
-                appData.setEventNameList(eventNameList);
-                appData.setEventInfoList(eventInfoList);
-                appData.setEventIDs(eventIDs);
-                appData.setParticipantCountList(participantCountList);
-                notifyDataAdapter();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("DEBUG here", "Failed to fetch events for organizer");
             }
         });
     }
+
 
 
     private void notifyDataAdapter() {
