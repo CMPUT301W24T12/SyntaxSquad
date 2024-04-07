@@ -29,33 +29,43 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-public class  AppEventsActivity extends AppCompatActivity {
 
+/**
+ * AppEventsActivity displays a list of events for the administrator.
+ * It retrieves event data from Firebase Firestore and populates the list accordingly.
+ *
+ * This activity initializes various UI elements, sets listeners for buttons,
+ * refreshes event data from Firestore, fetches organizers and their events,
+ * processes event and attendee data, and updates the event list accordingly.
+ */
+public class AppEventsActivity extends AppCompatActivity {
 
+    // Instance variables
     ListView eventList;
     AppEventAdapter adminListArrayAdapter;
-
-
     ArrayList<String> organizerList;
     ArrayList<String> eventNameList;
     ArrayList<String> eventInfoList;
     ArrayList<String> eventIDs;
     ArrayList<String> participantCountList;
     TextView backInstruct;
-
-
     public static AppData appData;
     Button showMoreButton;
-
-
-    // Keep track of the number of events initially displayed
     private int initiallyDisplayedCount = 10;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_event_page);
+        initializeViews();
+        setListeners();
+        refreshEventData();
+    }
+
+    /**
+     * Initializes all the required views from the layout file.
+     */
+    private void initializeViews() {
         eventList = findViewById(R.id.event_list);
         backInstruct = findViewById(R.id.events_back_button);
         showMoreButton = findViewById(R.id.see_more_button);
@@ -64,42 +74,41 @@ public class  AppEventsActivity extends AppCompatActivity {
         eventInfoList = new ArrayList<>();
         eventIDs = new ArrayList<>();
         participantCountList = new ArrayList<>();
+    }
 
-
-        refreshEventData();
-
-
+    /**
+     * Sets click listeners for buttons.
+     */
+    private void setListeners() {
         showMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Increase the count to show more events
                 initiallyDisplayedCount += 10;
                 notifyDataAdapter();
             }
         });
 
-
-
-
         backInstruct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AppEventsActivity.this, RoleChooseActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(AppEventsActivity.this, RoleChooseActivity.class));
             }
         });
-
     }
 
-
-    public void refreshEventData() {
+    /**
+     * Refreshes event data by clearing existing lists and fetching data from Firestore.
+     */
+    private void refreshEventData() {
         clearEventData();
         FirebaseFirestore appDb = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = appDb.collection("Organizer");
         fetchOrganizers(collectionRef, appDb);
     }
 
-
+    /**
+     * Clears all event data lists.
+     */
     private void clearEventData() {
         organizerList.clear();
         eventNameList.clear();
@@ -108,7 +117,11 @@ public class  AppEventsActivity extends AppCompatActivity {
         participantCountList.clear();
     }
 
-
+    /**
+     * Fetches organizers from the Firestore database.
+     * @param collectionRef Reference to the collection of organizers in Firestore
+     * @param appDb Reference to the Firestore database
+     */
     private void fetchOrganizers(CollectionReference collectionRef, FirebaseFirestore appDb) {
         collectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -127,116 +140,120 @@ public class  AppEventsActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * Fetches events for a particular organizer from Firestore.
+     * @param eventsCollectionRef Reference to the collection of events for an organizer in Firestore
+     */
     private void fetchEventsForOrganizer(CollectionReference eventsCollectionRef) {
         eventsCollectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot eventQueryDocumentSnapshots) {
                 for (QueryDocumentSnapshot eventSnapshot : eventQueryDocumentSnapshots) {
-                    String eventId = eventSnapshot.getId();
-                    List<String> attendeeList = (List<String>) eventSnapshot.get("AttendeeList");
-                    int attendeeListLength = attendeeList != null ? attendeeList.size() : 0;
-                    String description = eventSnapshot.getString("Description");
-                    String name = eventSnapshot.getString("Name");
-
-                    ArrayList<String> attendeeIDs = new ArrayList<>(); // Moved inside the loop
-
-                    CollectionReference attendeeRef = eventsCollectionRef.document(eventId).collection("Attendees");
-                    attendeeRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                String checkIns = documentSnapshot.getString("Number of Check ins:");
-                                if (checkIns != null && Integer.parseInt(checkIns) > 0) {
-                                    attendeeIDs.add(documentSnapshot.getId());
-                                }
-                            }
-
-                            organizerList.add(eventSnapshot.getReference().getParent().getParent().getId());
-                            eventNameList.add(name);
-                            eventInfoList.add(description);
-                            eventIDs.add(eventId);
-                            participantCountList.add(String.valueOf(attendeeIDs.size()));
-
-                            appData = new AppData();
-                            appData.setOrganizerList(organizerList);
-                            appData.setEventNameList(eventNameList);
-                            appData.setEventInfoList(eventInfoList);
-                            appData.setEventIDs(eventIDs);
-                            appData.setParticipantCountList(participantCountList);
-                            notifyDataAdapter();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("DEBUG here", "Failed to fetch events for organizer");
-                        }
-                    });
+                    processEvent(eventSnapshot, eventsCollectionRef);
                 }
             }
         });
     }
 
+    /**
+     * Processes an event document snapshot from Firestore.
+     * @param eventSnapshot Snapshot of an event document
+     * @param eventsCollectionRef Reference to the collection of events for an organizer in Firestore
+     */
+    private void processEvent(QueryDocumentSnapshot eventSnapshot, CollectionReference eventsCollectionRef) {
+        String eventId = eventSnapshot.getId();
+        List<String> attendeeList = (List<String>) eventSnapshot.get("AttendeeList");
+        int attendeeListLength = attendeeList != null ? attendeeList.size() : 0;
+        String description = eventSnapshot.getString("Description");
+        String name = eventSnapshot.getString("Name");
+        ArrayList<String> attendeeIDs = new ArrayList<>();
+        fetchAttendeesForEvent(eventsCollectionRef, eventSnapshot, attendeeIDs, eventId, name, description);
+    }
 
+    /**
+     * Fetches attendees for a particular event from Firestore.
+     * @param eventsCollectionRef Reference to the collection of events for an organizer in Firestore
+     * @param eventSnapshot Snapshot of an event document
+     * @param attendeeIDs List to store attendee IDs
+     * @param eventId ID of the event
+     * @param name Name of the event
+     * @param description Description of the event
+     */
+    private void fetchAttendeesForEvent(CollectionReference eventsCollectionRef, QueryDocumentSnapshot eventSnapshot, ArrayList<String> attendeeIDs, String eventId, String name, String description) {
+        CollectionReference attendeeRef = eventsCollectionRef.document(eventId).collection("Attendees");
+        attendeeRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    processAttendee(documentSnapshot, attendeeIDs);
+                }
+                updateEventDataLists(eventSnapshot, eventId, name, description, attendeeIDs);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("DEBUG here", "Failed to fetch events for organizer");
+            }
+        });
+    }
 
+    /**
+     * Processes an attendee document snapshot from Firestore.
+     * @param documentSnapshot Snapshot of an attendee document
+     * @param attendeeIDs List to store attendee IDs
+     */
+    private void processAttendee(QueryDocumentSnapshot documentSnapshot, ArrayList<String> attendeeIDs) {
+        String checkIns = documentSnapshot.getString("Number of Check ins:");
+        if (checkIns != null && Integer.parseInt(checkIns) > 0) {
+            attendeeIDs.add(documentSnapshot.getId());
+        }
+    }
+
+    /**
+     * Updates event data lists with information from Firestore.
+     * @param eventSnapshot Snapshot of an event document
+     * @param eventId ID of the event
+     * @param name Name of the event
+     * @param description Description of the event
+     * @param attendeeIDs List of attendee IDs for the event
+     */
+    private void updateEventDataLists(QueryDocumentSnapshot eventSnapshot, String eventId, String name, String description, ArrayList<String> attendeeIDs) {
+        organizerList.add(eventSnapshot.getReference().getParent().getParent().getId());
+        eventNameList.add(name);
+        eventInfoList.add(description);
+        eventIDs.add(eventId);
+        participantCountList.add(String.valueOf(attendeeIDs.size()));
+        notifyDataAdapter();
+    }
+
+    /**
+     * Notifies the data adapter about changes in the data set.
+     */
     private void notifyDataAdapter() {
         if (adminListArrayAdapter == null) {
             adminListArrayAdapter = new AppEventAdapter(AppEventsActivity.this, eventNameList, eventInfoList, organizerList, eventIDs, participantCountList, initiallyDisplayedCount);
             eventList.setAdapter(adminListArrayAdapter);
         } else {
-            // Update the data in the adapter with the new event lists
             ArrayList<String> newEventNames = new ArrayList<>(adminListArrayAdapter.getEventNames());
             ArrayList<String> newEventDescriptions = new ArrayList<>(adminListArrayAdapter.getEventDescription());
             ArrayList<String> newOrganizerIDs = new ArrayList<>(adminListArrayAdapter.getOrganizerID());
             ArrayList<String> newEventIDs = new ArrayList<>(adminListArrayAdapter.getEventIDs());
             ArrayList<String> newParticipantCountList = new ArrayList<>(adminListArrayAdapter.getParticipantCountList());
 
-
-            // Add the newly fetched event data to the existing data
             newEventNames.addAll(eventNameList.subList(adminListArrayAdapter.getCount(), eventNameList.size()));
             newEventDescriptions.addAll(eventInfoList.subList(adminListArrayAdapter.getCount(), eventInfoList.size()));
             newOrganizerIDs.addAll(organizerList.subList(adminListArrayAdapter.getCount(), organizerList.size()));
             newEventIDs.addAll(eventIDs.subList(adminListArrayAdapter.getCount(), eventIDs.size()));
             newParticipantCountList.addAll(participantCountList.subList(adminListArrayAdapter.getCount(), participantCountList.size()));
 
-
-            // Update the adapter with the combined data
             adminListArrayAdapter.updateData(newEventNames, newEventDescriptions, newOrganizerIDs, newEventIDs, newParticipantCountList);
-            adminListArrayAdapter.setInitiallyDisplayedCount(initiallyDisplayedCount); // Add this line
+            adminListArrayAdapter.setInitiallyDisplayedCount(initiallyDisplayedCount);
         }
 
-
-        // Show or hide the "Show More" button based on the remaining events
         if (initiallyDisplayedCount < eventNameList.size()) {
             showMoreButton.setVisibility(View.VISIBLE);
         } else {
             showMoreButton.setVisibility(View.GONE);
         }
     }
-
-
-
-
-
-
-    private void logAppDataInfo(AppData appData) {
-        ArrayList<String> organizerList = appData.getOrganizerList();
-        ArrayList<String> eventNameList = appData.getEventNameList();
-        ArrayList<String> eventInfoList = appData.getEventInfoList();
-        ArrayList<String> eventIDs = appData.getEventIDs();
-        ArrayList<String> participantCountList = appData.getParticipantCountList();
-
-
-        // Log information for each event
-        for (int i = 0; i < eventNameList.size(); i++) {
-            Log.d("AppData Info", "Event " + (i + 1) + ":");
-            Log.d("AppData Info", "Organizer: " + organizerList.get(i));
-            Log.d("AppData Info", "Event Name: " + eventNameList.get(i));
-            Log.d("AppData Info", "Event Info: " + eventInfoList.get(i));
-            Log.d("AppData Info", "Event ID: " + eventIDs.get(i));
-            Log.d("AppData Info", "Participant Count: " + participantCountList.get(i));
-            Log.d("AppData Info", "---------------------------");
-        }
-    }
 }
-
