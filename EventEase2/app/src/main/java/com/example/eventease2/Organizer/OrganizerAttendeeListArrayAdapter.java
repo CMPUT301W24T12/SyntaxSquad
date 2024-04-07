@@ -24,6 +24,7 @@ public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
     private ArrayList<String> attendeeIDs;
     private ArrayList<String> attendeeNames;
     private Context context;
+    private String name = null;
 
     public OrganizerAttendeeListArrayAdapter(Context context, ArrayList<String> attendeeIDs, ArrayList<String> attendeeNames) {
         super(context, 0, attendeeIDs);
@@ -42,10 +43,14 @@ public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
             view = LayoutInflater.from(context).inflate(R.layout.attendees_content, parent, false);
         }
 
-        String name = attendeeNames.get(position);
+        if (!attendeeIDs.isEmpty()) {
+            String name = attendeeNames.get(position);
+        }
 
         TextView attendeeName = view.findViewById(R.id.attendee_name);
-        attendeeName.setText(name);
+        if (name != null && !name.isEmpty()) {
+            attendeeName.setText(name);
+        }
 
         ImageView attendeePicture = view.findViewById(R.id.attendeePortrait);
         attendeePicture.setImageResource(R.drawable.frame_4);

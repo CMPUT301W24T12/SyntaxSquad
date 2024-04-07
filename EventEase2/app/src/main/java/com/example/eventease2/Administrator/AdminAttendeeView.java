@@ -63,7 +63,7 @@ public class AdminAttendeeView extends AppCompatActivity {
         attendeeList = findViewById(R.id.organizer_attendee_list);
 
         CollectionReference attendeeRef = db.collection("Organizer").document(organizerID).collection("Events").document(eventID).collection("Attendees");
-        ArrayList<String> attendeeIDs = new ArrayList<>();                                                   //replace with organizer ID                                                                        //replace with event ID
+        ArrayList<String> attendeeIDs = new ArrayList<>();                                                                                                                           //replace with event ID
         ArrayList<String> attendeeNames = new ArrayList<>();
         attendeeRef.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

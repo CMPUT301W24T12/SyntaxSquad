@@ -50,7 +50,8 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
     ArrayList<String> attendeeNameList;
     OrganizerAttendeeListArrayAdapter attendeeArrayAdapter;
 
-    private int milestone = 0; // initialize milestone
+    private int count = 0; // initialize milestone
+    private Boolean milestone = Boolean.FALSE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,27 +75,32 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                             // Access each document here
                             Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
                             //                         attendee id's                            attendee info
-                            attendeeIDs.add(documentSnapshot.getId());
-                            attendeeNames.add(documentSnapshot.getString("Name"));
+                            if (documentSnapshot.getString("Number of Check ins:") != null && !documentSnapshot.getString("Number of Check ins:").equals("0")) {
+                                attendeeIDs.add(documentSnapshot.getId());
+                                attendeeNames.add(documentSnapshot.getString("Name"));
+                            }
                         }
                         attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerAttendeeListFragment.this, attendeeIDs, attendeeNames);
                         attendeeList.setAdapter(attendeeArrayAdapter);
 
-                        if (attendeeIDs.size() != 0 && attendeeIDs.size() >= milestone) {
+                        if (attendeeIDs.size() != 0 && attendeeIDs.size() >= count && milestone == Boolean.TRUE) {
                             Toast.makeText(OrganizerAttendeeListFragment.this, "Milestone reached!", Toast.LENGTH_SHORT).show();
                         }
                         // Click listener on List to send to Attendee profile
-                        /*
+
                         attendeeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 Intent intent = new Intent(OrganizerAttendeeListFragment.this, OrganizerAttendeeProfileFragment.class);
                                 // Include anything attendee profile may need
                                 // intent.putExtra("Name", name)
+                                intent.putExtra("OrganizerID", organizerID);
+                                intent.putExtra("EventID", eventID);
+                                intent.putExtra("ID", attendeeIDs.get(position));
+                                intent.putExtra("Name", attendeeNames.get(position));
                                 startActivity(intent);
                             }
                         });
-                         */
 
                     }
                 })
@@ -131,7 +137,7 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Create an Intent to navigate to the Add Event Activity
-                Intent intent = new Intent(OrganizerAttendeeListFragment.this, EventListFragment.class);
+                Intent intent = new Intent(OrganizerAttendeeListFragment.this, OrganizerSignUpFragment.class);
                 intent.putExtra("OrganizerID", organizerID);
                 intent.putExtra("EventID", eventID);
                 // Start the new activity
@@ -158,8 +164,9 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String milestoneStr = input.getText().toString();
                 if (!milestoneStr.isEmpty()) {
-                    milestone = Integer.parseInt(milestoneStr);
-                    Toast.makeText(OrganizerAttendeeListFragment.this, "Milestone set to " + milestone, Toast.LENGTH_SHORT).show();
+                    count = Integer.parseInt(milestoneStr);
+                    milestone = Boolean.TRUE;
+                    Toast.makeText(OrganizerAttendeeListFragment.this, "Milestone set to " + count, Toast.LENGTH_SHORT).show();
                 }
             }
         });

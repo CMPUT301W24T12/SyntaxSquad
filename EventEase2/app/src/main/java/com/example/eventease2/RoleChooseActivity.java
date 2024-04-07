@@ -71,21 +71,6 @@ public class RoleChooseActivity extends AppCompatActivity {
         attendeeIcon = findViewById(R.id.attendIcon);
         confirmButton = findViewById(R.id.confirmButton);
 
-        // Subscribing Attendee to event notifications
-        FirebaseMessaging.getInstance().subscribeToTopic("test")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "Subscribed";
-                        if (!task.isSuccessful()) {
-                            msg = "Subscribe failed";
-                        }
-                        Log.d("Notification Subscription", msg);
-                        Toast.makeText(RoleChooseActivity.this, msg, Toast.LENGTH_SHORT).show();
-                        NotificationMaker.showNotification(RoleChooseActivity.this, "title", "body");
-                    }
-                });
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(RoleChooseActivity.this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(RoleChooseActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 546);

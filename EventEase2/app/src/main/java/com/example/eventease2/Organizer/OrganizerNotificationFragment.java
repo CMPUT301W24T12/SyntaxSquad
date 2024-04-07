@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -27,6 +28,7 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,8 +47,12 @@ public class OrganizerNotificationFragment extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String eventID = getIntent().getStringExtra("EventID");
+        Log.d("Notification Event", eventID);
         String organizerID = getIntent().getStringExtra("OrganizerID");
 
+        //updateTopic(eventID);
+
+        /*
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -59,6 +65,7 @@ public class OrganizerNotificationFragment extends AppCompatActivity {
                         Log.d("Notification Token", token);
                     }
                 });
+         */
 
         Button send = findViewById(R.id.send_button);
         send.setOnClickListener(new View.OnClickListener() {
@@ -68,31 +75,17 @@ public class OrganizerNotificationFragment extends AppCompatActivity {
                 EditText title_input = title_header.getEditText();
                 String title = null;
                 if (title_input != null) {
-                    title = title_input.toString();
+                    title = title_input.getText().toString();
                 }
 
                 TextInputLayout body_header = findViewById(R.id.textInputLayout);
                 EditText body_input = body_header.getEditText();
                 String body = null;
                 if (body_input != null) {
-                    body = body_input.toString();
+                    body = body_input.getText().toString();
                 }
 
-                sendNotification(title, body);
-
-                /*
-                String topic = "test";
-                // Get an instance of FirebaseMessaging
-                FirebaseMessaging messaging = FirebaseMessaging.getInstance();
-                // Create a message                               eventID
-                RemoteMessage message = new RemoteMessage.Builder(topic)
-                        .setMessageId("your-message-id")
-                        .addData("key", "value") // optional data payload
-                        .build();
-                // Send the message
-                messaging.send(message);
-                 */
-
+                sendNotification(title, body, eventID);
             }
         });
 
@@ -111,17 +104,20 @@ public class OrganizerNotificationFragment extends AppCompatActivity {
         });
     }
 
-    private void sendNotification(String header, String description) {
-        Log.d("Notification Token", token);
+    private void sendNotification(String header, String description, String eventID) {
+        //Log.d("Notification Token", token);
+
+        //updateTopic(eventID);
 
         OkHttpClient client = new OkHttpClient();
         MediaType mediaType = MediaType.parse("application/json");
         JSONObject jsonNotif = new JSONObject();
         JSONObject jsonObj = new JSONObject();
+        Log.d("Notification Event", eventID);
         try {
             jsonNotif.put("title", header);
             jsonNotif.put("body", description);
-            jsonObj.put("to", token);
+            jsonObj.put("to", "/topics/"+eventID);
             jsonObj.put("notification", jsonNotif);
         } catch (JSONException e) {
             Log.d("Notification Error", e.toString());
@@ -134,13 +130,6 @@ public class OrganizerNotificationFragment extends AppCompatActivity {
                 .addHeader("Content-Type", "application/json")
                 .post(rBody)
                 .build();
-        /*
-        try {
-            Response response = client.newCall(request).execute();
-        } catch (IOException e) {
-            Log.d("Notification Error", e.toString());
-        }
-        */
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -155,9 +144,49 @@ public class OrganizerNotificationFragment extends AppCompatActivity {
                 } else {
                     Log.d("Notification Error", response.toString());
                 }
-
             }
         });
+    }
 
+    private void updateTopic(String eventID){
+        OkHttpClient client = new OkHttpClient();
+
+        String apiKey = "PMAK-6611e5fd895f54000150b1ad-dd69042ad56c77d5ba8a848cfad0ff5cd5";
+        String collectionId = "34103086-2ce22f39-e512-42d0-889a-9f1da51b3a84";
+
+        // Build your request
+        RequestBody requestBody = new FormBody.Builder()
+                .add("key", "topic")
+                .add("value", eventID)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://api.getpostman.com/collections/" + collectionId + "/variables")
+                .addHeader("X-Api-Key", apiKey)
+                .put(requestBody)
+                .build();
+
+        // Execute the request
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    // Variable updated successfully
+                    String responseBody = response.body().string();
+                    Log.d("Notification Update", responseBody);
+                } else {
+                    // Request not successful
+                    // Handle error
+                    Log.d("Notification Update", "Unsuccessful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // Request failure
+                // Handle error
+                Log.d("Notification Update", "Unsuccessful2");
+            }
+        });
     }
 }

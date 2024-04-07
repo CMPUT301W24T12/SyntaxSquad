@@ -79,6 +79,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
             CollectionReference attendeeRef = db.collection("Organizer").document(organizerID)
                     .collection("Events").document(event).collection("Attendees");
 
+            View finalView = view;
             attendeeRef.get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
@@ -91,6 +92,16 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
                                 attendeeID.add(attendees);
                             }
                             attendeeIDs.add(attendeeID.size());
+                            Log.d("Entries Get", attendeeIDs.toString());
+                            TextView eventCount = finalView.findViewById(R.id.participant_count);
+                            if (attendeeIDs.isEmpty()) {
+                                count = 0;
+                            } else {
+                                count = attendeeIDs.get(position);
+                            }
+                            Log.d("Entries", attendeeIDs.toString());
+                            Log.d("Entries", count.toString());
+                            eventCount.setText(count.toString());
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -100,14 +111,6 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
                         }
                     });
         }
-
-        TextView eventCount = view.findViewById(R.id.participant_count);
-        if (attendeeIDs.isEmpty()) {
-            count = 0;
-        } else {
-            count = attendeeIDs.get(position);
-        }
-        eventCount.setText(count.toString());
 
         Button eventInfo = view.findViewById(R.id.event_details);
         eventInfo.setOnClickListener(v -> {
@@ -120,7 +123,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
         Button viewAttendees = view.findViewById(R.id.view_attendees);
         viewAttendees.setOnClickListener(v -> {
             Intent intent = new Intent(context, OrganizerSignUpFragment.class);
-            intent.putExtra("ID", eventID);
+            intent.putExtra("EventID", eventID);
             intent.putExtra("OrganizerID", organizerID);
             context.startActivity(intent);
         });

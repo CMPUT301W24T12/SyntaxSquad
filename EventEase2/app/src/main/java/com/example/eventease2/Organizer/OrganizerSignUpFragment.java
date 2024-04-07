@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,7 +35,7 @@ public class OrganizerSignUpFragment extends AppCompatActivity {
         setContentView(R.layout.organizer_signup_page);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String eventID = getIntent().getStringExtra("ID");
+        String eventID = getIntent().getStringExtra("EventID");
         String organizerID = getIntent().getStringExtra("OrganizerID");
 
         attendeeList = findViewById(R.id.organizer_attendee_list);
@@ -56,6 +57,20 @@ public class OrganizerSignUpFragment extends AppCompatActivity {
                         }
                         attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerSignUpFragment.this, attendeeIDs, attendeeNames);
                         attendeeList.setAdapter(attendeeArrayAdapter);
+
+                        attendeeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(OrganizerSignUpFragment.this, OrganizerAttendeeProfileFragment.class);
+                                // Include anything attendee profile may need
+                                // intent.putExtra("Name", name)
+                                intent.putExtra("OrganizerID", organizerID);
+                                intent.putExtra("EventID", eventID);
+                                intent.putExtra("ID", attendeeIDs.get(position));
+                                intent.putExtra("Name", attendeeNames.get(position));
+                                startActivity(intent);
+                            }
+                        });
 
                     }
                 })

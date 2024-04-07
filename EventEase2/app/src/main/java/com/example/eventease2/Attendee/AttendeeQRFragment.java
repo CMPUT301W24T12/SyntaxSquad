@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.eventease2.R;
+import com.example.eventease2.RoleChooseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -180,40 +181,6 @@ public class AttendeeQRFragment extends Fragment {
         data.put("Email", viewModel.getProfileEmail());
         data.put("Phone", viewModel.getProfilePhone());
         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
-
-        /*
-        // Subscribing Attendee to event notifications
-        Context context = requireContext();
-        event = appDb.collection("Organizer").document(viewModel.getOrganizer())
-                .collection("Events")
-                .document(viewModel.getEvent());
-        FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "Subscribed";
-                        if (!task.isSuccessful()) {
-                            msg = "Subscribe failed";
-                        }
-                        Log.d("Notification Subscription", msg);
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
-         */
-
-        /*
-        @Override
-        public void onTokenRefresh() {
-            // Get updated InstanceID token.
-            String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-            Log.d("TAG", "Refreshed token: " + refreshedToken);
-
-            // If you want to send messages to this application instance or
-            // manage this apps subscriptions on the server side, send the
-            // Instance ID token to your app server.
-            sendRegistrationToServer(refreshedToken);
-        }
-         */
     }
 
 
@@ -262,6 +229,21 @@ public class AttendeeQRFragment extends Fragment {
                 viewModel.setCheckIN(viewModel.getCheckIN() + 1);
                 data.put("Number of Check ins:", String.valueOf(viewModel.getCheckIN()));
                 attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+
+
+                // Subscribing Attendee to event notifications
+                FirebaseMessaging.getInstance().subscribeToTopic(event.toString())
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            String msg = "Subscribed";
+                            if (!task.isSuccessful()) {
+                                msg = "Subscribe failed";
+                            }
+                            Log.d("Notification Subscription", msg);
+                        }
+                    });
+
             }
         }
 

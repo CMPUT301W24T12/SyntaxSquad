@@ -131,5 +131,13 @@ public class EventListFragment extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button back = findViewById(R.id.button_second);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

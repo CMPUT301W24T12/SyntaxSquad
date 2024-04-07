@@ -1,145 +1,188 @@
 package com.example.eventease2.Organizer;
 
-import static android.app.Activity.RESULT_OK;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.view.LayoutInflater;
+
+import androidx.annotation.NonNull;
+
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
-import com.example.eventease2.Attendee.AttendeeItemViewModel;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.eventease2.Administrator.AppData;
 import com.example.eventease2.R;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.util.HashMap;
-import java.util.Objects;
 
-public class OrganizerAttendeeProfileFragment extends Fragment {
+import androidx.appcompat.app.AppCompatActivity;
 
-    private Button attendeeSaveChanges;
-    private FirebaseFirestore appDb;
-    private EditText attendeeNameText,attendeePhoneText,attendeeEmailText,attendeeBioText;
-    private ImageButton attendeeImage;
-    private Uri selectedImage;
-    private String event,organizer;
-    private AttendeeItemViewModel viewModel;
-    private CollectionReference attendeeCollect;
-    public OrganizerAttendeeProfileFragment() {
-        event = "";
-        organizer = "";
-    }
+import android.widget.ImageView;
 
-    public OrganizerAttendeeProfileFragment(String eventID, String organizerID) {
-        this.event = eventID;
-        this.organizer = organizerID;
-    }
+
+/**
+ * This fragments shows the user the empty profile unless saved changes were updated.
+ */
+public class OrganizerAttendeeProfileFragment extends AppCompatActivity {
+
+    FirebaseFirestore appDb = FirebaseFirestore.getInstance();
+    TextView attendeeName;
+    TextView attendeeBio;
+    TextView email;
+    TextView phone;
+    TextView checked_in;
+    Button removePic;
+    Button removeProfile;
+    String attendeeID;
+    String name;
+    String eventID; // Add eventID variable
+    String organizerID; // Add organizerID variable
+    String posOfEvent;
+    DocumentReference eventInfoDoc;
+    ImageView profile_pic;
+    int originalProfilePicResId = R.drawable.ellipse_9;
+    public static AppData appData;
+
+    @SuppressLint("ResourceType")
     @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.organizer_attendee_profile);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.organizer_attendee_profile, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
 
-        firebase();
-        getEditProfile(view);
-        setTextFromModel();
+        attendeeName = findViewById(R.id.textView2);
+        attendeeBio = findViewById(R.id.textView3);
+        email = findViewById(R.id.editTextText2);
+        phone = findViewById(R.id.editTextText3);
+        checked_in = findViewById(R.id.count_textview);
+        profile_pic = findViewById(R.id.imageView2);
+        int profilePicResId = getIntent().getIntExtra("ProfilePicture", originalProfilePicResId);
+        profile_pic.setImageResource(profilePicResId);
+        // Retrieve data from intent extras
+        //attendeeName.setText(getIntent().getStringExtra("Name"));
+        attendeeID = getIntent().getStringExtra("ID");
+        eventID = getIntent().getStringExtra("EventID");
+        organizerID = getIntent().getStringExtra("OrganizerID");
+        //email.setText(getIntent().getStringExtra("Email"));
+        //phone.setText(getIntent().getStringExtra("Phone"));
+        profile_pic.setImageResource(profilePicResId);
 
-        ImageButton gallery = view.findViewById(R.id.attendeeProfileImage);
-        gallery.setOnClickListener(new View.OnClickListener() {
+        if (eventID == null || organizerID == null) {
+            Log.e("EditProfileActivity", "EventID or OrganizerID is null");
+            // Handle the error or finish the activity
+            finish();
+            return;
+        }
+
+        eventInfoDoc = appDb.collection("Organizer")
+                .document(organizerID)
+                .collection("Events")
+                .document(eventID)
+                .collection("Attendees")
+                .document(attendeeID);
+
+        eventInfoDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i,3);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                StorageReference profilePicRef = FirebaseStorage.getInstance().getReference().child("profilepics");
+                profilePicRef.listAll().addOnSuccessListener(listResult -> {
+                    for (StorageReference itemRef : listResult.getItems()) {
+                        // Check if the item name starts with attendeeID
+                        if (itemRef.getName().startsWith(attendeeID)) {
+                            itemRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                                // Load the image into the ImageView
+                                Glide.with(OrganizerAttendeeProfileFragment.this)
+                                        .load(uri)
+                                        .apply(RequestOptions.circleCropTransform())
+                                        .into(profile_pic);
+                            }).addOnFailureListener(e -> {
+                                // Handle any errors
+                                Log.e("EditProfileActivity", "Failed to download profile picture: " + e.getMessage());
+                                profile_pic.setImageResource(profilePicResId);
+                            });
+                            break; // Found the file with the right ID, so no need to continue the loop
+                        }
+                    }
+                }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    Log.d("EditProfileActivity", "Error: " + exception.getMessage());
+                });
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String nameStr = document.getString("Name");
+                        if (nameStr != null && !nameStr.isEmpty()) {
+                            attendeeName.setText(nameStr);
+                        }
+                        String bioStr = document.getString("Bio");
+                        if (bioStr != null && !bioStr.isEmpty()) {
+                            attendeeBio.setText(bioStr);
+                        }
+                        String emailStr = document.getString("Email");
+                        if (emailStr != null && !emailStr.isEmpty()) {
+                            email.setText(String.format("Email: %s", emailStr));
+                        }
+                        String phoneStr = document.getString("Phone");
+                        if (phoneStr != null && !phoneStr.isEmpty()) {
+                            phone.setText(String.format("Phone: %s", phoneStr));
+                        }
+                        String count = document.getString("Number of Check ins:");
+                        if (count != null && !count.isEmpty()) {
+                            checked_in.setText(count);
+                        }
+
+                        // Download the profile picture from Firebase Storage
+                        profilePicRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Load the image into the ImageView
+                                Glide.with(OrganizerAttendeeProfileFragment.this)
+                                        .load(uri)
+                                        .apply(RequestOptions.circleCropTransform())
+                                        .into(profile_pic);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Handle any errors
+                                Log.e("EditProfileActivity", "Failed to download profile picture: " + e.getMessage());
+                                profile_pic.setImageResource(profilePicResId);
+
+                            }
+                        });
+                    } else {
+                        Log.d("EditProfileActivity", "No such document");
+                    }
+                } else {
+                    Log.d("EditProfileActivity", "get failed with ", task.getException());
+                }
             }
         });
 
-        /*
-        Button back = view.findViewById(R.id.button);
+        TextView back = findViewById(R.id.profile_back_button);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OrganizerAttendeeProfileFragment.this, OrganizerAttendeeListFragment.class);
+                intent.putExtra("OrganizerID", organizerID);
+                intent.putExtra("EventID", eventID);
                 // Start the new activity
                 startActivity(intent);
+                // Finish the current activity
+                finish();
             }
         });
-         */
-
-        return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && data != null){
-            selectedImage = data.getData();
-            ImageButton imageButton = getView().findViewById(R.id.attendeeProfileImage);
-            imageButton.setImageURI(selectedImage);
-        }
-    }
-
-    /**
-     * On create, the fragment will find the texts and image.
-     * @param view
-     * The view of the Fragment attendee Profile so it can correctly match with the text and image
-     * fields.
-     */
-    public void getEditProfile(View view){
-        attendeeSaveChanges = view.findViewById(R.id.AttendeeAddChanges);
-        attendeeNameText = view.findViewById(R.id.editProfileName);
-        attendeePhoneText = view.findViewById(R.id.editTextPhone2);
-        attendeeEmailText = view.findViewById(R.id.editProfileEmail);
-        attendeeImage = view.findViewById(R.id.attendeeProfileImage);
-        attendeeBioText = view.findViewById(R.id.editBioText);
-    }
-    /**
-     * When called, set the current text of the edit text field and image to the viewModel for
-     * later use.
-     */
-    public void setModelItems(){
-        viewModel.setProfileName(attendeeNameText.getText().toString());
-        viewModel.setProfileEmail(attendeeEmailText.getText().toString());
-        viewModel.setProfilePhone(attendeePhoneText.getText().toString());
-        viewModel.setProfileBio(attendeeBioText.getText().toString());
-        if(selectedImage != null){
-            viewModel.setProfileImage(selectedImage);
-        }
-    }
-    /**
-     * Set the text that was saved on the viewModel when users switch back and forth from their
-     * profile to other fragments.
-     */
-    public void setTextFromModel(){
-        attendeeNameText.setText(viewModel.getProfileName());
-        attendeePhoneText.setText(viewModel.getProfilePhone());
-        attendeeEmailText.setText(viewModel.getProfileEmail());
-        attendeeBioText.setText(viewModel.getProfileBio());
-        attendeeImage.setImageURI(viewModel.getProfileImage());
-    }
-    /**
-     * Firebase implementation necessary for communicating with the database.
-     */
-    public void firebase(){
-        if(!Objects.equals(event, "")){
-            appDb = FirebaseFirestore.getInstance();
-
-            attendeeCollect = appDb.collection("Organizer").document(organizer)
-                    .collection("Events")
-                    .document(event)
-                    .collection("Attendees");
-        }
     }
 }
