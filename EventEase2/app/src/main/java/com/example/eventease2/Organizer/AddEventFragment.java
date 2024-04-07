@@ -246,7 +246,9 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
                         throw new NumberFormatException();
                     }
 
-                    putData();
+                    putData(maxNumberOfAttendee,  eventName,  id,  location,  description,
+                             startTime,  endTime,  isAbleLocationTracking, collectionRef,
+                             organizerID);
 
                     StorageReference imageRef = storageRef.child("images/" + id);
                     StorageReference qrRef = storageRef.child("QRCode/" + id);
@@ -317,7 +319,9 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
     /**
      * put data to the firebase
      */
-    void putData(){
+    public void putData(int maxNumberOfAttendee, String eventName, String id, String location, String description,
+                 String startTime, String endTime, boolean isAbleLocationTracking,CollectionReference collectionRef,
+                 String organizerID){
         HashMap<String, Object> data = new HashMap<>(); // Note the change in the type of the HashMap
 
         // Put the list into the HashMap
@@ -343,7 +347,7 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
     /**
      * put QR code to firebase storage
      */
-    void putQRCode(Bitmap qrCode, Bitmap checkInQRCode, StorageReference qrRef, StorageReference checkInRef){
+    public void putQRCode(Bitmap qrCode, Bitmap checkInQRCode, StorageReference qrRef, StorageReference checkInRef){
         // Convert QR code bitmap to byte array
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos);
