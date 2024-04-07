@@ -48,7 +48,7 @@
         android:layout_weight="6.2"
         android:contentDescription="Event Picture"
         android:layout_gravity="center"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        tools:srcCompat="@drawable/default_event" />
 
     <Button
         android:id="@+id/event_remove_photo_button"
