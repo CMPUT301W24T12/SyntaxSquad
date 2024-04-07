@@ -37,103 +37,91 @@ public class AdminEventControlTester {
     private Solo solo;
 
     @Rule
-    public ActivityTestRule<RoleChooseActivity> rule =
+    public ActivityTestRule<RoleChooseActivity> activityRule =
             new ActivityTestRule<>(RoleChooseActivity.class, true, true);
 
     @Before
     public void setUp() {
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
+        solo = new Solo(InstrumentationRegistry.getInstrumentation(), activityRule.getActivity());
 
     }
 
     @Test
-    public void correctActivity(){
-        boolean isTextPresent = solo.searchText("Welcome", true);
-        assertTrue("Not in the Main Page", isTextPresent);
+    public void testCorrectActivity() {
+        boolean isWelcomeTextPresent = solo.searchText("Welcome", true);
+        assertTrue("Not in the Main Page", isWelcomeTextPresent);
     }
 
     @Test
-    public void testNavigToEventList() {
+    public void testNavigateToEventList() {
         solo.clickOnImageButton(2);
         solo.clickOnButton("Confirm");
-        boolean isTextPresent = solo.searchText("Entries", true);
-        assertTrue("TextView with text 'Welcome' is not present", isTextPresent);
+        boolean isEntriesTextPresent = solo.searchText("Entries", true);
+        assertTrue("Unable to Navigate to Event List Activity", isEntriesTextPresent);
     }
 
     @Test
-    public void testNavigToIndivEvent() {
-        // Click on the "VIEW ATTENDEES" Button
+    public void testNavigateToIndividualEvent() {
         solo.clickOnImageButton(2);
         solo.clickOnButton("Confirm");
         solo.clickOnButton("EVENT DETAILS");
-        boolean isButtonPresent = solo.searchButton("Remove Picture", true);
-        assertTrue("Remove Picture button is not present", isButtonPresent);
+        boolean isRemovePictureButtonPresent = solo.searchButton("Remove Picture", true);
+        assertTrue("Unable to Navigate to Individual Event's Activity", isRemovePictureButtonPresent);
     }
 
     @Test
-    public void testNavigFromEventListToRole(){
+    public void testNavigateFromEventListToRole() {
         solo.clickOnImageButton(2);
         solo.clickOnButton("Confirm");
         solo.clickOnText("Back");
-        boolean isButtonPresent = solo.searchText("Welcome", true);
-        assertTrue("Remove Picture button is not present", isButtonPresent);
+        boolean isWelcomeTextPresent = solo.searchText("Welcome", true);
+        assertTrue("Back button from event list to role activity not working", isWelcomeTextPresent);
     }
 
-
     @Test
-    public void testNavigFromIndivEventToRole(){
+    public void testNavigateFromIndividualEventToRole() {
         solo.clickOnImageButton(2);
         solo.clickOnButton("Confirm");
         solo.clickOnButton("EVENT DETAILS");
         solo.clickOnText("Back");
         solo.clickOnText("Back");
-        boolean isButtonPresent = solo.searchText("Welcome", true);
-        assertTrue("Remove Picture button is not present", isButtonPresent);
-
+        boolean isWelcomeTextPresent = solo.searchText("Welcome", true);
+        assertTrue("Back button from individual event to role activity not working", isWelcomeTextPresent);
     }
 
     @Test
-    public void testImageRemoval() {
-        // Click on the image button to initiate removal
+    public void testImageRemovalButtonPresence() {
         solo.clickOnImageButton(2);
-        // Confirm the removal action
         solo.clickOnButton("Confirm");
-        // Navigate to the event details where the image is displayed
         solo.clickOnButton("EVENT DETAILS");
-        // Attempt to remove the picture
         solo.clickOnButton("Remove Picture");
-        boolean isButtonPresent = solo.searchButton("Remove Picture", true);
-        assertTrue("Remove Picture button is not present", isButtonPresent);
+        boolean isRemovePictureButtonPresent = solo.searchButton("Remove Picture", true);
+        assertTrue("Remove Picture button not working", isRemovePictureButtonPresent);
     }
 
     @Test
     public void testEventRemoval() {
-        // Click on the image button to initiate removal
         solo.clickOnImageButton(2);
-        // Confirm the removal action
         solo.clickOnButton("Confirm");
-        // Navigate to the event details where the image is displayed
         solo.clickOnButton("EVENT DETAILS");
-        // Attempt to remove the picture
         solo.clickOnButton("Remove Event");
-        boolean isTextPresent = solo.searchText("Entries", true);
-        assertTrue("Remove Picture button is not present", isTextPresent);
+        boolean isEntriesTextPresent = solo.searchText("Entries", true);
+        assertTrue("Unable to remove event", isEntriesTextPresent);
     }
 
     @Test
     public void testShowMoreButton() {
         solo.clickOnImageButton(2);
-        // Confirm the removal action
         solo.clickOnButton("Confirm");
         if (solo.searchButton("Show More", true)) {
             solo.clickOnButton("Show More");
-            boolean isTextPresent = solo.searchText("Entries", true);
-            assertTrue("Entries text is not present", isTextPresent);
+            boolean isEntriesTextPresent = solo.searchText("Entries", true);
+            assertTrue("Show More Button not working", isEntriesTextPresent);
         }
     }
 
     @Test
-    public void testEventNavigationWithBackButton(){
+    public void testEventNavigationWithBackButton() {
         solo.clickOnImageButton(2);
         solo.clickOnButton("Confirm");
         solo.clickOnButton("EVENT DETAILS");
@@ -141,9 +129,8 @@ public class AdminEventControlTester {
         solo.clickOnText("Back");
         solo.clickOnImageButton(2);
         solo.clickOnButton("Confirm");
-        boolean isTextPresent = solo.searchText("Entries", true);
-        assertTrue("TextView with text 'Welcome' is not present", isTextPresent);
+        boolean isEntriesTextPresent = solo.searchText("Entries", true);
+        assertTrue("Back Button unable to work with multiple use", isEntriesTextPresent);
     }
 
 }
-
