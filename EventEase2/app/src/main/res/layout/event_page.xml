@@ -43,7 +43,7 @@
         android:scaleX="1.5"
         android:scaleY="1.5"
         android:translationX="310dp"
-        android:translationY="-390dp"
+        android:translationY="-150dp"
         app:srcCompat="@drawable/ic_circle_plus"
         app:tint="#FFFFFF"
         tools:layout_editor_absoluteX="314dp"
