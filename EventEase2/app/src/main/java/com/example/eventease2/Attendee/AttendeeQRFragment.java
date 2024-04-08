@@ -266,12 +266,15 @@ public class AttendeeQRFragment extends Fragment {
         });
         if (checkedIn) {
             Log.d("Notification Event", String.valueOf(event));
+            Toast.makeText(getContext(), "Check in Failed", Toast.LENGTH_SHORT).show();
             FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Subscribed to topic successfully");
+                            Toast.makeText(getContext(), "Subscription Passed", Toast.LENGTH_SHORT).show();
                         } else {
                             Log.e(TAG, "Failed to subscribe to topic: " + task.getException().getMessage());
+                            Toast.makeText(getContext(), "Subscription Failed", Toast.LENGTH_SHORT).show();
                         }
                     });
         }
