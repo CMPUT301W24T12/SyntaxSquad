@@ -23,6 +23,12 @@ import com.example.eventease2.R;
 
 import java.util.ArrayList;
 
+/**
+ * AppEventAdapter is a custom ArrayAdapter used to populate a ListView with event data.
+ * It handles displaying event names, descriptions, participant counts, and provides
+ * functionality for event detail and attendee list button clicks.
+ */
+
 public class AppEventAdapter extends ArrayAdapter<String> {
 
     private ArrayList<String> eventNames;
@@ -33,30 +39,17 @@ public class AppEventAdapter extends ArrayAdapter<String> {
     private Context context;
     private int initiallyDisplayedCount; // Change this to the number of events initially displayed
 
-    // Constructor
-    public ArrayList<String> getEventNames() {
-        return eventNames;
-    }
-
-    public ArrayList<String> getEventDescription() {
-        return eventDescription;
-    }
-
-    public ArrayList<String> getOrganizerID() {
-        return organizerID;
-    }
-
-    public ArrayList<String> getEventIDs() {
-        return eventIDs;
-    }
-
-    public ArrayList<String> getParticipantCountList() {
-        return participantCountList;
-    }
-    public void setInitiallyDisplayedCount(int initiallyDisplayedCount) {
-        this.initiallyDisplayedCount = initiallyDisplayedCount;
-    }
-
+    /**
+     * Constructor for the adapter.
+     *
+     * @param context                The context in which the adapter is being used.
+     * @param eventNames             List of event names.
+     * @param eventDescription       List of event descriptions.
+     * @param organizerID            List of organizer IDs.
+     * @param eventIDs               List of event IDs.
+     * @param participantCountList   List of participant counts for each event.
+     * @param initiallyDisplayedCount The initial count of events to be displayed.
+     */
     public AppEventAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, ArrayList<String> organizerID, ArrayList<String> eventIDs, ArrayList<String> participantCountList, int initiallyDisplayedCount) {
         super(context, 0, eventNames);
         this.eventNames = eventNames;
@@ -67,21 +60,124 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         this.context = context;
         this.initiallyDisplayedCount = initiallyDisplayedCount;
     }
+
+    /**
+     * Getter method for event names.
+     *
+     * @return List of event names.
+     */
+    public ArrayList<String> getEventNames() {
+        return eventNames;
+    }
+
+    /**
+     * Getter method for event descriptions.
+     *
+     * @return List of event descriptions.
+     */
+    public ArrayList<String> getEventDescription() {
+        return eventDescription;
+    }
+
+    /**
+     * Getter method for organizer IDs.
+     *
+     * @return List of organizer IDs.
+     */
+    public ArrayList<String> getOrganizerID() {
+        return organizerID;
+    }
+
+    /**
+     * Getter method for event IDs.
+     *
+     * @return List of event IDs.
+     */
+    public ArrayList<String> getEventIDs() {
+        return eventIDs;
+    }
+
+    /**
+     * Getter method for participant counts.
+     *
+     * @return List of participant counts for each event.
+     */
+    public ArrayList<String> getParticipantCountList() {
+        return participantCountList;
+    }
+
+    /**
+     * Setter method for initiallyDisplayedCount.
+     *
+     * @param initiallyDisplayedCount The initial count of events to be displayed.
+     */
+    public void setInitiallyDisplayedCount(int initiallyDisplayedCount) {
+        this.initiallyDisplayedCount = initiallyDisplayedCount;
+    }
+
+    /**
+     * Method to update adapter data.
+     *
+     * @param eventNameList      Updated list of event names.
+     * @param eventInfoList      Updated list of event descriptions.
+     * @param organizerList      Updated list of organizer IDs.
+     * @param eventIDs           Updated list of event IDs.
+     * @param participantCountList Updated list of participant counts for each event.
+     */
     public void updateData(ArrayList<String> eventNameList, ArrayList<String> eventInfoList, ArrayList<String> organizerList, ArrayList<String> eventIDs, ArrayList<String> participantCountList) {
         this.eventNames = eventNameList;
         this.eventDescription = eventInfoList;
         this.organizerID = organizerList;
         this.eventIDs = eventIDs;
         this.participantCountList = participantCountList;
-        notifyDataSetChanged(); // use notifyItemRemoved(int position)
+        notifyDataSetChanged();
     }
 
+    /**
+     * Method to handle event detail button click.
+     *
+     * @param position The position of the clicked event in the list.
+     */
+    private void handleEventDetailButtonClick(int position) {
+        Intent intent = new Intent(context, EventEditorActivity.class);
+        intent.putExtra("ID", eventIDs.get(position));
+        intent.putExtra("OrganizerID", organizerID.get(position));
+        intent.putExtra("posOfEvent", String.valueOf(position));
+        context.startActivity(intent);
+        Log.d("BACKKKK", "I am back");
+    }
 
+    /**
+     * Method to handle attendee list button click.
+     *
+     * @param position The position of the clicked event in the list.
+     */
+    private void handleAttendeeListButtonClick(int position) {
+        Intent intent = new Intent(context, AdminAttendeeView.class);
+        intent.putExtra("ID", eventIDs.get(position));
+        intent.putExtra("OrganizerID", organizerID.get(position));
+        context.startActivity(intent);
+        ((Activity) context).finish();
+    }
+
+    /**
+     * Method to determine the number of items in the adapter.
+     *
+     * @return The number of items in the adapter, capped at initiallyDisplayedCount.
+     */
     @Override
     public int getCount() {
         return Math.min(initiallyDisplayedCount, eventNames.size());
     }
 
+    /**
+     * Method to create and populate views for the ListView.
+     *
+     * @param position    The position of the item within the adapter's data set.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent      The parent that this view will eventually be attached to.
+     * @return The view corresponding to the data at the specified position.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -101,35 +197,19 @@ public class AppEventAdapter extends ArrayAdapter<String> {
         eventDetailsView.setText(eventDescription.get(position));
         eventCountView.setText(participantCountList.get(position));
 
-
         eventDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle button click here
-                Intent intent = new Intent(context, EventEditorActivity.class);
-                intent.putExtra("ID", eventIDs.get(position));
-                intent.putExtra("OrganizerID", organizerID.get(position));
-                intent.putExtra("posOfEvent", String.valueOf(position));
-                context.startActivity(intent);
-                Log.d("BACKKKK", "I am back");
+                handleEventDetailButtonClick(position);
             }
         });
+
         attendeeListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AdminAttendeeView.class);
-                intent.putExtra("ID", eventID);
-                intent.putExtra("OrganizerID", organizerID.get(position));
-                context.startActivity(intent);
-                ((Activity) context).finish();
-
+                handleAttendeeListButtonClick(position);
             }
         });
-
-
-
-
-
 
         return view;
     }
