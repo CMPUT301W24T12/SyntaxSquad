@@ -1,5 +1,7 @@
 package com.example.eventease2;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,6 +23,7 @@ import com.example.eventease2.Attendee.AttendeeStartActivity;
 
 import com.example.eventease2.Administrator.AppEventsActivity;
 
+import com.example.eventease2.Organizer.OrganizerAttendeeListFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -88,6 +91,16 @@ public class RoleChooseActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(RoleChooseActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 546);
             }
         }
+
+        FirebaseMessaging.getInstance().subscribeToTopic("62990c06-1b3b-47a3-843e-7e9717a365d2")
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Subscribed to topic successfully");
+                        Toast.makeText(RoleChooseActivity.this, "Subscribed!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e(TAG, "Failed to subscribe to topic: " + task.getException().getMessage());
+                    }
+                });
     }
 
     /**
