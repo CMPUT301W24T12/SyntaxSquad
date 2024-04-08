@@ -10,6 +10,10 @@
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:usesCleartextTraffic="true"
@@ -48,6 +52,9 @@
         <activity android:name=".EventListFragment" />
         <activity android:name=".EventListArrayAdapter" />
         <activity android:name=".Organizer.OrganizerAttendeeListFragment" />
+        <activity android:name=".Organizer.OrganizerSignUpFragment" />
+        <activity android:name=".Organizer.OrganizerNotificationFragment" />
+        <activity android:name=".Organizer.OrganizerAttendeeProfileFragment" />
         <activity android:name=".Attendee.AttendeeEventDetailsActivity" />
         <activity android:name=".Attendee.AttendeeEventAdapter" />
         <activity android:name=".Organizer.ReuseQRCodeFragment"/>
@@ -57,6 +64,19 @@
         <activity
             android:name=".Organizer.OrganizerEventFrame"
             android:exported="true" />
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher_foreground" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@drawable/ic_launcher_background" />
     </application>
 
 </manifest>
