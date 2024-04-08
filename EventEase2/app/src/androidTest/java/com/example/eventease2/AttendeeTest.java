@@ -8,6 +8,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
@@ -38,78 +39,78 @@ public class AttendeeTest {
     @Rule
     public ActivityScenarioRule<RoleChooseActivity> scenario = new
             ActivityScenarioRule<RoleChooseActivity>(RoleChooseActivity.class);
-//    @Test
-//    public void testAttendeeOpen() {
-//        onView(withId(R.id.attendIcon)).perform(click());
-//
-//        onView(withId(R.id.confirmButton)).perform(click());
-//
-//        onView(withId(R.id.btnScanQR)).check(matches(isDisplayed()));
-//    }
-//    @Test
-//    public void testAttendeeSwitchViews() throws InterruptedException {
-//        onView(withId(R.id.attendIcon)).perform(click());
-//
-//        onView(withId(R.id.confirmButton)).perform(click());
-//
-//        onView(withId(R.id.Profile)).perform(click());
-//
-//        onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
-//
-//        onView(withId(R.id.Event)).perform(click());
-//
-//        onView(withId(R.id.event_header)).check(matches(isDisplayed()));
-//    }
-//    @Test
-//    public void testAttendeeProfileText(){
-//        onView(withId(R.id.attendIcon)).perform(click());
-//
-//        onView(withId(R.id.confirmButton)).perform(click());
-//
-//        onView(withId(R.id.Profile)).perform(click());
-//
-//        onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
-//
-//        onView(withId(R.id.editProfileName)).perform(ViewActions.typeText("Sean Piatt"));
-//
-//        onView(withId(R.id.editBioText)).perform(ViewActions.typeText("I am number 1"));
-//
-//        Espresso.closeSoftKeyboard();
-//
-//        onView(withId(R.id.editTextPhone2)).perform(ViewActions.typeText("7778889999"));
-//
-//        Espresso.closeSoftKeyboard();
-//
-//        onView(withId(R.id.editProfileEmail)).perform(ViewActions.typeText("awesean@hotmail.com"));
-//
-//        Espresso.closeSoftKeyboard();
-//
-//        onView(withId(R.id.AttendeeAddChanges)).perform(click());
-//
-//        onView(withId(R.id.QR_Scanner)).perform(click());
-//
-//        onView(withId(R.id.btnScanQR)).check(matches(isDisplayed()));
-//
-//        onView(withId(R.id.Profile)).perform(click());
-//
-//        onView(withText("Sean Piatt")).check(matches(isDisplayed()));
-//
-//        onView(withText("I am number 1")).check(matches(isDisplayed()));
-//
-//        onView(withText("7778889999")).check(matches(isDisplayed()));
-//
-//        onView(withText("awesean@hotmail.com")).check(matches(isDisplayed()));
-//    }
-//    @Test
-//    public void testAttendeeProfileImage(){
-//        onView(withId(R.id.attendIcon)).perform(click());
-//
-//        onView(withId(R.id.confirmButton)).perform(click());
-//
-//        onView(withId(R.id.Profile)).perform(click());
-//
-//        onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
-//    }
+    @Test
+    public void testAttendeeOpen() {
+        onView(withId(R.id.attendIcon)).perform(click());
+
+        onView(withId(R.id.confirmButton)).perform(click());
+
+        onView(withId(R.id.btnScanQR)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testAttendeeSwitchViews() throws InterruptedException {
+        onView(withId(R.id.attendIcon)).perform(click());
+
+        onView(withId(R.id.confirmButton)).perform(click());
+
+        onView(withId(R.id.Profile)).perform(click());
+
+        onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.Event)).perform(click());
+
+        onView(withId(R.id.event_header)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testAttendeeProfileText(){
+        onView(withId(R.id.attendIcon)).perform(click());
+
+        onView(withId(R.id.confirmButton)).perform(click());
+
+        onView(withId(R.id.Profile)).perform(click());
+
+        onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.editProfileName)).perform(ViewActions.typeText("Sean Piatt"));
+
+        onView(withId(R.id.editBioText)).perform(ViewActions.typeText("I am number 1"));
+
+        Espresso.closeSoftKeyboard();
+
+        onView(withId(R.id.editTextPhone2)).perform(ViewActions.typeText("7778889999"));
+
+        Espresso.closeSoftKeyboard();
+
+        onView(withId(R.id.editProfileEmail)).perform(ViewActions.typeText("awesean@hotmail.com"));
+
+        Espresso.closeSoftKeyboard();
+
+        onView(withId(R.id.AttendeeAddChanges)).perform(click());
+
+        onView(withId(R.id.QR_Scanner)).perform(click());
+
+        onView(withId(R.id.btnScanQR)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.Profile)).perform(click());
+
+        onView(withText("Sean Piatt")).check(matches(isDisplayed()));
+
+        onView(withText("I am number 1")).check(matches(isDisplayed()));
+
+        onView(withText("7778889999")).check(matches(isDisplayed()));
+
+        onView(withText("awesean@hotmail.com")).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testAttendeeProfileImage(){
+        onView(withId(R.id.attendIcon)).perform(click());
+
+        onView(withId(R.id.confirmButton)).perform(click());
+
+        onView(withId(R.id.Profile)).perform(click());
+
+        onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
+    }
 
     @Test
     public void testAttendeeEventView() throws InterruptedException {
@@ -148,7 +149,10 @@ public class AttendeeTest {
                 .atPosition(0).onChildView(withId(R.id.event_details)).check(matches(isDisplayed()))
                 .perform(click());
 
-        onView(withId(R.id.attendee_event_photo)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.switch1)).perform(click());
+
+        Espresso.pressBack();
 
     }
 
