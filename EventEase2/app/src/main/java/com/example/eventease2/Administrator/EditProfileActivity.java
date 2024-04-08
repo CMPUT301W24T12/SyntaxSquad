@@ -27,7 +27,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
+/**
+ * Activity for editing attendee profile.
+ * Displays attendee information and allows editing.
+ * Provides options to remove profile picture and attendee profile.
+ */
 public class EditProfileActivity extends AppCompatActivity {
     FirebaseFirestore appDb = FirebaseFirestore.getInstance();
 
@@ -47,7 +51,12 @@ public class EditProfileActivity extends AppCompatActivity {
     ImageView profile_pic;
     int originalProfilePicResId = R.drawable.ellipse_9;
     public static AppData appData;
-
+    /**
+     * Sets up the EditProfileActivity.
+     * Retrieves attendee information from Firebase Firestore and sets up UI.
+     * Provides functionality to remove profile picture and attendee profile.
+     * @param savedInstanceState A Bundle containing saved state information, if any.
+     */
     @SuppressLint("ResourceType")
     @Override
     public void onCreate(Bundle savedInstanceState) {

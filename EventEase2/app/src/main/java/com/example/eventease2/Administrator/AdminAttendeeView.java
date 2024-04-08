@@ -56,6 +56,12 @@ public class AdminAttendeeView extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String eventID = getIntent().getStringExtra("ID");
         String organizerID = getIntent().getStringExtra("OrganizerID");
+        if (eventID == null || organizerID == null) {
+            Log.e("AdminAttendeeView", "EventID or OrganizerID is null");
+            // Handle the error or finish the activity
+            finish();
+            return;
+        }
         String profile_pic = getIntent().getStringExtra("ProfilePicture");
         String email = getIntent().getStringExtra("Email");
         String phone = getIntent().getStringExtra("Phone");
