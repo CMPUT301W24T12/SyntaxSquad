@@ -23,11 +23,12 @@ import com.example.eventease2.R;
 import java.util.ArrayList;
 
 /**
- * Custom ListArray Adapter for the Event List page
- * uses the event_list.xml to display the events in the Event Page.
- * Recieves information fromEventListFragment
- * @author Adeel Khan + Jimmy
- * @param Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, String organizerID, ArrayList<String> eventIDs
+ * This class is a custom ArrayAdapter used to populate a ListView with event information
+ * for the purpose of reusing QR codes. It displays event names and descriptions along with
+ * buttons to view event details, view attendees, and choose an event to proceed with reusing
+ * its QR code. The adapter receives information from the EventListFragment and interacts with
+ * the AddEventFragment to update the selected event ID for QR code reuse.
+ * @author Jimmy
  * @return view
  */
 public class EventListArrayAdapterReuseQRCode extends ArrayAdapter<String> {

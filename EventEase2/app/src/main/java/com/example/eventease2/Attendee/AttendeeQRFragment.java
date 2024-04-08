@@ -2,7 +2,6 @@ package com.example.eventease2.Attendee;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,8 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.eventease2.Administrator.AdminAttendeeView;
-import com.example.eventease2.Administrator.AppEventsActivity;
 import com.example.eventease2.R;
 import com.example.eventease2.RoleChooseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,11 +36,20 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * QR fragment is the responsible for showing the button that allows users
- * to scan a QR code after pressing a button.
+ * The AttendeeQRFragment class is responsible for managing the QR code scanning functionality
+ * for attendees. It allows users to scan a QR code to check-in to an event and provides
+ * relevant event details upon successful scanning.
+ * <p>
+ * The class handles the initiation of the QR code scanner, processing scanned data,
+ * and sending relevant information to the ViewModel for Firebase interaction. It also
+ * manages Firebase connections for retrieving event details and attendee check-in operations.
+ * <p>
+ * Additionally, it subscribes the attendee to event-specific topics for receiving notifications
+ * related to the subscribed event.
+ *
  * @author Sean
  */
-public class AttendeeQRFragment extends Fragment{
+public class AttendeeQRFragment extends Fragment {
     private AttendeeItemViewModel viewModel;
     private boolean flag = false;
     private boolean noLimit = false;
@@ -53,14 +59,15 @@ public class AttendeeQRFragment extends Fragment{
     private DocumentReference event;
     private int maxAttendees;
     private long currentAttendees;
+
     public AttendeeQRFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendee_q_r, container, false);
-        super.onViewCreated(view,savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
         checkedIn = false;
         viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
         Button btnScanQR = view.findViewById(R.id.btnScanQR);
@@ -76,6 +83,7 @@ public class AttendeeQRFragment extends Fragment{
         btnScanQR.setOnClickListener(v -> startQRScanner());
         return view;
     }
+
     /**
      * This function opens the camera app on your phone and detects a QR code.
      */
@@ -86,6 +94,7 @@ public class AttendeeQRFragment extends Fragment{
         integrator.initiateScan();
 
     }
+
     /**
      * When the user scans a QR code, we get the information needed to access the firebase.
      */
@@ -110,31 +119,33 @@ public class AttendeeQRFragment extends Fragment{
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
     /**
      * Displays a success toast if updated correctly
-     * @param scannedData
-     * This shows the scanned data to the screen, shows the organizerID and EventID
+     *
+     * @param scannedData This shows the scanned data to the screen, shows the organizerID and EventID
      */
     private void displayScanResult(String scannedData) {
         // Display a message using a Toast
         //Toast.makeText(getContext(), "Scan Successful: " + scannedData, Toast.LENGTH_SHORT).show();
     }
+
     /**
      * Sends data to the view model of the organizer ID and the event ID for firebase use.
-     * @param scannedData
-     * Sends the viewModel so the Attendee fragments can receive information for the firebase
+     *
+     * @param scannedData Sends the viewModel so the Attendee fragments can receive information for the firebase
      */
-    private void sendDataToModel(String scannedData){
-        String eventIDAppend ="";
-        String organizerIDAppend ="";
+    private void sendDataToModel(String scannedData) {
+        String eventIDAppend = "";
+        String organizerIDAppend = "";
         //NEed to update information so it sends checks in user at certain event.
         if (scannedData.charAt(0) == '*') {
             for (int i = 1; i < scannedData.length(); i++) {
                 if (scannedData.charAt(i) != '#' && !flag) {
-                       eventIDAppend += scannedData.charAt(i);
-                } else if(scannedData.charAt(i) == '#') {
+                    eventIDAppend += scannedData.charAt(i);
+                } else if (scannedData.charAt(i) == '#') {
                     flag = true;
-                }else{
+                } else {
                     organizerIDAppend += scannedData.charAt(i);
                 }
             }
@@ -143,13 +154,13 @@ public class AttendeeQRFragment extends Fragment{
             flag = false;
             firebase();
             checkIn();
-        }else{
+        } else {
             for (int i = 0; i < scannedData.length(); i++) {
                 if (scannedData.charAt(i) != '#' && !flag) {
                     eventIDAppend += scannedData.charAt(i);
-                } else if(scannedData.charAt(i) == '#') {
+                } else if (scannedData.charAt(i) == '#') {
                     flag = true;
-                }else{
+                } else {
                     organizerIDAppend += scannedData.charAt(i);
                 }
             }
@@ -162,21 +173,24 @@ public class AttendeeQRFragment extends Fragment{
 
     }
 
+    /**
+     * Navigates the user to the AttendeeEventDetailsActivity to view event details and promotions.
+     */
     private void sendToPromotion() {
         Intent intent = new Intent(AttendeeQRFragment.this.getActivity(), AttendeeEventDetailsActivity.class);
         intent.putExtra("ID", viewModel.getEvent());
 
-        intent.putExtra("OrganizerID", viewModel.getOrganizer());;
+        intent.putExtra("OrganizerID", viewModel.getOrganizer());
 
-        intent.putExtra("AttendeeID",viewModel.getAttendeeID());
+        intent.putExtra("AttendeeID", viewModel.getAttendeeID());
 
-        intent.putExtra("AttendeeName",viewModel.getProfileName());
+        intent.putExtra("AttendeeName", viewModel.getProfileName());
 
-        intent.putExtra("AttendeePhone",viewModel.getProfilePhone());
+        intent.putExtra("AttendeePhone", viewModel.getProfilePhone());
 
         intent.putExtra("AttendeeEmail", viewModel.getProfileEmail());
 
-        intent.putExtra("AttendeeCheckInTimes",viewModel.getCheckIN());
+        intent.putExtra("AttendeeCheckInTimes", viewModel.getCheckIN());
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -186,7 +200,7 @@ public class AttendeeQRFragment extends Fragment{
     /**
      * When initial scan is complete, add the current profile to the firebase
      */
-    public void checkIn(){
+    public void checkIn() {
         event = appDb.collection("Organizer").document(viewModel.getOrganizer())
                 .collection("Events")
                 .document(viewModel.getEvent());
@@ -197,7 +211,7 @@ public class AttendeeQRFragment extends Fragment{
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        if(document.get("Max")!= null){
+                        if (document.get("Max") != null) {
                             maxAttendees = Integer.parseInt(document.get("Max").toString());
                         }
                     } else {
@@ -219,29 +233,28 @@ public class AttendeeQRFragment extends Fragment{
                     AggregateQuerySnapshot snapshot = task.getResult();
                     Log.d(TAG, "Count: " + snapshot.getCount());
                     currentAttendees = snapshot.getCount();
-                    if(noLimit){
-                        HashMap<String,String> data = new HashMap<>();
+                    if (noLimit) {
+                        HashMap<String, String> data = new HashMap<>();
                         data.put("Name", viewModel.getProfileName());
                         data.put("Email", viewModel.getProfileEmail());
                         data.put("Phone", viewModel.getProfilePhone());
-                        viewModel.setCheckIN(viewModel.getCheckIN()+1);
-                        data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
+                        viewModel.setCheckIN(viewModel.getCheckIN() + 1);
+                        data.put("Number of Check ins:", String.valueOf(viewModel.getCheckIN()));
                         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
                         Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
                         checkedIn = true;
                         noLimit = false;
-                    }else if(currentAttendees < maxAttendees){
-                        HashMap<String,String> data = new HashMap<>();
+                    } else if (currentAttendees < maxAttendees) {
+                        HashMap<String, String> data = new HashMap<>();
                         data.put("Name", viewModel.getProfileName());
                         data.put("Email", viewModel.getProfileEmail());
                         data.put("Phone", viewModel.getProfilePhone());
-                        viewModel.setCheckIN(viewModel.getCheckIN()+1);
-                        data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
+                        viewModel.setCheckIN(viewModel.getCheckIN() + 1);
+                        data.put("Number of Check ins:", String.valueOf(viewModel.getCheckIN()));
                         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
                         checkedIn = true;
                         Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getContext(), "All Spots Taken!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -252,7 +265,7 @@ public class AttendeeQRFragment extends Fragment{
             }
 
         });
-        if(checkedIn){
+        if (checkedIn) {
             FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -265,11 +278,12 @@ public class AttendeeQRFragment extends Fragment{
 
 
     }
+
     /**
-     * Firebase connecting function.
+     * Establishes Firebase connections and retrieves event details for the attendee's current event.
      */
-    public void firebase(){
-        if(!Objects.equals(viewModel.getEvent(), "")){
+    public void firebase() {
+        if (!Objects.equals(viewModel.getEvent(), "")) {
             appDb = FirebaseFirestore.getInstance();
 
             attendeeCollect = appDb.collection("Organizer").document(viewModel.getOrganizer())
@@ -289,17 +303,16 @@ public class AttendeeQRFragment extends Fragment{
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                            if(document.get("Max") != null){
+                            if (document.get("Max") != null) {
                                 maxAttendees = Integer.parseInt(String.valueOf(document.get("Max")));
                                 //Toast.makeText(getContext(), maxAttendees, Toast.LENGTH_SHORT).show();
-                            }else {
+                            } else {
                                 Toast.makeText(getContext(), "No Limit", Toast.LENGTH_SHORT).show();
                                 noLimit = true;
                             }
                         } else
                             Log.d(TAG, "No such document");
-                    }
-                    else {
+                    } else {
                         Log.d(TAG, "get failed with ", task.getException());
                     }
                 }

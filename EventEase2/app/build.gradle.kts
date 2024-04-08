@@ -15,6 +15,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -43,6 +44,8 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation("androidx.test.espresso:espresso-intents:3.5.1")
+    implementation("androidx.test.ext:junit:1.1.2")
+    testImplementation ("org.mockito:mockito-core:3.12.4")
 
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
@@ -61,6 +64,7 @@ dependencies {
     implementation ("com.firebaseui:firebase-ui-storage:7.2.0")
     implementation ("com.squareup.picasso:picasso:2.8")
     androidTestImplementation ("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.mockito:mockito-core:3.+")
     implementation("androidx.activity:activity:1.8.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

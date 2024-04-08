@@ -45,8 +45,23 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * This is the class to add a event into the event list
+ * This class represents the functionality to add an event into the event list from the organizer's perspective.
+ * It allows organizers to input event details such as name, description, location, start and end time,
+ * and maximum number of attendees. Organizers can also upload an image for the event, select start and end times
+ * from a spinner, and choose whether to enable location tracking for the event.
+ * The {@link #selectImage()} method launches a launcher to select an image for the event.
+ * The {@link #getInfo()} method retrieves all event information from the input fields.
+ * The {@link #putData()} method puts the event data into Firebase Firestore.
+ * The {@link #putQRCode(Bitmap, Bitmap, StorageReference, StorageReference)} method uploads QR codes for the event
+ * to Firebase Storage.
+ * The {@link #onQRCodeTypeChange(String)} method is called when the type of QR code to use (check-in or promotional)
+ * is changed.
+ * The {@link #intentTOReuseQRCode()} method directs the user to the section for reusing a QR code to make an event.
+ * The {@link #showDatePickerDialog(String)} method displays a DatePickerDialog when the user clicks the button
+ * to pick a date.
+ * The {@link #updateEventID(String)} method is a static method for other classes to update the event ID.
  */
+
 public class AddEventFragment extends AppCompatActivity implements OrganizerWarningDialog.QRCodeTypeChangeListener {
     private ImageView imageView;
     private Uri imageURI;

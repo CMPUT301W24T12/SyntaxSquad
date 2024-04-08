@@ -48,6 +48,7 @@ public class AttendeeTest {
 
         onView(withId(R.id.btnScanQR)).check(matches(isDisplayed()));
     }
+
     @Test
     public void testAttendeeSwitchViews() throws InterruptedException {
         onView(withId(R.id.attendIcon)).perform(click());
@@ -112,11 +113,15 @@ public class AttendeeTest {
 
         onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
 
-        Espresso.onView(withId(R.id.imageView2)).check(matches(isDisplayed()));
-
+        onView(withId(R.id.deleteButton)).perform(click());
+        
         onView(withId(R.id.editProfileName)).perform(ViewActions.typeText("Sean Piatt"));
 
+        Espresso.closeSoftKeyboard();
+
         onView(withId(R.id.AttendeeAddChanges)).perform(click());
+
+
 
     }
 
