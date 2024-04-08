@@ -35,48 +35,6 @@
         android:visibility="visible"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/bot_header"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="#E8E8E8"
-        android:translationY="452dp"
-        android:visibility="invisible" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="72dp"
-        android:layout_height="56dp"
-        android:translationX="25dp"
-        android:translationY="385dp"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/ic_list"
-        app:tint="#00B6AA"
-        tools:layout_editor_absoluteX="43dp"
-        tools:layout_editor_absoluteY="667dp" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="61dp"
-        android:layout_height="55dp"
-        android:translationX="300dp"
-        android:translationY="330dp"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/ic_calender"
-        tools:layout_editor_absoluteX="175dp"
-        tools:layout_editor_absoluteY="668dp" />
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="77dp"
-        android:layout_height="55dp"
-        android:translationX="150dp"
-        android:translationY="275dp"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/ic_profile"
-        tools:layout_editor_absoluteX="304dp"
-        tools:layout_editor_absoluteY="667dp" />
-
     <ImageButton
         android:id="@+id/attendeeProfileImage"
         android:layout_width="75dp"
@@ -85,7 +43,7 @@
         android:scaleX="1.5"
         android:scaleY="1.5"
         android:translationX="310dp"
-        android:translationY="-390dp"
+        android:translationY="-150dp"
         app:srcCompat="@drawable/ic_circle_plus"
         app:tint="#FFFFFF"
         tools:layout_editor_absoluteX="314dp"
@@ -94,7 +52,7 @@
     <ListView
         android:id="@+id/event_list"
         android:layout_width="match_parent"
-        android:layout_height="526dp"
-        android:translationY="-391dp" />
+        android:layout_height="648dp"
+        android:translationY="-150dp" />
 
 </LinearLayout>
