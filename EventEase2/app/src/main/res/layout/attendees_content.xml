@@ -16,7 +16,6 @@
             android:layout_height="80dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="13dp"
-            android:background="@drawable/circle_shape"
             android:scaleType="centerCrop"
             tools:srcCompat="@drawable/frame_4" />
 

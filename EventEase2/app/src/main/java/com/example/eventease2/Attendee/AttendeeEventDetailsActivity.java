@@ -2,11 +2,14 @@ package com.example.eventease2.Attendee;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -22,7 +25,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.eventease2.Administrator.AdminAttendeeView;
 import com.example.eventease2.Administrator.AppData;
+import com.example.eventease2.Administrator.AppEventsActivity;
 import com.example.eventease2.Event;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,7 +68,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
     Bundle extras;
     StorageReference pathReference;
     boolean sent = false;
-    boolean entered;
+    boolean noMax = false;
     FirebaseStorage storageRef;
 
     public static AppData appData;
@@ -118,6 +123,16 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
         eventDetails = (TextView)findViewById(R.id.event_detail);
         eventPhoto = findViewById(R.id.attendee_event_photo);
         promiseToGoSwitch = findViewById(R.id.switch1);
+        TextView back = findViewById(R.id.textView12);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to the AppEvent activity
+                FragmentManager fm = getFragmentManager();
+                fm.popBackStack();
+                finish(); // Finish the current activity
+            }
+        });
         eventInfoDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -128,8 +143,12 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                         eventTitle.setText((CharSequence) document.get("Name"));
                         eventDescription.setText((CharSequence) document.get("Description"));
                         eventDetails.setText((CharSequence) document.get("EventBody"));
-                        String max = Objects.requireNonNull(document.get("Max")).toString();
-                        maxInt = Integer.parseInt(max);
+                        if(document.get("Max") == null){
+                            noMax = true;
+                        }else{
+                            maxInt = Integer.parseInt(String.valueOf(document.get("Max")));
+                        }
+
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -146,7 +165,6 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         promiseToGoSwitch.setChecked(true);
-                        maxInt++;
                         sent = true;
                     } else {
                         sent = false;
@@ -166,13 +184,13 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                     // Count fetched successfully
                     AggregateQuerySnapshot snapshot = task.getResult();
                     Log.d(TAG, "Count: " + snapshot.getCount());
-                    entries = String.valueOf(maxInt - snapshot.getCount());
-                    //found some errors when retrieving getCount. Getting the count twice seems to
-                    //fix most of the problems.
-                    if (Integer.parseInt(entries) < 0){
-                        entries = String.valueOf(maxInt - snapshot.getCount());
-                        entriesTextView.setText(entries);
+                    entries = String.valueOf(snapshot.getCount());
+                    if (noMax){
+                        entriesTextView.setText("No Limit");
+                    }else if (maxInt - Integer.parseInt(entries) < 0){
+                        entriesTextView.setText("0");
                     }else{
+                        entries = String.valueOf(maxInt - Integer.parseInt(entries));
                         entriesTextView.setText(entries);
                     }
                 } else {
@@ -196,13 +214,15 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                                     // Count fetched successfully
                                     AggregateQuerySnapshot snapshot = task.getResult();
                                     Log.d(TAG, "Count: " + snapshot.getCount());
-                                    if(maxInt > snapshot.getCount()){
+                                    if(maxInt > snapshot.getCount() || noMax){
                                         addAttendeeData();
                                         promisedEvent = new Event(eventPhoto,eventTitle.toString(),
                                                 eventDescription.toString(),null,
                                                 false,null, null);
-                                        entries = String.valueOf(Integer.parseInt(entries)-1);
-                                        entriesTextView.setText(entries);
+                                        if(!noMax){
+                                            entries = String.valueOf(Integer.parseInt(entries)-1);
+                                            entriesTextView.setText(entries);
+                                        }
                                         sent = true;
                                     }else{
                                         //geolocation, and

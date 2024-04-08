@@ -51,19 +51,25 @@ public class AdminAttendeeView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.organizer_attendee_list);
+        setContentView(R.layout.activity_admin_attendee_view);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String eventID = getIntent().getStringExtra("ID");
         String organizerID = getIntent().getStringExtra("OrganizerID");
+        if (eventID == null || organizerID == null) {
+            Log.e("AdminAttendeeView", "EventID or OrganizerID is null");
+            // Handle the error or finish the activity
+            finish();
+            return;
+        }
         String profile_pic = getIntent().getStringExtra("ProfilePicture");
         String email = getIntent().getStringExtra("Email");
         String phone = getIntent().getStringExtra("Phone");
 
-        attendeeList = findViewById(R.id.organizer_attendee_list);
+        attendeeList = findViewById(R.id.listView);
 
         CollectionReference attendeeRef = db.collection("Organizer").document(organizerID).collection("Events").document(eventID).collection("Attendees");
-        ArrayList<String> attendeeIDs = new ArrayList<>();                                                   //replace with organizer ID                                                                        //replace with event ID
+        ArrayList<String> attendeeIDs = new ArrayList<>();                                                                                                                           //replace with event ID
         ArrayList<String> attendeeNames = new ArrayList<>();
         attendeeRef.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -72,11 +78,14 @@ public class AdminAttendeeView extends AppCompatActivity {
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             // Access each document here
                             Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                            String checkIns = documentSnapshot.getString("Number of Check ins:");
-                            if (checkIns != null && checkIns.equals("1")) {
-                                // Only include attendees who have checked in
-                                attendeeIDs.add(documentSnapshot.getId());
-                                attendeeNames.add(documentSnapshot.getString("Name"));
+                            String checkInsStr = documentSnapshot.getString("Number of Check ins:");
+                            if (checkInsStr != null) {
+                                int checkIns = Integer.parseInt(checkInsStr);
+                                if (checkIns >= 1) {
+                                    // Only include attendees who have checked in at least once
+                                    attendeeIDs.add(documentSnapshot.getId());
+                                    attendeeNames.add(documentSnapshot.getString("Name"));
+                                }
                             }
                         }
                         attendeeArrayAdapter = new AdminAttendeeListArrayAdapter(AdminAttendeeView.this, attendeeIDs, attendeeNames, eventID, organizerID,profile_pic, email, phone );
@@ -94,13 +103,10 @@ public class AdminAttendeeView extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Navigate to the AppEvent activity
                 Intent intent = new Intent(AdminAttendeeView.this, AppEventsActivity.class);
-                intent.putExtra("OrganizerID", organizerID);
-                intent.putExtra("EventID", eventID);
-                // Start the new activity
                 startActivity(intent);
-                // Finish the current activity
-                finish();
+                finish(); // Finish the current activity
             }
         });
 //        attendeeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

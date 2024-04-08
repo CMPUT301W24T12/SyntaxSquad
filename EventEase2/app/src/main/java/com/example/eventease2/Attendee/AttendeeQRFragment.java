@@ -10,13 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.eventease2.Administrator.AdminAttendeeView;
+import com.example.eventease2.Administrator.AppEventsActivity;
 import com.example.eventease2.R;
+import com.example.eventease2.RoleChooseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.AggregateQuery;
@@ -27,6 +31,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -41,6 +46,8 @@ import java.util.Objects;
 public class AttendeeQRFragment extends Fragment{
     private AttendeeItemViewModel viewModel;
     private boolean flag = false;
+    private boolean noLimit = false;
+    private boolean checkedIn;
     private FirebaseFirestore appDb;
     private CollectionReference attendeeCollect;
     private DocumentReference event;
@@ -54,9 +61,18 @@ public class AttendeeQRFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendee_q_r, container, false);
         super.onViewCreated(view,savedInstanceState);
-
+        checkedIn = false;
         viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
         Button btnScanQR = view.findViewById(R.id.btnScanQR);
+        TextView back = view.findViewById(R.id.header);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to the AppEvent activity
+                Intent intent = new Intent(getActivity(), RoleChooseActivity.class);
+                startActivity(intent);
+            }
+        });
         btnScanQR.setOnClickListener(v -> startQRScanner());
         return view;
     }
@@ -142,8 +158,6 @@ public class AttendeeQRFragment extends Fragment{
             flag = false;
             firebase();
             sendToPromotion();
-            //send user to the
-            // promotional part in the page
         }
 
     }
@@ -159,7 +173,9 @@ public class AttendeeQRFragment extends Fragment{
         intent.putExtra("AttendeeName",viewModel.getProfileName());
 
         intent.putExtra("AttendeePhone",viewModel.getProfilePhone());
+
         intent.putExtra("AttendeeEmail", viewModel.getProfileEmail());
+
         intent.putExtra("AttendeeCheckInTimes",viewModel.getCheckIN());
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -185,6 +201,7 @@ public class AttendeeQRFragment extends Fragment{
                             maxAttendees = Integer.parseInt(document.get("Max").toString());
                         }
                     } else {
+                        maxAttendees = -10;
                         Log.d(TAG, "No such document");
                     }
                 } else {
@@ -202,21 +219,51 @@ public class AttendeeQRFragment extends Fragment{
                     AggregateQuerySnapshot snapshot = task.getResult();
                     Log.d(TAG, "Count: " + snapshot.getCount());
                     currentAttendees = snapshot.getCount();
+                    if(noLimit){
+                        HashMap<String,String> data = new HashMap<>();
+                        data.put("Name", viewModel.getProfileName());
+                        data.put("Email", viewModel.getProfileEmail());
+                        data.put("Phone", viewModel.getProfilePhone());
+                        viewModel.setCheckIN(viewModel.getCheckIN()+1);
+                        data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
+                        attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+                        Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
+                        checkedIn = true;
+                        noLimit = false;
+                    }else if(currentAttendees < maxAttendees){
+                        HashMap<String,String> data = new HashMap<>();
+                        data.put("Name", viewModel.getProfileName());
+                        data.put("Email", viewModel.getProfileEmail());
+                        data.put("Phone", viewModel.getProfilePhone());
+                        viewModel.setCheckIN(viewModel.getCheckIN()+1);
+                        data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
+                        attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+                        checkedIn = true;
+                        Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(getContext(), "All Spots Taken!", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
+                    Toast.makeText(getContext(), "Check in Failed", Toast.LENGTH_SHORT).show();
+
                     Log.d(TAG, "Count failed: ", task.getException());
                 }
             }
+
         });
-        if(currentAttendees < maxAttendees){
-            HashMap<String,String> data = new HashMap<>();
-            data.put("Name", viewModel.getProfileName());
-            data.put("Email", viewModel.getProfileEmail());
-            data.put("Phone", viewModel.getProfilePhone());
-            viewModel.setCheckIN(viewModel.getCheckIN()+1);
-            data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
-            attendeeCollect.document(viewModel.getAttendeeID()).set(data);
-            Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
+        if(checkedIn){
+            FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Subscribed to topic successfully");
+                        } else {
+                            Log.e(TAG, "Failed to subscribe to topic: " + task.getException().getMessage());
+                        }
+                    });
         }
+
+
     }
     /**
      * Firebase connecting function.
@@ -229,6 +276,34 @@ public class AttendeeQRFragment extends Fragment{
                     .collection("Events")
                     .document(viewModel.getEvent())
                     .collection("Attendees");
+
+            event = appDb.collection("Organizer").document(viewModel.getOrganizer())
+                    .collection("Events")
+                    .document(viewModel.getEvent());
+
+            event.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Toast.makeText(getContext(), "Going to Task", Toast.LENGTH_SHORT).show();
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                            if(document.get("Max") != null){
+                                maxAttendees = Integer.parseInt(String.valueOf(document.get("Max")));
+                                //Toast.makeText(getContext(), maxAttendees, Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getContext(), "No Limit", Toast.LENGTH_SHORT).show();
+                                noLimit = true;
+                            }
+                        } else
+                            Log.d(TAG, "No such document");
+                    }
+                    else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
         }
     }
 

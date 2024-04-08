@@ -31,10 +31,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eventease2.R;
+import com.example.eventease2.RoleChooseActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -101,6 +103,15 @@ public class AttendeeProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_attendee_profile, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
 
+        TextView back = view.findViewById(R.id.app_name);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to the AppEvent activity
+                Intent intent = new Intent(getActivity(), RoleChooseActivity.class);
+                startActivity(intent);
+            }
+        });
         firebase();
         getEditProfile(view);
         setTextFromModel();

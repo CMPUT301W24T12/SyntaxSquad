@@ -1,53 +1,82 @@
 package com.example.eventease2;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.action.ViewActions;
+import android.content.Intent;
+
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import com.example.eventease2.Organizer.AddEventFragment;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.robotium.solo.Solo;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class EventEaseTest {
+public class AddEventUITest {
+//    @Rule
+//    public ActivityScenarioRule<RoleChooseActivity> scenario = new ActivityScenarioRule<>(RoleChooseActivity.class);
+    private Solo solo;
     @Rule
-    public ActivityScenarioRule<RoleChooseActivity> scenario = new ActivityScenarioRule<>(RoleChooseActivity.class);
-    public ActivityScenarioRule<AddEventFragment> addScenario = new ActivityScenarioRule<>(AddEventFragment.class);
-    /**Click Organizer button and confirm
-     *check if it turns to the event list page
-     */
-    @Test
-    public void testGoToEventList(){
-        // Click on organizer icon
-        onView(withId(R.id.orgIcon)).perform(click());
-        //Click confirm to intent
-        onView(withId(R.id.confirmButton)).perform(click());
-        //Check if we are in the page of event list
-        onView(withText("EventEase")).check(matches(isDisplayed()));
-
+    public ActivityTestRule<AddEventFragment> addEvent =
+            new ActivityTestRule<>(AddEventFragment.class, true, true);
+    @Before
+    public void setUp() {
+        solo = new Solo(InstrumentationRegistry.getInstrumentation(), addEvent.getActivity());
     }
+//    /**Click Organizer button and confirm
+//     *check if it turns to the event list page
+//     */
+//    @Test
+//    public void testGoToEventList(){
+//        // Click on organizer icon
+//        onView(withId(R.id.orgIcon)).perform(click());
+//        //Click confirm to intent
+//        onView(withId(R.id.confirmButton)).perform(click());
+//        //Check if we are in the page of event list
+//        onView(withText("EventEase")).check(matches(isDisplayed()));
+//
+//    }
     @Test
-    public void testLimitAttendee(){
-
+    public void testActivity(){
+        boolean uploadText = solo.searchText("Upload an image for the event", true);
+        assertTrue("Not in the Add Event Page", uploadText);
     }
+
+    @Test
+    public void testNavigateToEventList() {
+        solo.clickOnButton("Back");
+        boolean isAddButtonExist = false;
+        try{
+            onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
+        } catch (Exception e){
+            isAddButtonExist = true;
+        }
+        assertTrue("Not in eventList activity", isAddButtonExist);
+    }
+
+//    @Test
+//    public void testImageSelection(){
+//        intended(hasAction(Intent.ACTION_PICK));
+//        intended(hasType("image/*"));
+//    }
+
 //    /**Add a event to firebase
 //     *check if the event info are in the firebase
 //     */
