@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Selected state -->
+    <item android:drawable="@drawable/selected_tint" android:state_selected="true"/>
+    <!-- Pressed state -->
+    <item android:drawable="@drawable/pressed_tint" android:state_pressed="true"/>
+    <!-- Default state -->
+    <item android:drawable="@drawable/default_tint"/>
+</selector>

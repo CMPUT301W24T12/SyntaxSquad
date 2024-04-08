@@ -1,24 +1,16 @@
 package com.example.eventease2.Organizer;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import com.example.eventease2.DeviceInfoUtils;
-import com.example.eventease2.EventListArrayAdapter;
 import com.example.eventease2.EventListFragment;
 import com.example.eventease2.R;
-import com.example.eventease2.RoleChooseActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -123,7 +115,7 @@ public class ReuseQRCodeFragment extends EventListFragment {
                     }
                 });
 
-        Button back = findViewById(R.id.button_second);
+        Button back = findViewById(R.id.home_event);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

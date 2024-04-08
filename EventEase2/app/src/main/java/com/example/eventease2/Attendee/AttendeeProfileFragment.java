@@ -112,7 +112,7 @@ public class AttendeeProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_attendee_profile, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
 
-        TextView back = view.findViewById(R.id.app_name);
+        TextView back = view.findViewById(R.id.home_profile);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,9 +139,10 @@ public class AttendeeProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setModelItems();
+                Toast.makeText(getContext(), "Profile Saved!", Toast.LENGTH_SHORT).show();
                 if (!Objects.equals(event, "")) {
                     addAttendeeData();
-                    Toast.makeText(getContext(), "Profile Saved!", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -204,6 +205,7 @@ public class AttendeeProfileFragment extends Fragment {
         data.put("Email", viewModel.getProfileEmail());
         data.put("Phone", viewModel.getProfilePhone());
         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+
     }
 
     /**

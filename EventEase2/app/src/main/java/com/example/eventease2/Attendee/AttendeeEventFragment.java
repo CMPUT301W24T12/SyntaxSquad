@@ -108,7 +108,7 @@ public class AttendeeEventFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
         eventList = view.findViewById(R.id.attendee_event_list);
 
-        TextView back = view.findViewById(R.id.header);
+        TextView back = view.findViewById(R.id.home_event_text);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

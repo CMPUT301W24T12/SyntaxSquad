@@ -13,11 +13,21 @@
         android:layout_height="75dp"
         android:background="#00B6AA"
         android:gravity="center"
-        android:text="EventEase"
+        android:text="EVENTEASE"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/home_event_text"
+        android:layout_width="82dp"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:translationX="8dp"
+        android:translationY="-51dp" />
 
     <TextView
         android:id="@+id/event_header"
@@ -27,27 +37,12 @@
         android:fontFamily="sans-serif-thin"
         android:foregroundGravity="center_vertical|center|center_horizontal"
         android:gravity="center|center_horizontal"
-        android:paddingLeft="12dp"
         android:text="EVENTS"
         android:textAlignment="gravity"
         android:textColor="#000000"
         android:textSize="34sp"
-        android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/button_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="296dp"
-        android:layout_marginBottom="27dp"
-        android:background="@android:color/transparent"
-        android:onClick="onButtonClick"
-        android:text="Back"
-        android:textSize="16sp"
-        android:translationX="20dp"
-        android:translationY="-115dp"
-        android:visibility="invisible"
-        app:layout_constraintVertical_bias="0.0" />
+        android:textStyle="bold"
+        android:translationY="-28dp" />
 
     <TextView
         android:id="@+id/bot_header"
@@ -105,6 +100,10 @@
         app:tint="#FFFFFF"
         tools:layout_editor_absoluteX="314dp"
         tools:layout_editor_absoluteY="0dp" />
+
+    <Space
+        android:layout_width="10dp"
+        android:layout_height="60dp" />
 
     <ListView
         android:id="@+id/attendee_event_list"
