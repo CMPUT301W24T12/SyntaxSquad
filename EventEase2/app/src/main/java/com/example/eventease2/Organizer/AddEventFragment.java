@@ -199,12 +199,10 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // Perform action based on the selected item
                 endHour = (String) parentView.getItemAtPosition(position);
-                //Toast.makeText(AddEventFragment.this, "Selected: " + selectedItem, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // Do nothing
             }
         });
 
@@ -226,18 +224,6 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), ReuseQRCodeFragment.class);
-//                intent.putExtra("ID",id);
-//                intent.putExtra("OrganizerID",organizerID);
-//                startActivity(intent);
-//                String result = getIntent().getStringExtra("SelectedID");
-//                if (result!=null){
-//                    Toast.makeText(AddEventFragment.this,result,Toast.LENGTH_LONG).show();
-//                }
-//                OrganizerWarningDialog warningDialog = new OrganizerWarningDialog();
-//                warningDialog.show(getSupportFragmentManager(),"Choose existing QR Code");
-                //Toast.makeText(AddEventFragment.this,id,Toast.LENGTH_LONG).show();
-
                 try{
                     Log.d("ID_add",id);
                     getInfo();
@@ -270,6 +256,7 @@ public class AddEventFragment extends AppCompatActivity implements OrganizerWarn
                             intent.putExtra("ID",id);
                             intent.putExtra("OrganizerID",organizerID);
                             startActivity(intent);
+                            finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

@@ -31,6 +31,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -46,6 +47,7 @@ public class AttendeeQRFragment extends Fragment{
     private AttendeeItemViewModel viewModel;
     private boolean flag = false;
     private boolean noLimit = false;
+    private boolean checkedIn;
     private FirebaseFirestore appDb;
     private CollectionReference attendeeCollect;
     private DocumentReference event;
@@ -59,7 +61,7 @@ public class AttendeeQRFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendee_q_r, container, false);
         super.onViewCreated(view,savedInstanceState);
-
+        checkedIn = false;
         viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
         Button btnScanQR = view.findViewById(R.id.btnScanQR);
         TextView back = view.findViewById(R.id.header);
@@ -185,7 +187,28 @@ public class AttendeeQRFragment extends Fragment{
      * When initial scan is complete, add the current profile to the firebase
      */
     public void checkIn(){
-
+        event = appDb.collection("Organizer").document(viewModel.getOrganizer())
+                .collection("Events")
+                .document(viewModel.getEvent());
+        event.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        if(document.get("Max")!= null){
+                            maxAttendees = Integer.parseInt(document.get("Max").toString());
+                        }
+                    } else {
+                        maxAttendees = -10;
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
         Query query = attendeeCollect;
         AggregateQuery countQuery = query.count();
         countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
@@ -205,6 +228,7 @@ public class AttendeeQRFragment extends Fragment{
                         data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
                         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
                         Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
+                        checkedIn = true;
                         noLimit = false;
                     }else if(currentAttendees < maxAttendees){
                         HashMap<String,String> data = new HashMap<>();
@@ -214,13 +238,12 @@ public class AttendeeQRFragment extends Fragment{
                         viewModel.setCheckIN(viewModel.getCheckIN()+1);
                         data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
                         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+                        checkedIn = true;
                         Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
                     }
                     else {
                         Toast.makeText(getContext(), "All Spots Taken!", Toast.LENGTH_SHORT).show();
                     }
-
-
                 } else {
                     Toast.makeText(getContext(), "Check in Failed", Toast.LENGTH_SHORT).show();
 
@@ -229,7 +252,16 @@ public class AttendeeQRFragment extends Fragment{
             }
 
         });
-        Toast.makeText(getContext(), "Past Checkin", Toast.LENGTH_SHORT).show();
+        if(checkedIn){
+            FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Subscribed to topic successfully");
+                        } else {
+                            Log.e(TAG, "Failed to subscribe to topic: " + task.getException().getMessage());
+                        }
+                    });
+        }
 
 
     }
