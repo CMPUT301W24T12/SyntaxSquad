@@ -136,6 +136,9 @@ public class EventListFragment extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(EventListFragment.this, RoleChooseActivity.class);
+                // Start the new activity
+                startActivity(intent);
                 finish();
             }
         });

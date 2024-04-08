@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/event_title"
-        android:layout_width="145dp"
+        android:layout_width="321dp"
         android:layout_height="wrap_content"
         android:text="Event Title"
         android:textSize="26sp"
@@ -28,12 +28,12 @@
 
     <TextView
         android:id="@+id/event_description"
-        android:layout_width="132dp"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:text="Event Description"
         android:textSize="14sp"
         android:textStyle="italic"
-        android:translationX="-520dp"
+        android:translationX="-695dp"
         android:translationY="40dp"
         tools:layout_editor_absoluteX="36dp"
         tools:layout_editor_absoluteY="64dp" />
@@ -43,7 +43,7 @@
         android:layout_width="68dp"
         android:layout_height="wrap_content"
         android:text="ENTRIES"
-        android:translationX="-510dp"
+        android:translationX="-875dp"
         android:translationY="75dp"
         tools:layout_editor_absoluteX="178dp"
         tools:layout_editor_absoluteY="100dp" />
@@ -56,7 +56,7 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:translationX="-585dp"
+        android:translationX="-950dp"
         android:translationY="100dp"
         tools:layout_editor_absoluteX="188dp"
         tools:layout_editor_absoluteY="131dp" />
@@ -77,7 +77,7 @@
         android:text="EVENT DETAILS"
         android:textColor="@color/white"
         android:textSize="11sp"
-        android:translationX="-800dp"
+        android:translationX="-1160dp"
         android:translationY="170dp"
         tools:layout_editor_absoluteX="217dp"
         tools:layout_editor_absoluteY="179dp" />
@@ -90,7 +90,7 @@
         android:text="VIEW ATTENDEES"
         android:textColor="@color/white"
         android:textSize="11sp"
-        android:translationX="-775dp"
+        android:translationX="-1145dp"
         android:translationY="170dp"
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="179dp" />
