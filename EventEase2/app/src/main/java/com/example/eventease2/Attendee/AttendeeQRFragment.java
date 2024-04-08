@@ -263,9 +263,9 @@ public class AttendeeQRFragment extends Fragment {
                     Log.d(TAG, "Count failed: ", task.getException());
                 }
             }
-
         });
         if (checkedIn) {
+            Log.d("Notification Event", String.valueOf(event));
             FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -275,8 +275,6 @@ public class AttendeeQRFragment extends Fragment {
                         }
                     });
         }
-
-
     }
 
     /**
