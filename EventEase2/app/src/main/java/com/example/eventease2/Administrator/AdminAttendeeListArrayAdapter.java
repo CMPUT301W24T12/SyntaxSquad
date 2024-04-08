@@ -85,7 +85,6 @@ public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
         TextView attendeeName = view.findViewById(R.id.attendee_name);
         attendeeName.setText(name);
 
-        // Load profile picture from Firebase Storage
         ImageView attendeePicture = view.findViewById(R.id.attendeePortrait);
         String fileNameWithExtension = attendeeIDs.get(position) + ".jpg";
         String fileNameWithoutExtension = attendeeIDs.get(position);
