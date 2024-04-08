@@ -45,7 +45,6 @@ public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
     DocumentReference eventInfoDoc;
     private String attendeeID;
     int profilePicResId = R.drawable.ellipse_9;
-    private String name = null;
 
     public OrganizerAttendeeListArrayAdapter(Context context, ArrayList<String> attendeeIDs, ArrayList<String> attendeeNames, String organizerID, String eventID) {
         super(context, 0, attendeeIDs);
@@ -66,13 +65,9 @@ public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
             view = LayoutInflater.from(context).inflate(R.layout.attendees_content, parent, false);
         }
 
-        if (!attendeeIDs.isEmpty()) {
-            String name = attendeeNames.get(position);
-        }
-
         TextView attendeeName = view.findViewById(R.id.attendee_name);
-        if (name != null && !name.isEmpty()) {
-            attendeeName.setText(name);
+        if (!attendeeIDs.isEmpty()) {
+            attendeeName.setText(attendeeNames.get(position));
         }
 
         ImageView attendeePicture = view.findViewById(R.id.attendeePortrait);
