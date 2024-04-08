@@ -28,8 +28,7 @@ import java.util.ArrayList;
  * buttons to view event details, view attendees, and choose an event to proceed with reusing
  * its QR code. The adapter receives information from the EventListFragment and interacts with
  * the AddEventFragment to update the selected event ID for QR code reuse.
- * <p>
- * @author Adeel Khan + Jimmy
+ * @author Jimmy
  * @return view
  */
 public class EventListArrayAdapterReuseQRCode extends ArrayAdapter<String> {

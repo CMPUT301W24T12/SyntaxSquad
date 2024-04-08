@@ -29,9 +29,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 /**
- * Adapter for Organizer Attendee List Fragment
- * revies information from fragment and displays it
+ * Adapter for OrganizerAttendeeListFragment and OrganizerSignUpFragment
+ * receives information from fragments and Firebase to display attendee name and picture
  * @author Adeel Khan
+ * @param Context context, ArrayList<String> attendeeIDs, ArrayList<String> attendeeNames, String organizerID, String eventIDs
+ * @return view
  */
 public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
     private ArrayList<String> attendeeIDs;
@@ -43,7 +45,6 @@ public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
     DocumentReference eventInfoDoc;
     private String attendeeID;
     int profilePicResId = R.drawable.ellipse_9;
-    private String name = null;
 
     public OrganizerAttendeeListArrayAdapter(Context context, ArrayList<String> attendeeIDs, ArrayList<String> attendeeNames, String organizerID, String eventID) {
         super(context, 0, attendeeIDs);
@@ -64,13 +65,9 @@ public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
             view = LayoutInflater.from(context).inflate(R.layout.attendees_content, parent, false);
         }
 
-        if (!attendeeIDs.isEmpty()) {
-            String name = attendeeNames.get(position);
-        }
-
         TextView attendeeName = view.findViewById(R.id.attendee_name);
-        if (name != null && !name.isEmpty()) {
-            attendeeName.setText(name);
+        if (!attendeeIDs.isEmpty()) {
+            attendeeName.setText(attendeeNames.get(position));
         }
 
         ImageView attendeePicture = view.findViewById(R.id.attendeePortrait);

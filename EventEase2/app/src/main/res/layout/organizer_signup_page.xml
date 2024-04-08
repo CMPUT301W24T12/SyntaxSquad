@@ -9,11 +9,12 @@
         android:id="@+id/attendee_text"
         android:layout_width="131dp"
         android:layout_height="46dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:text="Signed Up"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:translationY="-5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,14 +23,13 @@
         android:id="@+id/back_text"
         android:layout_width="66dp"
         android:layout_height="33dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="36dp"
         android:text="Back"
         android:textSize="18dp"
-        app:layout_constraintEnd_toStartOf="@+id/attendee_text"
-        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintBottom_toTopOf="@+id/organizer_attendee_list"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.288" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -57,14 +57,15 @@
 
     <Button
         android:id="@+id/checked_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/rounded_button_background"
         android:text="Checked In"
         android:textColor="@color/white"
-        android:backgroundTint="#00B6AA"
         app:layout_constraintBottom_toTopOf="@+id/organizer_attendee_list"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/attendee_text" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

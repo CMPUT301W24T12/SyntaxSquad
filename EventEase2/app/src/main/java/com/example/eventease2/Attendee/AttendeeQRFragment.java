@@ -263,7 +263,6 @@ public class AttendeeQRFragment extends Fragment {
                     Log.d(TAG, "Count failed: ", task.getException());
                 }
             }
-
         });
     }
 

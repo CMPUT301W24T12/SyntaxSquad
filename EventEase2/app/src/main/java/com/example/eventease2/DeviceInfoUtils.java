@@ -18,15 +18,11 @@ import java.util.UUID;
 
 /**
  * Utility class for retrieving device information such as ICCID, IMSI, and IMEI.
- * <p>
  * This class provides methods to retrieve unique identifiers associated with the device's SIM card
  * (such as ICCID), the device itself (such as IMEI), and a combination of the device's Android ID
  * and ICCID (such as IMSI). It also handles permission checks and compatibility issues with
  * different Android SDK versions.
- * </p>
- * <p>
  * Note: Some methods in this class require the 'READ_PHONE_STATE' permission in the application's manifest.
- * </p>
  *
  * @author yovi.putra
  * @version 1.0

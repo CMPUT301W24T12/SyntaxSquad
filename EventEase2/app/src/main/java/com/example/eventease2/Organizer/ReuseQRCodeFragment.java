@@ -24,14 +24,10 @@ import java.util.ArrayList;
  * This fragment displays a list of events that an organizer can choose from to reuse a QR code.
  * It retrieves the list of events associated with the organizer from Firestore and populates the list view.
  * If the organizer has no events, it displays an empty list.
- * <p>
  * The {@link #onCreate(Bundle)} method initializes the fragment by retrieving the list of events associated
  * with the organizer from Firestore and populating the list view accordingly.
- * </p>
- * <p>
  * The {@link #onCreate(Bundle)} method also sets up a click listener for the back button to navigate back to the
  * previous activity when clicked.
- * </p>
  */
 
 public class ReuseQRCodeFragment extends EventListFragment {
