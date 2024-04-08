@@ -2,6 +2,7 @@ package com.example.eventease2.Attendee;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eventease2.Event;
 import com.example.eventease2.R;
+import com.example.eventease2.RoleChooseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -71,6 +74,16 @@ public class AttendeeEventFragment extends Fragment {
         View view =  inflater.inflate(R.layout.attendee_event_page, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
         eventList = view.findViewById(R.id.attendee_event_list);
+
+        TextView back = view.findViewById(R.id.header);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to the AppEvent activity
+                Intent intent = new Intent(getActivity(), RoleChooseActivity.class);
+                startActivity(intent);
+            }
+        });
 
         organizerList = new ArrayList<>();
         eventNameList = new ArrayList<>();

@@ -91,7 +91,6 @@ public class RoleChooseActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(RoleChooseActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 546);
             }
         }
-        
     }
 
     /**
