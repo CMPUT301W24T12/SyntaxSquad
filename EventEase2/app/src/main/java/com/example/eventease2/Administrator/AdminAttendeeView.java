@@ -58,7 +58,6 @@ public class AdminAttendeeView extends AppCompatActivity {
         String organizerID = getIntent().getStringExtra("OrganizerID");
         if (eventID == null || organizerID == null) {
             Log.e("AdminAttendeeView", "EventID or OrganizerID is null");
-            // Handle the error or finish the activity
             finish();
             return;
         }
@@ -82,7 +81,6 @@ public class AdminAttendeeView extends AppCompatActivity {
                             if (checkInsStr != null) {
                                 int checkIns = Integer.parseInt(checkInsStr);
                                 if (checkIns >= 1) {
-                                    // Only include attendees who have checked in at least once
                                     attendeeIDs.add(documentSnapshot.getId());
                                     attendeeNames.add(documentSnapshot.getString("Name"));
                                 }
