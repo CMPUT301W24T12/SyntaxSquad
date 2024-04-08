@@ -51,7 +51,7 @@ public class AdminAttendeeView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.organizer_attendee_list);
+        setContentView(R.layout.activity_admin_attendee_view);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String eventID = getIntent().getStringExtra("ID");
@@ -66,7 +66,7 @@ public class AdminAttendeeView extends AppCompatActivity {
         String email = getIntent().getStringExtra("Email");
         String phone = getIntent().getStringExtra("Phone");
 
-        attendeeList = findViewById(R.id.organizer_attendee_list);
+        attendeeList = findViewById(R.id.listView);
 
         CollectionReference attendeeRef = db.collection("Organizer").document(organizerID).collection("Events").document(eventID).collection("Attendees");
         ArrayList<String> attendeeIDs = new ArrayList<>();                                                   //replace with organizer ID                                                                        //replace with event ID
