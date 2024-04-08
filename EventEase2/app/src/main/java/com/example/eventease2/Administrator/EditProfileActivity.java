@@ -220,9 +220,12 @@ public class EditProfileActivity extends AppCompatActivity {
      */
     private void navigateToAttendeeView() {
         Intent intent = new Intent(this, AdminAttendeeView.class);
+        intent.putExtra("ID", eventID);
+        intent.putExtra("OrganizerID", organizerID);
         startActivity(intent);
         finish();
     }
+
 
     /**
      * Sets up the back button listener to navigate back to the attendee view.
