@@ -35,7 +35,11 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
+/**
+ * Notification page to receive information from user to send notification to attendees checked in to event
+ * Uses Postman and OkHTTP API's to send Notifications
+ * @Author Adeel Khan
+ */
 public class OrganizerNotificationFragment extends AppCompatActivity {
 
     private String token;
@@ -104,6 +108,12 @@ public class OrganizerNotificationFragment extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method to send notifications
+     * Uses Postman and OkHTTP API's to send Notifications
+     * @param String header, String description, String eventID
+     * @Author Adeel Khan
+     */
     private void sendNotification(String header, String description, String eventID) {
         //Log.d("Notification Token", token);
 

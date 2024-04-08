@@ -40,8 +40,11 @@ import java.util.List;
 /**
  * Fragment for the Attendee List page
  * recieves event and organizer ID's from intent
- * gets attendee ID and Names from Firebase and sends it to attendeeArrayAdapter to be displayed
+ * gets attendee ID and Names from Firebase and sends it to OrganizerAttendeeArrayAdapter to be displayed
  * has click listener for back button sending it to the Event List page
+ * Contains Send Notification button to send notification to all attendees checked in
+ * and has a set milestone button that alerts the user if they have reached a certain number of
+ * attendees signed up. Can click on attendee list view that direct the user to the attendees profile
  * @Author Adeel Khan
  */
 public class OrganizerAttendeeListFragment extends AppCompatActivity {
@@ -148,6 +151,12 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method to create dialog builder to get milestone information from user
+     * Gives option to cancel builder or set the milestone
+     * If the milestone is reached a toast message will appear for the user
+     * The milestone is reached if the number of signed up attendees is equal or greater than the milestone
+     */
     private void setMilestoneDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(OrganizerAttendeeListFragment.this);
         builder.setTitle("Set Milestone");

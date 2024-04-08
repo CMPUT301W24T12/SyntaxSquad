@@ -45,7 +45,7 @@
         android:translationX="310dp"
         android:translationY="-150dp"
         app:srcCompat="@drawable/ic_circle_plus"
-        app:tint="#FFFFFF"
+        app:tint="@color/white"
         tools:layout_editor_absoluteX="314dp"
         tools:layout_editor_absoluteY="0dp" />
 

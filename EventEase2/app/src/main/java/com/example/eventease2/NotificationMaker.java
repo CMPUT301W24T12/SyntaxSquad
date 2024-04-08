@@ -10,12 +10,20 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+/**
+ * Class that takes information from MyFirebaseMessagingService to create notification and display it
+ * Contains the methods the handle the notification and where to display it
+ * @author Adeel Khan
+ */
 public class NotificationMaker {
 
     public static final String CHANNEL_ID = "your_channel_id";
     public static final String CHANNEL_NAME = "Your Channel Name";
     public static final String CHANNEL_DESCRIPTION = "Your Channel Description";
 
+    /**
+     * Method that creates the notification channel so that it can be received by the user
+     */
     public static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
@@ -31,7 +39,9 @@ public class NotificationMaker {
         }
     }
 
-    // This method builds and displays the notification
+    /**
+     * Method builds and displays the notification
+     */
     public static void showNotification(Context context, String title, String message) {
 
         // Create an intent for the notification to open when clicked
@@ -52,6 +62,4 @@ public class NotificationMaker {
         Log.d("Notification Maker", message);
         notificationManager.notify(notificationId, builder.build());
     }
-
-
 }

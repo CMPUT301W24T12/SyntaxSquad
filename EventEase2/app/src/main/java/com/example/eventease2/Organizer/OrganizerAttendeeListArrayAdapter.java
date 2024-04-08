@@ -29,9 +29,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 /**
- * Adapter for Organizer Attendee List Fragment
- * revies information from fragment and displays it
+ * Adapter for OrganizerAttendeeListFragment and OrganizerSignUpFragment
+ * receives information from fragments and Firebase to display attendee name and picture
  * @author Adeel Khan
+ * @param Context context, ArrayList<String> attendeeIDs, ArrayList<String> attendeeNames, String organizerID, String eventIDs
+ * @return view
  */
 public class OrganizerAttendeeListArrayAdapter extends ArrayAdapter<String> {
     private ArrayList<String> attendeeIDs;
