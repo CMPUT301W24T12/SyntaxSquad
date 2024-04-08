@@ -1,13 +1,9 @@
 package com.example.eventease2.Administrator;
-import com.bumptech.glide.request.RequestOptions;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,27 +27,30 @@ import java.util.ArrayList;
 /**
  * Adapter for Administrator Attendee List Fragment
  * receives information from fragment and displays it
+ *
  * @author Ashlyn Benoy
  */
 public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
-    private ArrayList<String> attendeeIDs;
-    private ArrayList<String> attendeeNames;
-    private String eventID;
-    private String organizerID;
-    private String profile_pic;
-    private String email;
-    private String phone;
-    private Context context;
+    private final ArrayList<String> attendeeIDs;
+    private final ArrayList<String> attendeeNames;
+    private final String eventID;
+    private final String organizerID;
+    private final String profile_pic;
+    private final String email;
+    private final String phone;
+    private final Context context;
+
     /**
      * Constructor for AdminAttendeeListArrayAdapter.
-     * @param context The context in which the adapter will be used.
-     * @param attendeeIDs The list of attendee IDs.
+     *
+     * @param context       The context in which the adapter will be used.
+     * @param attendeeIDs   The list of attendee IDs.
      * @param attendeeNames The list of attendee names.
-     * @param eventID The ID of the event.
-     * @param organizerID The ID of the organizer.
-     * @param profile_pic The profile picture of the attendee.
-     * @param email The email of the attendee.
-     * @param phone The phone number of the attendee.
+     * @param eventID       The ID of the event.
+     * @param organizerID   The ID of the organizer.
+     * @param profile_pic   The profile picture of the attendee.
+     * @param email         The email of the attendee.
+     * @param phone         The phone number of the attendee.
      */
     public AdminAttendeeListArrayAdapter(Context context, ArrayList<String> attendeeIDs, ArrayList<String> attendeeNames, String eventID, String organizerID, String profile_pic, String email, String phone) {
         super(context, 0, attendeeIDs);
@@ -64,11 +63,13 @@ public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
         this.email = email;
         this.phone = phone;
     }
+
     /**
      * Get a View that displays the data at the specified position in the data set.
-     * @param position The position of the item within the adapter's data set.
+     *
+     * @param position    The position of the item within the adapter's data set.
      * @param convertView The old view to reuse, if possible.
-     * @param parent The parent that this view will eventually be attached to.
+     * @param parent      The parent that this view will eventually be attached to.
      * @return A View corresponding to the data at the specified position.
      */
     @NonNull

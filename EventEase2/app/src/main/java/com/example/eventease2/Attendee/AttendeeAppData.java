@@ -1,7 +1,7 @@
-
 package com.example.eventease2.Attendee;
 
 import java.util.ArrayList;
+
 /**
  * The AttendeeAppData class represents the data structure for managing attendee-related information
  * in an event management application.
@@ -23,6 +23,7 @@ import java.util.ArrayList;
  * <p>
  * This class also provides methods to retrieve, set, and delete elements from these lists.
  * </p>
+ *
  * @author Sean
  */
 public class AttendeeAppData {
@@ -48,6 +49,7 @@ public class AttendeeAppData {
 
     /**
      * Retrieves the list of organizers.
+     *
      * @return The list of organizers.
      */
     public ArrayList<String> getOrganizerList() {
@@ -56,6 +58,7 @@ public class AttendeeAppData {
 
     /**
      * Sets the list of organizers.
+     *
      * @param organizerList The list of organizers to be set.
      */
     public void setOrganizerList(ArrayList<String> organizerList) {
@@ -64,6 +67,7 @@ public class AttendeeAppData {
 
     /**
      * Retrieves the list of event names.
+     *
      * @return The list of event names.
      */
     public ArrayList<String> getEventNameList() {
@@ -72,6 +76,7 @@ public class AttendeeAppData {
 
     /**
      * Sets the list of event names.
+     *
      * @param eventNameList The list of event names to be set.
      */
     public void setEventNameList(ArrayList<String> eventNameList) {
@@ -80,6 +85,7 @@ public class AttendeeAppData {
 
     /**
      * Retrieves the list of event information.
+     *
      * @return The list of event information.
      */
     public ArrayList<String> getEventInfoList() {
@@ -88,6 +94,7 @@ public class AttendeeAppData {
 
     /**
      * Sets the list of event information.
+     *
      * @param eventInfoList The list of event information to be set.
      */
     public void setEventInfoList(ArrayList<String> eventInfoList) {
@@ -96,6 +103,7 @@ public class AttendeeAppData {
 
     /**
      * Retrieves the list of event IDs.
+     *
      * @return The list of event IDs.
      */
     public ArrayList<String> getEventIDs() {
@@ -104,6 +112,7 @@ public class AttendeeAppData {
 
     /**
      * Sets the list of event IDs.
+     *
      * @param eventIDs The list of event IDs to be set.
      */
     public void setEventIDs(ArrayList<String> eventIDs) {
@@ -112,6 +121,7 @@ public class AttendeeAppData {
 
     /**
      * Retrieves the list of maximum attendees allowed for each event.
+     *
      * @return The list of maximum attendees.
      */
     public ArrayList<String> getMaxAttendeeList() {
@@ -120,6 +130,7 @@ public class AttendeeAppData {
 
     /**
      * Sets the list of maximum attendees allowed for each event.
+     *
      * @param maxAttendeeList The list of maximum attendees to be set.
      */
     public void setMaxAttendeeList(ArrayList<String> maxAttendeeList) {
@@ -128,6 +139,7 @@ public class AttendeeAppData {
 
     /**
      * Deletes the organizer at the specified index.
+     *
      * @param index The index of the organizer to be deleted.
      */
     public void deleteOrganizer(int index) {
@@ -138,6 +150,7 @@ public class AttendeeAppData {
 
     /**
      * Deletes the event name at the specified index.
+     *
      * @param index The index of the event name to be deleted.
      */
     public void deleteEventName(int index) {
@@ -148,6 +161,7 @@ public class AttendeeAppData {
 
     /**
      * Deletes the event information at the specified index.
+     *
      * @param index The index of the event information to be deleted.
      */
     public void deleteEventInfo(int index) {
@@ -158,6 +172,7 @@ public class AttendeeAppData {
 
     /**
      * Deletes the event ID at the specified index.
+     *
      * @param index The index of the event ID to be deleted.
      */
     public void deleteEventID(int index) {
@@ -168,6 +183,7 @@ public class AttendeeAppData {
 
     /**
      * Deletes the participant count at the specified index.
+     *
      * @param index The index of the participant count to be deleted.
      */
     public void deleteParticipantCount(int index) {
@@ -178,6 +194,7 @@ public class AttendeeAppData {
 
     /**
      * Retrieves the list of entries by attendees.
+     *
      * @return The list of entries by attendees.
      */
     public ArrayList<String> getEntriesAttendeeList() {
@@ -186,6 +203,7 @@ public class AttendeeAppData {
 
     /**
      * Sets the list of entries by attendees.
+     *
      * @param entriesAttendeeList The list of entries by attendees to be set.
      */
     public void setEntriesAttendeeList(ArrayList<String> entriesAttendeeList) {

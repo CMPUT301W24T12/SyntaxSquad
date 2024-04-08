@@ -27,7 +27,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
+/**
+ * This activity allows an administrator to edit attendee profile information,
+ * including name, bio, email, and phone number. The administrator can also
+ * remove the attendee's profile picture and profile entirely.
+ */
 public class EditProfileActivity extends AppCompatActivity {
     private FirebaseFirestore appDb = FirebaseFirestore.getInstance();
     private TextView attendeeName, attendeeBio, email, phone;
