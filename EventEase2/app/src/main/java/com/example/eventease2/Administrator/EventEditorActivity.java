@@ -47,8 +47,8 @@ import java.util.Objects;
  */
 public class EventEditorActivity extends AppCompatActivity {
 
-    private FirebaseFirestore appDb;
-    private FirebaseStorage storage;
+    public FirebaseFirestore appDb;
+    public FirebaseStorage storage;
 
     private TextView eventDesciption;
     private TextView eventTitle;
@@ -61,10 +61,10 @@ public class EventEditorActivity extends AppCompatActivity {
     private TextView locationText;
     private TextView maxEntries;
 
-    private String eventID;
+    public String eventID;
     private String organizerID;
-    private String posOfEvent;
-    private DocumentReference eventInfoDoc;
+    public String posOfEvent;
+    public DocumentReference eventInfoDoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +147,7 @@ public class EventEditorActivity extends AppCompatActivity {
     /**
      * Deletes the event from Firestore database.
      */
-    private void deleteEvent() {
+    public void deleteEvent() {
         if (posOfEvent != null) {
             eventInfoDoc.delete()
                     .addOnSuccessListener(aVoid -> {
@@ -213,7 +213,7 @@ public class EventEditorActivity extends AppCompatActivity {
     /**
      * Removes the event image from Firebase Storage.
      */
-    private void removeImage() {
+    public void removeImage() {
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child("images/" + eventID);
         imageRef.delete().addOnSuccessListener(aVoid -> {
