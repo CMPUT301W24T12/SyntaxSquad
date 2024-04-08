@@ -31,9 +31,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.ImageView;
 
-
 /**
+ * Displays an attendees profile with their relevant information as well as the number of times they have checked in
  * This fragments shows the user the empty profile unless saved changes were updated.
+ * Gets information from Firebase and displays it
+ * @Author Adeel Khan
  */
 public class OrganizerAttendeeProfileFragment extends AppCompatActivity {
 

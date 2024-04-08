@@ -40,7 +40,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
     private String organizerID;
     private ArrayList<String> eventIDs;
     private Context context;
-
+    private ArrayList<Integer> attendeeIDs = new ArrayList<>();
     private String count;
 
     public EventListArrayAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, String organizerID, ArrayList<String> eventIDs) {
@@ -49,6 +49,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
         this.eventDescription = eventDescription;
         this.organizerID = organizerID;
         this.eventIDs = eventIDs;
+        this.attendeeIDs = attendeeIDs;
         this.context = context;
     }
 
@@ -66,6 +67,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
         String name = eventNames.get(position);
         String description = eventDescription.get(position);
         String eventID = eventIDs.get(position);
+        //Integer attendeeSize = attendeeIDs.get(position);
 
         TextView eventName = view.findViewById(R.id.event_title);
         TextView eventDetails = view.findViewById(R.id.event_description);
@@ -73,6 +75,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
 
         eventName.setText(name);
         eventDetails.setText(description);
+        //eventCount.setText(attendeeSize.toString());
 
         ArrayList<Integer> attendeeIDs = new ArrayList<>();
         for (String event : eventIDs) {
@@ -89,23 +92,18 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
                                 // Access each document here
                                 Log.d("Event List", documentSnapshot.getId());
                                 //                        attendee id's
-                                String attendees = documentSnapshot.getId();
-                                attendeeID.add(attendees);
+                                //String attendees = documentSnapshot.getId();
+                                attendeeID.add(documentSnapshot.getId());
                             }
                             attendeeIDs.add(attendeeID.size());
-                            Log.d("Entries 1", attendeeID.toString());
-                            Log.d("Entries 2", attendeeIDs.toString());
-                            if (attendeeIDs.isEmpty()) {
-                                count = "0";
-                            } else {
-                                Log.d("Entries 5", String.valueOf(position));
-                                if (position == attendeeIDs.size() - 1){
-                                    count = String.valueOf(attendeeIDs.get(position));
-                                    eventCount.setText(count);
-                                }
-                                //eventCount.setText(count);
+                            Log.d("Entries", String.valueOf(attendeeIDs));
+                            if (attendeeIDs.size() == eventIDs.size()) {
+                                String count = String.valueOf(attendeeIDs.get(position));
+                                eventCount.setText(count);
                             }
+                            Log.d("Entries After2", String.valueOf(attendeeIDs));
                         }
+
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -114,6 +112,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
                         }
                     });
         }
+
 
         Button eventInfo = view.findViewById(R.id.event_details);
         eventInfo.setOnClickListener(v -> {

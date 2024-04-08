@@ -13,7 +13,11 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-
+/**
+ * Firebase service that runs in the background checking if a notification is sent and recieves it
+ * Contains the methods the handle the notification and where to display it
+ * @author Adeel Khan
+ */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
