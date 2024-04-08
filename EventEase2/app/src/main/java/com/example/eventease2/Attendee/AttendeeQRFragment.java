@@ -71,7 +71,7 @@ public class AttendeeQRFragment extends Fragment {
         checkedIn = false;
         viewModel = new ViewModelProvider(requireActivity()).get(AttendeeItemViewModel.class);
         Button btnScanQR = view.findViewById(R.id.btnScanQR);
-        TextView back = view.findViewById(R.id.header);
+        TextView back = view.findViewById(R.id.home_qr);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
