@@ -41,6 +41,20 @@ import com.google.firebase.messaging.FirebaseMessaging;
  */
 import java.util.List;
 
+/**
+ * RoleChooseActivity is the opening activity of the application where users can select their role.
+ * Depending on the selected role (organizer, administrator, or attendee), the user will be directed
+ * to the respective activity after confirmation.
+ *
+ * This activity initializes Firebase Firestore instance, retrieves IMEI (device number) using DeviceInfoUtils,
+ * and handles click events for icons representing different roles. It also fetches data from Firestore
+ * based on the selected role.
+ *
+ * The class contains methods to initialize UI elements, set onClickListeners for icons, handle icon click events,
+ * and fetch data from Firestore for attendees and administrators.
+ *
+ */
+
 public class RoleChooseActivity extends AppCompatActivity {
 
     ImageButton organizerIcon;
@@ -50,144 +64,121 @@ public class RoleChooseActivity extends AppCompatActivity {
     FirebaseFirestore appDb;
     public String imei;
     private DocumentReference organizerRef;
-    private  CollectionReference collectionRef;
+    private CollectionReference collectionRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_choose);
 
-        appDb = FirebaseFirestore.getInstance();
-        // Firebase contains info of all events on the app
-        CollectionReference collectionReference = appDb.collection("Events");
+        // Initialize Firebase Firestore instance
+        initializeFirebaseFirestore();
 
-        // Copyright 2020 M. Fadli Zein
-        imei = DeviceInfoUtils.getIMEI(getApplicationContext()); // device number
-        Log.d("IMEI", imei);
-        CollectionReference collectionRef = appDb.collection("Organizer");
+        // Get IMEI device number
+        getIMEINumber();
 
-        organizerIcon = findViewById(R.id.orgIcon);
-        admIcon = findViewById(R.id.admIcon);
-        attendeeIcon = findViewById(R.id.attendIcon);
-        confirmButton = findViewById(R.id.confirmButton);
+        // Initialize UI elements
+        initializeUI();
+
+        // Set onClickListeners for icons
+        setIconClickListeners();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(RoleChooseActivity.this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(RoleChooseActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 546);
             }
         }
+    }
 
+    /**
+     * Initializes the Firebase Firestore instance.
+     */
+    private void initializeFirebaseFirestore() {
+        appDb = FirebaseFirestore.getInstance();
+    }
+
+    /* Retrieves IMEI (device number) using DeviceInfoUtils.*/
+    private void getIMEINumber() {
+        imei = DeviceInfoUtils.getIMEI(getApplicationContext());
+        Log.d("IMEI", imei);
+    }
+
+    /**
+     * Initializes UI elements such as icons and buttons.
+     */
+    private void initializeUI() {
+        organizerIcon = findViewById(R.id.orgIcon);
+        admIcon = findViewById(R.id.admIcon);
+        attendeeIcon = findViewById(R.id.attendIcon);
+        confirmButton = findViewById(R.id.confirmButton);
+    }
+
+    /**
+     *  Sets onClickListeners for icons.
+     */
+    private void setIconClickListeners() {
         attendeeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                confirmButton.setTextColor(Color.parseColor("#FFFFFF"));
-                confirmButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(RoleChooseActivity.this, AttendeeStartActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                CollectionReference collectionRef = appDb.collection("Organizer");
-                collectionRef.get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                for (QueryDocumentSnapshot organizerSnapshot : queryDocumentSnapshots) {
-                                    // Access each organizer document here
-                                    String organizerId = organizerSnapshot.getId();
-                                    // Get a reference to the "Events" collection for this organizer
-                                    CollectionReference eventsCollectionRef = appDb.collection("Organizer").document(organizerId).collection("Events");
-
-                                    eventsCollectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onSuccess(QuerySnapshot eventQueryDocumentSnapshots) {
-                                            for (QueryDocumentSnapshot eventSnapshot : eventQueryDocumentSnapshots) {
-                                                // Access each event document here
-                                                String eventId = eventSnapshot.getId();
-                                                Log.d("Event ID is ", eventId);
-
-                                                // Get the AttendeeList field from the event document
-                                                List<String> attendeeList = (List<String>) eventSnapshot.get("AttendeeList");
-                                                // Get the length of the AttendeeList
-                                                int attendeeListLength = attendeeList != null ? attendeeList.size() : 0;
-
-                                                // Get the Description field from the event document
-                                                String description = eventSnapshot.getString("Description");
-
-                                                String name = eventSnapshot.getString("Name");
-
-//                                                Log.d("AttendeeList length for event " + eventId + " is ", String.valueOf(attendeeListLength));
-//                                                Log.d("Description for event " + eventId + " is ", description);
-//                                                Log.d("The name for the event is", name);
-                                            }
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            // Handle failures
-                                        }
-                                    });
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Handle failures
-                            }
-                        });
+                handleAttendeeIconClick();
             }
         });
 
         organizerIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                confirmButton.setTextColor(Color.parseColor("#FFFFFF"));
-                confirmButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(RoleChooseActivity.this, EventListFragment.class);
-                        intent.putExtra("OrganizerID",imei);
-                        startActivity(intent);
-                    }
-                });
+                handleOrganizerIconClick();
             }
         });
 
         admIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                confirmButton.setTextColor(Color.parseColor("#FFFFFF"));
-                confirmButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), AppEventsActivity.class);
-                        startActivity(intent);
-//                        Toast.makeText(RoleChooseActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                CollectionReference collectionRef = db.collection("Organizer").document("ffffffff-8a86-b983-0000-0000380c0fa3").collection("Events");
-                collectionRef.get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                    // Access each document here
-                                    Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                                    //                         event id's                            event info
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("NewTag", "Error getting documents.", e);
-                            }
-                        });
+                handleAdmIconClick();
             }
         });
-    }}
+    }
+
+    /**
+     *  Handles click on the attendee icon.
+     */
+    private void handleAttendeeIconClick() {
+        confirmButton.setTextColor(Color.parseColor("#FFFFFF"));
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RoleChooseActivity.this, AttendeeStartActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * Handles click on the organizer icon.
+     */
+    private void handleOrganizerIconClick() {
+        confirmButton.setTextColor(Color.parseColor("#FFFFFF"));
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RoleChooseActivity.this, EventListFragment.class);
+                intent.putExtra("OrganizerID", imei);
+                startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     *  Handles click on the administrator icon.
+     */
+    private void handleAdmIconClick() {
+        confirmButton.setTextColor(Color.parseColor("#FFFFFF"));
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AppEventsActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+}
