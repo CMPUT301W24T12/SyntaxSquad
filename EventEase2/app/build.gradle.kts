@@ -63,6 +63,8 @@ dependencies {
     implementation("androidx.core:core:1.7.0")
     implementation ("com.firebaseui:firebase-ui-storage:7.2.0")
     implementation ("com.squareup.picasso:picasso:2.8")
+    androidTestImplementation ("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.mockito:mockito-core:3.+")
     implementation("androidx.activity:activity:1.8.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -39,8 +39,52 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * Shows the user a default event if the QR scanner hasn't been scanned and shows the scanned event
- * if the scan was successful
+ * A fragment that displays events for attendees. If the QR scanner hasn't been scanned, it shows a default event;
+ * if the scan was successful, it displays the scanned event.
+ * <p>
+ * This fragment retrieves event data from Firebase Firestore and populates a ListView with the details of the events.
+ * </p>
+ * <p>
+ * The {@code refreshEventData} method is responsible for clearing the existing event data and fetching new event data
+ * from Firestore.
+ * </p>
+ * <p>
+ * The {@code clearEventData} method clears all ArrayLists that store event-related information.
+ * </p>
+ * <p>
+ * The {@code fetchOrganizers} method fetches the list of organizers from Firestore and calls the {@code fetchEventsForOrganizer}
+ * method for each organizer.
+ * </p>
+ * <p>
+ * The {@code fetchEventsForOrganizer} method fetches the list of events for a given organizer from Firestore and populates
+ * the ArrayLists with event details.
+ * </p>
+ * <p>
+ * The {@code notifyDataAdapter} method initializes the {@link AttendeeEventAdapter} with the updated event data and
+ * notifies the ListView adapter to update its content.
+ * </p>
+ * <p>
+ * The {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} method initializes the fragment's UI components,
+ * sets up event listeners, and calls the {@code refreshEventData} method to fetch event data from Firestore.
+ * </p>
+ * <p>
+ * The {@link #refreshEventData()} method clears the existing event data and fetches new event data from Firestore.
+ * </p>
+ * <p>
+ * The {@link #clearEventData()} method clears all ArrayLists that store event-related information.
+ * </p>
+ * <p>
+ * The {@link #fetchOrganizers(CollectionReference, FirebaseFirestore)} method fetches the list of organizers from
+ * Firestore and initiates the process of fetching events for each organizer.
+ * </p>
+ * <p>
+ * The {@link #fetchEventsForOrganizer(CollectionReference)} method fetches the list of events for a given organizer
+ * from Firestore and populates the ArrayLists with event details.
+ * </p>
+ * <p>
+ * The {@link #notifyDataAdapter()} method initializes the {@link AttendeeEventAdapter} with the updated event data
+ * and notifies the ListView adapter to update its content.
+ * </p>
  * @author Sean
  */
 public class AttendeeEventFragment extends Fragment {

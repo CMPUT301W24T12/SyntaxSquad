@@ -1,5 +1,7 @@
+
 package com.example.eventease2.Attendee;
 
+// Imported libraries
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.content.Context;
@@ -12,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import java.util.Collections;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,38 +21,47 @@ import androidx.annotation.Nullable;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.AggregateQuery;
-import com.google.firebase.firestore.AggregateQuerySnapshot;
-import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
-
+/**
+ * This class is a custom ArrayAdapter used to populate a ListView with event information for attendees.
+ * It binds the event name, description, and other details to the respective TextViews and Buttons in the list item layout.
+ * <p>
+ * The constructor initializes the adapter with event data and attendee information.
+ * </p>
+ * <p>
+ * The {@link #getView(int, View, ViewGroup)} method is responsible for creating the View for each item in the ListView,
+ * updating UI elements based on attendee's participation status in events, and setting click listeners for event details buttons.
+ * </p>
+ */
 public class AttendeeEventAdapter extends ArrayAdapter<String> {
 
+    // Member variables
     private ArrayList<String> eventNames;
-
     private ArrayList<String> eventDescription;
     private ArrayList<String> organizerID;
-    private  ArrayList<String> eventIDs;
-    private ArrayList<String> maxAttendee;
-    private String entries;
+    private ArrayList<String> eventIDs;
     private Context context;
-    FirebaseFirestore appDb = FirebaseFirestore.getInstance();
-    DocumentReference eventInfoDoc;
-    CollectionReference attendeeList;
-    private String attendeeID, attendeeName, attendeePhone, attendeeEmail,stringEventPhoto;
-    Button eventDetailButton;
-    AttendeeAppData attendeeAppData;
+    private String attendeeID, attendeeName, attendeePhone, attendeeEmail;
+    private FirebaseFirestore appDb = FirebaseFirestore.getInstance();
+    private Button eventDetailButton;
+    private AttendeeAppData attendeeAppData;
 
-    public AttendeeEventAdapter(Context context, AttendeeAppData appData,String attendeeID,
-                                String attendeeName,String attendeePhone, String attendeeEmail) {
+    /**
+     * Constructor for the AttendeeEventAdapter.
+     * @param context The context of the application.
+     * @param appData An instance of AttendeeAppData containing event data.
+     * @param attendeeID The ID of the attendee.
+     * @param attendeeName The name of the attendee.
+     * @param attendeePhone The phone number of the attendee.
+     * @param attendeeEmail The email of the attendee.
+     */
+    public AttendeeEventAdapter(Context context, AttendeeAppData appData, String attendeeID,
+                                String attendeeName, String attendeePhone, String attendeeEmail) {
         super(context, 0, appData.getEventNameList());
         this.attendeeAppData = appData;
         this.eventNames = appData.getEventNameList();
@@ -63,13 +73,19 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
         this.attendeeName = attendeeName;
         this.attendeePhone = attendeePhone;
         this.attendeeEmail = attendeeEmail;
-        //this.participantCountList = appData.getParticipantCountList();
     }
 
+    /**
+     * Method to get the View for each item in the ListView. And updating which events that the
+     * current attendee is a part of.
+     * @param position The position of the item in the ListView.
+     * @param convertView The recycled view to populate.
+     * @param parent The parent ViewGroup.
+     * @return The View for the item at the specified position.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//        return super.getView(position, convertView, parent);
         View view = convertView;
         FirebaseStorage storage = FirebaseStorage.getInstance();
         if (view == null) {
@@ -77,12 +93,13 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
         }
         StorageReference storageRef = storage.getReference();
 
+        // Find TextViews and Button in the layout
         TextView eventNameView = view.findViewById(R.id.event_title);
         TextView eventDetailsView = view.findViewById(R.id.event_description);
-        //TextView maxAttendeeCount = view.findViewById(R.id.maxEntriesNum);
         TextView enteredInEvent = view.findViewById(R.id.signedUp);
         Button eventDetailButton = view.findViewById(R.id.event_details);
 
+        // Check if attendee is signed up for the event and update UI accordingly
         CollectionReference attendeeCollectionRef = appDb.collection("Organizer")
                 .document(organizerID.get(position)).collection("Events")
                 .document(eventIDs.get(position)).collection("Attendees");
@@ -107,8 +124,11 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
             }
         });
 
+        // Set event name and description
         eventNameView.setText(eventNames.get(position));
         eventDetailsView.setText(eventDescription.get(position));
+
+        // Set click listener for event details button
         eventDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,11 +141,9 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
                 intent.putExtra("AttendeeName",attendeeName);
                 intent.putExtra("AttendeePhone",attendeePhone);
                 intent.putExtra("AttendeeEmail",attendeeEmail);
-                intent.putExtra("AttendeePhoto",stringEventPhoto);
-                //intent.putExtra("AttendeeEntries",entries.get(position));
+                // Start activity and pass necessary data
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
-                Log.d("BACK", "I am back");
                 notifyDataSetChanged();
             }
         });
@@ -134,4 +152,3 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
     }
 
 }
-
