@@ -215,7 +215,7 @@ public class AttendeeQRFragment extends Fragment {
                             maxAttendees = Integer.parseInt(document.get("Max").toString());
                         }
                     } else {
-                        maxAttendees = -10;
+                        noLimit = true;
                         Log.d(TAG, "No such document");
                     }
                 } else {
@@ -265,7 +265,6 @@ public class AttendeeQRFragment extends Fragment {
             }
 
         });
-        Toast.makeText(getContext(), "Checked In = "+checkedIn, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -287,7 +286,6 @@ public class AttendeeQRFragment extends Fragment {
             event.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    Toast.makeText(getContext(), "Going to Task", Toast.LENGTH_SHORT).show();
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
@@ -311,9 +309,7 @@ public class AttendeeQRFragment extends Fragment {
 
     public void firebaseMessaging(){
         Log.d("Notification Event", String.valueOf(event));
-        Toast.makeText(getContext(), "Event: "+ event, Toast.LENGTH_SHORT).show();
-        Toast.makeText(getContext(), "Check in Failed", Toast.LENGTH_SHORT).show();
-        FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
+        FirebaseMessaging.getInstance().subscribeToTopic(viewModel.getEvent())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Subscribed to topic successfully");
@@ -321,6 +317,7 @@ public class AttendeeQRFragment extends Fragment {
                     } else {
                         Log.e(TAG, "Failed to subscribe to topic: " + task.getException().getMessage());
                         Toast.makeText(getContext(), "Subscription Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
