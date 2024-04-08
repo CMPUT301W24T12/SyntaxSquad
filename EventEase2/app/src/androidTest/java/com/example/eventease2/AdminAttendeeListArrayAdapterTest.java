@@ -73,7 +73,6 @@ public class AdminAttendeeListArrayAdapterTest {
 
         @Override
         protected void onLayout(boolean changed, int l, int t, int r, int b) {
-            // No implementation needed for testing purposes
         }
     }
 }

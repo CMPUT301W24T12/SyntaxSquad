@@ -42,7 +42,17 @@ public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
     private String email;
     private String phone;
     private Context context;
-
+    /**
+     * Constructor for AdminAttendeeListArrayAdapter.
+     * @param context The context in which the adapter will be used.
+     * @param attendeeIDs The list of attendee IDs.
+     * @param attendeeNames The list of attendee names.
+     * @param eventID The ID of the event.
+     * @param organizerID The ID of the organizer.
+     * @param profile_pic The profile picture of the attendee.
+     * @param email The email of the attendee.
+     * @param phone The phone number of the attendee.
+     */
     public AdminAttendeeListArrayAdapter(Context context, ArrayList<String> attendeeIDs, ArrayList<String> attendeeNames, String eventID, String organizerID, String profile_pic, String email, String phone) {
         super(context, 0, attendeeIDs);
         this.attendeeIDs = attendeeIDs;
@@ -54,7 +64,13 @@ public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
         this.email = email;
         this.phone = phone;
     }
-
+    /**
+     * Get a View that displays the data at the specified position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent The parent that this view will eventually be attached to.
+     * @return A View corresponding to the data at the specified position.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -133,9 +149,7 @@ public class AdminAttendeeListArrayAdapter extends ArrayAdapter<String> {
                 context.startActivity(intent);
                 ((Activity) context).finish();
             }
-
         });
-
         return view;
     }
 }

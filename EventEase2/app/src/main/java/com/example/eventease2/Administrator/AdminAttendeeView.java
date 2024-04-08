@@ -51,16 +51,22 @@ public class AdminAttendeeView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.organizer_attendee_list);
+        setContentView(R.layout.activity_admin_attendee_view);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String eventID = getIntent().getStringExtra("ID");
         String organizerID = getIntent().getStringExtra("OrganizerID");
+        if (eventID == null || organizerID == null) {
+            Log.e("AdminAttendeeView", "EventID or OrganizerID is null");
+            // Handle the error or finish the activity
+            finish();
+            return;
+        }
         String profile_pic = getIntent().getStringExtra("ProfilePicture");
         String email = getIntent().getStringExtra("Email");
         String phone = getIntent().getStringExtra("Phone");
 
-        attendeeList = findViewById(R.id.organizer_attendee_list);
+        attendeeList = findViewById(R.id.listView);
 
         CollectionReference attendeeRef = db.collection("Organizer").document(organizerID).collection("Events").document(eventID).collection("Attendees");
         ArrayList<String> attendeeIDs = new ArrayList<>();                                                                                                                           //replace with event ID
