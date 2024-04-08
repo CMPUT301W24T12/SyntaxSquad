@@ -63,7 +63,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
     Bundle extras;
     StorageReference pathReference;
     boolean sent = false;
-    boolean entered;
+    boolean noMax = false;
     FirebaseStorage storageRef;
 
     public static AppData appData;
@@ -128,8 +128,12 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                         eventTitle.setText((CharSequence) document.get("Name"));
                         eventDescription.setText((CharSequence) document.get("Description"));
                         eventDetails.setText((CharSequence) document.get("EventBody"));
-                        String max = Objects.requireNonNull(document.get("Max")).toString();
-                        maxInt = Integer.parseInt(max);
+                        if(document.get("Max") == null){
+                            noMax = true;
+                        }else{
+                            maxInt = Integer.parseInt(String.valueOf(document.get("Max")));
+                        }
+
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -146,7 +150,6 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         promiseToGoSwitch.setChecked(true);
-                        maxInt++;
                         sent = true;
                     } else {
                         sent = false;
@@ -166,13 +169,13 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                     // Count fetched successfully
                     AggregateQuerySnapshot snapshot = task.getResult();
                     Log.d(TAG, "Count: " + snapshot.getCount());
-                    entries = String.valueOf(maxInt - snapshot.getCount());
-                    //found some errors when retrieving getCount. Getting the count twice seems to
-                    //fix most of the problems.
-                    if (Integer.parseInt(entries) < 0){
-                        entries = String.valueOf(maxInt - snapshot.getCount());
-                        entriesTextView.setText(entries);
+                    entries = String.valueOf(snapshot.getCount());
+                    if (noMax){
+                        entriesTextView.setText("No Limit");
+                    }else if (maxInt - Integer.parseInt(entries) < 0){
+                            entriesTextView.setText("0");
                     }else{
+                        entries = String.valueOf(maxInt - Integer.parseInt(entries));
                         entriesTextView.setText(entries);
                     }
                 } else {
@@ -196,7 +199,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                                     // Count fetched successfully
                                     AggregateQuerySnapshot snapshot = task.getResult();
                                     Log.d(TAG, "Count: " + snapshot.getCount());
-                                    if(maxInt > snapshot.getCount()){
+                                    if(maxInt > snapshot.getCount() || noMax){
                                         addAttendeeData();
                                         promisedEvent = new Event(eventPhoto,eventTitle.toString(),
                                                 eventDescription.toString(),null,

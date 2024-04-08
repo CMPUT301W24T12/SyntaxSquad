@@ -185,6 +185,7 @@ public class AttendeeQRFragment extends Fragment{
                             maxAttendees = Integer.parseInt(document.get("Max").toString());
                         }
                     } else {
+                        maxAttendees = -10;
                         Log.d(TAG, "No such document");
                     }
                 } else {
@@ -207,7 +208,16 @@ public class AttendeeQRFragment extends Fragment{
                 }
             }
         });
-        if(currentAttendees < maxAttendees){
+        if(maxAttendees == -10){
+            HashMap<String,String> data = new HashMap<>();
+            data.put("Name", viewModel.getProfileName());
+            data.put("Email", viewModel.getProfileEmail());
+            data.put("Phone", viewModel.getProfilePhone());
+            viewModel.setCheckIN(viewModel.getCheckIN()+1);
+            data.put("Number of Check ins:",String.valueOf(viewModel.getCheckIN()));
+            attendeeCollect.document(viewModel.getAttendeeID()).set(data);
+            Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
+        }else if(currentAttendees < maxAttendees){
             HashMap<String,String> data = new HashMap<>();
             data.put("Name", viewModel.getProfileName());
             data.put("Email", viewModel.getProfileEmail());

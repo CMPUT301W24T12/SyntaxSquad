@@ -87,6 +87,7 @@ public class AttendeeEventFragment extends Fragment {
         clearEventData();
         FirebaseFirestore appDb = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = appDb.collection("Organizer");
+        collectionRef.orderBy("OrganizerID");
         fetchOrganizers(collectionRef, appDb);
     }
     private void clearEventData() {
@@ -104,6 +105,7 @@ public class AttendeeEventFragment extends Fragment {
                 for (QueryDocumentSnapshot organizerSnapshot : queryDocumentSnapshots) {
                     String organizerId = organizerSnapshot.getId();
                     CollectionReference eventsCollectionRef = appDb.collection("Organizer").document(organizerId).collection("Events");
+                    eventsCollectionRef.orderBy("Name");
                     fetchEventsForOrganizer(eventsCollectionRef);
                 }
             }
@@ -129,14 +131,12 @@ public class AttendeeEventFragment extends Fragment {
                     }else {
                         maxAttendees ="0";
                     }
-
                     organizerList.add(eventSnapshot.getReference().getParent().getParent().getId());
                     eventNameList.add(name);
                     eventInfoList.add(description);
                     eventIDs.add(eventId);
                     maxAttendeeList.add(maxAttendees);
                 }
-
                 attendeeAppData = new AttendeeAppData();
                 attendeeAppData.setOrganizerList(organizerList);
                 attendeeAppData.setEventNameList(eventNameList);
