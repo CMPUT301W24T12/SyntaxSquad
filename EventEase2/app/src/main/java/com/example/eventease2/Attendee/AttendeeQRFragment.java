@@ -242,7 +242,7 @@ public class AttendeeQRFragment extends Fragment {
                         data.put("Number of Check ins:", String.valueOf(viewModel.getCheckIN()));
                         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
                         Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
-                        checkedIn = true;
+                        firebaseMessaging();
                         noLimit = false;
                     } else if (currentAttendees < maxAttendees) {
                         HashMap<String, String> data = new HashMap<>();
@@ -252,7 +252,7 @@ public class AttendeeQRFragment extends Fragment {
                         viewModel.setCheckIN(viewModel.getCheckIN() + 1);
                         data.put("Number of Check ins:", String.valueOf(viewModel.getCheckIN()));
                         attendeeCollect.document(viewModel.getAttendeeID()).set(data);
-                        checkedIn = true;
+                        firebaseMessaging();
                         Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "All Spots Taken!", Toast.LENGTH_SHORT).show();
@@ -266,22 +266,6 @@ public class AttendeeQRFragment extends Fragment {
 
         });
         Toast.makeText(getContext(), "Checked In = "+checkedIn, Toast.LENGTH_SHORT).show();
-        if (checkedIn) {
-            Log.d("Notification Event", String.valueOf(event));
-            Toast.makeText(getContext(), "Check in Failed", Toast.LENGTH_SHORT).show();
-            FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Subscribed to topic successfully");
-                            Toast.makeText(getContext(), "Subscription Passed", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.e(TAG, "Failed to subscribe to topic: " + task.getException().getMessage());
-                            Toast.makeText(getContext(), "Subscription Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-
-
     }
 
     /**
@@ -323,6 +307,22 @@ public class AttendeeQRFragment extends Fragment {
                 }
             });
         }
+    }
+
+    public void firebaseMessaging(){
+        Log.d("Notification Event", String.valueOf(event));
+        Toast.makeText(getContext(), "Event: "+ event, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Check in Failed", Toast.LENGTH_SHORT).show();
+        FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Subscribed to topic successfully");
+                        Toast.makeText(getContext(), "Subscription Passed", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e(TAG, "Failed to subscribe to topic: " + task.getException().getMessage());
+                        Toast.makeText(getContext(), "Subscription Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 
