@@ -15,11 +15,12 @@
         android:text="EVENTEASE"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="34sp"
         android:textStyle="bold"
+        android:translationY="-5dp"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
@@ -215,6 +216,22 @@
         app:layout_constraintStart_toEndOf="@+id/attendeeProfileImage"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.885" />
+
+    <TextView
+        android:id="@+id/home_profile"
+        android:layout_width="73dp"
+        android:layout_height="44dp"
+        android:gravity="center"
+        android:text="Home"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:translationY="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/attendeeProfileImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.666" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

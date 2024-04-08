@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="eventEase">#6500B6AA</color>
     <color name="green">#00B6AA</color>
+    <color name="selected_tint_color">#36006760</color> <!-- Example selected tint color -->
+    <color name="pressed_tint_color">#00B5A9</color> <!-- Example pressed tint color -->
 </resources>
