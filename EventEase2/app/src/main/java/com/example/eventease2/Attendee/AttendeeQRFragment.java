@@ -39,8 +39,17 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * QR fragment is the responsible for showing the button that allows users
- * to scan a QR code after pressing a button.
+ * The AttendeeQRFragment class is responsible for managing the QR code scanning functionality
+ * for attendees. It allows users to scan a QR code to check-in to an event and provides
+ * relevant event details upon successful scanning.
+ * <p>
+ * The class handles the initiation of the QR code scanner, processing scanned data,
+ * and sending relevant information to the ViewModel for Firebase interaction. It also
+ * manages Firebase connections for retrieving event details and attendee check-in operations.
+ * <p>
+ * Additionally, it subscribes the attendee to event-specific topics for receiving notifications
+ * related to the subscribed event.
+ *
  * @author Sean
  */
 public class AttendeeQRFragment extends Fragment{
@@ -162,6 +171,9 @@ public class AttendeeQRFragment extends Fragment{
 
     }
 
+    /**
+     * Navigates the user to the AttendeeEventDetailsActivity to view event details and promotions.
+     */
     private void sendToPromotion() {
         Intent intent = new Intent(AttendeeQRFragment.this.getActivity(), AttendeeEventDetailsActivity.class);
         intent.putExtra("ID", viewModel.getEvent());
@@ -266,7 +278,7 @@ public class AttendeeQRFragment extends Fragment{
 
     }
     /**
-     * Firebase connecting function.
+     * Establishes Firebase connections and retrieves event details for the attendee's current event.
      */
     public void firebase(){
         if(!Objects.equals(viewModel.getEvent(), "")){

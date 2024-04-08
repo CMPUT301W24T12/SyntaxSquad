@@ -58,7 +58,26 @@ import android.Manifest;
 
 
 /**
- * This fragments shows the user the empty profile unless saved changes were updated.
+ * A fragment that displays and manages the attendee's profile information.
+ * <p>
+ * This fragment allows attendees to view and edit their profile details such as name, phone number,
+ * email, and bio. Attendees can also upload or delete their profile picture.
+ * <p>
+ * Additionally, attendees can enable geolocation tracking to share their current coordinates with
+ * event organizers, if enabled by the organizer.
+ * <p>
+ * Dependencies:
+ * <p>
+ * This fragment relies on Firebase Firestore for storing attendee data and Firebase Storage for
+ * storing profile pictures. It also uses Picasso for image loading and Glide for image uploading.
+ * <p>
+ * Note: This fragment assumes that the attendee's profile picture is stored in Firebase Storage
+ * under a folder named "profilepics" with the attendee's ID as the filename.
+ * <p>
+ * Permissions:
+ * <p>
+ * This fragment requests location permission to enable geolocation tracking. Users need to grant
+ * location permission for this feature to work properly. However, this was not fully implemented.
  */
 public class AttendeeProfileFragment extends Fragment {
 
@@ -70,7 +89,7 @@ public class AttendeeProfileFragment extends Fragment {
     private String event,organizer;
     private AttendeeItemViewModel viewModel;
     private CollectionReference attendeeCollect;
-    private CheckBox checkBox;
+    private CheckBox checkBox;;
     FirebaseStorage storage;
     StorageReference storageRef,profileRef,pathReference;
     String eventID;
@@ -179,8 +198,10 @@ public class AttendeeProfileFragment extends Fragment {
         }
     }
     /**
-     * This function creates a hashmap, and then stores the name, email, and phone to the firebase
-     * Still need functionality of storing their photos to the database.
+     * Adds attendee data to the Firebase Firestore database.
+     * <p>
+     * This method creates a HashMap containing the attendee's name, email, and phone number,
+     * and then stores this data in the Firestore database under the "Attendees" collection.
      */
     public void addAttendeeData(){
         HashMap<String,String> data = new HashMap<>();
@@ -209,8 +230,11 @@ public class AttendeeProfileFragment extends Fragment {
         }
     }
     /**
-     * When called, set the current text of the edit text field and image to the viewModel for
-     * later use.
+     * Sets the data entered by the attendee into the ViewModel for later use.
+     * <p>
+     * This method retrieves the text entered into EditText fields and the selected image
+     * (if any) from the ImageButton, and sets this data into the ViewModel, ensuring that
+     * changes made by the user are stored for later use.
      */
     public void setModelItems(){
         viewModel.setProfileName(attendeeNameText.getText().toString());
@@ -246,8 +270,11 @@ public class AttendeeProfileFragment extends Fragment {
 
     }
     /**
-     * Set the text that was saved on the viewModel when users switch back and forth from their
-     * profile to other fragments.
+     * Retrieves and sets the attendee's profile information from the ViewModel.
+     * <p>
+     * This method sets the text of EditText fields and the image of the ImageButton
+     * to match the data stored in the ViewModel, ensuring consistency with the displayed
+     * profile information.
      */
     public void setTextFromModel(){
         attendeeNameText.setText(viewModel.getProfileName());
@@ -262,7 +289,10 @@ public class AttendeeProfileFragment extends Fragment {
 
     }
     /**
-     * Firebase implementation necessary for communicating with the database.
+     * Initializes Firebase components necessary for communication with the database.
+     * <p>
+     * This method initializes the FirebaseFirestore instance and sets up the CollectionReference
+     * for storing attendee data under the appropriate organizer and event.
      */
     public void firebase(){
         if(!Objects.equals(event, "")){
@@ -275,7 +305,12 @@ public class AttendeeProfileFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Retrieves the attendee's profile image from Firebase Storage.
+     * <p>
+     * This method retrieves the profile picture stored in Firebase Storage and sets it
+     * as the image for the ImageButton in the fragment's layout.
+     */
     public void getFirebaseProfileImage(){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -296,7 +331,11 @@ public class AttendeeProfileFragment extends Fragment {
             });
     }
     /**
-     * Requests location permission.
+     * Requests permission for accessing the device's location.
+     * <p>
+     * This method requests the ACCESS_FINE_LOCATION permission from the user to enable
+     * geolocation tracking. If the permission is granted, location updates are started.
+     * However, geolocation was not fully implemented.
      */
     private void requestLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -309,11 +348,17 @@ public class AttendeeProfileFragment extends Fragment {
             }
         }
     }
-
-
-
     /**
-     * Handles permission request result.
+     * Handles the result of the location permission request.
+     * <p>
+     * This method is called when the user responds to the location permission request.
+     * If the permission is granted, location updates are started; otherwise, a message
+     * is displayed indicating that location permission was denied.
+     * However, geolocation was not fully implemented.
+     *
+     * @param requestCode  The code originally supplied to requestPermissions().
+     * @param permissions  The requested permissions.
+     * @param grantResults The grant results for the corresponding permissions.
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -328,7 +373,12 @@ public class AttendeeProfileFragment extends Fragment {
     }
 
     /**
-     * Starts location updates.
+     * Starts location updates if location permission is granted.
+     * <p>
+     * This method requests location updates from the LocationManager if the ACCESS_FINE_LOCATION
+     * permission is granted by the user. Location updates provide the current coordinates of
+     * the device, which can be shared with event organizers if geolocation tracking is enabled.
+     * However, geolocation was not fully implemented.
      */
     private void requestLocationUpdates() {
         if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -360,6 +410,10 @@ public class AttendeeProfileFragment extends Fragment {
 
     /**
      * Stops location updates.
+     * <p>
+     * This method removes location updates previously requested from the LocationManager.
+     * It is called when geolocation tracking is disabled or when the fragment is destroyed.
+     * However, geolocation was not fully implemented.
      */
     private void stopLocationUpdates() {
         if (locationManager != null) {

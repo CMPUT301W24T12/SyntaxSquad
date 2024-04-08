@@ -39,9 +39,15 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * Shows the user a default event if the QR scanner hasn't been scanned and shows the scanned event
- * if the scan was successful
+ * A fragment that displays events for attendees.
+ * If the QR scanner hasn't been scanned, it shows a default event;
+ * if the scan was successful, it displays the scanned event.
+ * <p>
+ * This fragment retrieves event data from Firebase Firestore and populates a ListView
+ * with the details of the events.
+ *
  * @author Sean
+ * @version 1.0
  */
 public class AttendeeEventFragment extends Fragment {
     private String eventID;

@@ -49,7 +49,44 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Objects;
-
+/**
+ * An activity that displays details of an event for attendees and allows them to indicate
+ * their intention to attend the event.
+ * <p>
+ * This activity retrieves event details from Firebase Firestore and displays them along with
+ * an image representing the event. Attendees can toggle a switch to indicate their intention
+ * to attend the event. If the event has a maximum attendee limit, the activity checks the
+ * current number of attendees to ensure the limit is not exceeded before allowing attendance
+ * confirmation.
+ * <p>
+ * Additionally, attendees can remove their attendance confirmation if they change their minds.
+ * The activity updates the attendee count accordingly when attendance status changes.
+ * <p>
+ * The activity also handles UI elements like back navigation and ensures proper padding to
+ * accommodate system bars.
+ * <p>
+ * Usage:
+ * <p>
+ * To use this activity, you need to pass necessary data through intent extras:
+ * - "OrganizerID": The ID of the event organizer.
+ * - "ID": The ID of the event.
+ * - "AttendeeID": The ID of the attendee.
+ * - "AttendeeName": The name of the attendee.
+ * - "AttendeeEmail": The email of the attendee.
+ * - "AttendeePhone": The phone number of the attendee.
+ * <p>
+ * The activity retrieves event details and attendee information based on the provided IDs.
+ * Attendees can then toggle their attendance status using a switch.
+ * <p>
+ * Note: This activity assumes that the event photo is stored in Firebase Storage under
+ * a folder named "images" with the event ID as the filename.
+ * <p>
+ * Dependencies:
+ * <p>
+ * This activity relies on Firebase Firestore to retrieve event and attendee information,
+ * as well as Firebase Storage to fetch event photos.
+ * <p>
+ */
 public class AttendeeEventDetailsActivity extends AppCompatActivity {
     FirebaseFirestore appDb = FirebaseFirestore.getInstance();
     TextView eventTitle;

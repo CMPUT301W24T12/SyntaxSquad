@@ -29,9 +29,23 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Objects;
 /**
- * This activity holds the bottom navigation code, the functionality for replacing the fragments
- * based off what the user chooses, as well as provide the user with a unique ID
- * @author Sean
+ * This activity serves as the entry point for the Attendee app, managing bottom navigation,
+ * fragment transactions, and the creation of unique attendee IDs.
+ * <p>
+ * The activity allows users to switch between fragments: QR Scanner, Event Details, and Profile.
+ * It also generates a unique attendee ID when the app starts, manages fragment transactions,
+ * and saves attendee information to a file when the activity is destroyed.
+ * </p>
+ * <p>
+ * The AttendeeStartActivity uses {@link AttendeeItemViewModel} to manage attendee data and
+ * {@link ActivityAttendeeStartBinding} for view binding.
+ * </p>
+ * <p>
+ * This class utilizes {@link FirebaseStorage} to store attendee information.
+ * </p>
+ * <p>
+ * Author: Sean
+ * </p>
  */
 public class AttendeeStartActivity extends AppCompatActivity{
 
@@ -42,7 +56,17 @@ public class AttendeeStartActivity extends AppCompatActivity{
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int ID_LENGTH = 15;
     FirebaseStorage storage = FirebaseStorage.getInstance();
-
+    /**
+     * When the activity is created, initializes the view binding, sets up bottom navigation,
+     * generates a unique attendee ID, and loads attendee information from a file.
+     * <p>
+     * The bottom navigation allows users to switch between fragments: QR Scanner, Event Details,
+     * and Profile. It also listens for navigation item selections and replaces fragments accordingly.
+     * </p>
+     * <p>
+     * This method uses {@link AttendeeItemViewModel} to manage attendee data.
+     * </p>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +104,12 @@ public class AttendeeStartActivity extends AppCompatActivity{
         });
     }
     /**
-     * When a user clicks on the a different fragment, it replaces the fragment with the
-     * desired fragment
-     * @param fragment
-     * Desired fragment that the user wants to navigate to.
+     /**
+     * Replaces the current fragment with the specified fragment.
+     * <p>
+     * This method is used to navigate between fragments within the activity.
+     * </p>
+     * @param fragment The fragment to replace the current fragment with.
      */
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -92,9 +118,13 @@ public class AttendeeStartActivity extends AppCompatActivity{
         fragmentTransaction.commit();
     }
     /**
-     * When a user starts the app, a attendee ID is created
+     * Generates a random attendee ID.
+     * <p>
+     * This method generates a random string of alphanumeric characters to serve as
+     * the unique attendee ID.
+     * </p>
+     * @return A randomly generated attendee ID.
      */
-
     public  String generateRandomID() {
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder(ID_LENGTH);
@@ -114,7 +144,12 @@ public class AttendeeStartActivity extends AppCompatActivity{
             }
         }
     }
-
+    /**
+     * Saves attendee information to a file when the activity is destroyed.
+     * <p>
+     * This method saves attendee ID, name, phone, email, and bio to a text file.
+     * </p>
+     */
     @Override
     protected void onDestroy() {
         File path = getApplicationContext().getFilesDir();
@@ -137,6 +172,12 @@ public class AttendeeStartActivity extends AppCompatActivity{
         }
         super.onDestroy();
     }
+    /**
+     * Loads attendee information from a file.
+     * <p>
+     * This method reads attendee information from a text file and sets it in the ViewModel.
+     * </p>
+     */
     public void loadContent() {
         File path = getApplicationContext().getFilesDir();
         File readFrom = new File(path,"AttendeeInfo.txt");
