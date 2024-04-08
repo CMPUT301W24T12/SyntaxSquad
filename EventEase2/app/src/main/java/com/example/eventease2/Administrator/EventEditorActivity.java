@@ -41,220 +41,179 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
-
+/**
+ * EventEditorActivity is an activity class responsible for editing and managing event details by the administrator.
+ * This class allows the administrator to view, edit, and delete event information, including title, description, and image.
+ * It communicates with Firestore for fetching event details and Firebase Storage for managing event images.
+ */
 public class EventEditorActivity extends AppCompatActivity {
-    FirebaseFirestore appDb = FirebaseFirestore.getInstance();
 
+    private FirebaseFirestore appDb;
+    private FirebaseStorage storage;
 
-    TextView eventDesciption;
-    TextView eventTitle;
-    Button deleteEvent;
-    TextView backInstruct;
-    String eventID;
-    String organizerID;
-    String posOfEvent;
-    ImageView eventPic;
-    DocumentReference eventInfoDoc;
-    TextView getBackInstruct;
-    ImageView eventImg;
-    FirebaseStorage storage;
-    Button removeImg;
+    private TextView eventDesciption;
+    private TextView eventTitle;
+    private Button deleteEvent;
+    private TextView backInstruct;
+    private ImageView eventPic;
+    private TextView getBackInstruct;
+    private ImageView eventImg;
+    private Button removeImg;
 
-
-    public static AppData appData;
-
-
-
-
-
+    private String eventID;
+    private String organizerID;
+    private String posOfEvent;
+    private DocumentReference eventInfoDoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_event_editor);
-        appData = new AppData();
+        initializeViews();
+        appDb = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
+        EdgeToEdge.enable(this);
+        setWindowInsetsListener();
+        extractIntentData();
+        loadImageFromStorage();
+        setEventHandlers();
+        loadEventDataFromFirestore();
+    }
+
+    /**
+     * Initializes views by finding them in the layout XML.
+     */
+    private void initializeViews() {
         eventDesciption = findViewById(R.id.event_detail);
         eventTitle = findViewById(R.id.event_title);
         deleteEvent = findViewById(R.id.event_remove_profile_button);
         backInstruct = findViewById(R.id.events_back_button);
-        eventImg = findViewById(R.id.event_editable_photo);
         eventPic = findViewById(R.id.event_editable_photo);
         getBackInstruct = findViewById(R.id.events_back_button);
+        eventImg = findViewById(R.id.event_editable_photo);
         removeImg = findViewById(R.id.event_remove_photo_button);
+    }
 
-
+    /**
+     * Sets a listener to handle window insets for the main layout.
+     */
+    private void setWindowInsetsListener() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
 
-
-        // Retrieve data from intent extras
+    /**
+     * Extracts intent data passed to this activity.
+     */
+    private void extractIntentData() {
         eventID = getIntent().getStringExtra("ID");
         organizerID = getIntent().getStringExtra("OrganizerID");
         posOfEvent = getIntent().getStringExtra("posOfEvent");
+    }
 
-
-        // Get the StorageReference of the image using its ID
+    /**
+     * Loads the event image from Firebase Storage.
+     */
+    private void loadImageFromStorage() {
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child("images/" + eventID);
+        imageRef.getBytes(Long.MAX_VALUE).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                byte[] bytes = task.getResult();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                eventPic.setImageBitmap(bitmap);
+            } else {
+                Log.e("EventEditorActivity", "Error downloading image: " + task.getException());
+            }
+        });
+    }
 
+    /**
+     * Sets event handlers for buttons and views.
+     */
+    private void setEventHandlers() {
+        deleteEvent.setOnClickListener(v -> deleteEvent());
+        getBackInstruct.setOnClickListener(v -> finish());
+        backInstruct.setOnClickListener(v -> finish());
+        removeImg.setOnClickListener(v -> removeImage());
+    }
 
+    /**
+     * Deletes the event from Firestore database.
+     */
+    private void deleteEvent() {
+        if (posOfEvent != null) {
+            eventInfoDoc.delete()
+                    .addOnSuccessListener(aVoid -> {
+                        // Deleting event from appData
+                        AppData appData = new AppData();
+                        appData.deleteEventID(Integer.parseInt(posOfEvent));
+                        appData.deleteEventInfo(Integer.parseInt(posOfEvent));
+                        appData.deleteOrganizer(Integer.parseInt(posOfEvent));
+                        appData.deleteEventName(Integer.parseInt(posOfEvent));
+                        appData.deleteParticipantCount(Integer.parseInt(posOfEvent));
+                        Intent intent = new Intent(this, AppEventsActivity.class);
+                        startActivity(intent);
+                    })
+                    .addOnFailureListener(e -> Log.w("TAG", "Error deleting document", e));
+        } else {
+            Toast.makeText(this, "Can't have a null position!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Loads event data from Firestore database.
+     */
+    private void loadEventDataFromFirestore() {
         eventInfoDoc = appDb.collection("Organizer").document(organizerID).collection("Events").document(eventID);
-
-
-        deleteEvent.setOnClickListener(v -> {
-            // Delete the event document
-            if (posOfEvent != null){
-                eventInfoDoc.delete()
-                        .addOnSuccessListener(aVoid -> {
-                            appData.deleteEventID(Integer.parseInt(posOfEvent));
-                            appData.deleteEventInfo(Integer.parseInt(posOfEvent));
-                            appData.deleteOrganizer(Integer.parseInt(posOfEvent));
-                            appData.deleteEventName(Integer.parseInt(posOfEvent));
-                            appData.deleteParticipantCount(Integer.parseInt(posOfEvent));
-                            Intent intent = new Intent(this, AppEventsActivity.class);
-                            this.startActivity(intent);
-                        })
-                        .addOnFailureListener(e -> Log.w("TAG", "Error deleting document", e));
-            }
-            else{
-                Toast.makeText(this, "Can't have a null position!", Toast.LENGTH_SHORT).show();
-            }}
-        );
-
-
-        getBackInstruct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-
-
-
-        // Download the image data
-        imageRef.getBytes(Long.MAX_VALUE).addOnCompleteListener(new OnCompleteListener<byte[]>() {
-            @Override
-            public void onComplete(@NonNull Task<byte[]> task) {
-                if (task.isSuccessful()) {
-                    // Convert the byte array to a Bitmap
-                    byte[] bytes = task.getResult();
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-
-                    // Set the Bitmap to the ImageView
-                    eventPic.setImageBitmap(bitmap);
-                } else {
-                    // Handle any errors that occurred while downloading the image
-                    Log.e("EventEditorActivity", "Error downloading image: " + task.getException());
-                }
-            }
-        });
-
-
-        backInstruct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-
-        // Retrieve the document
-        eventInfoDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        // Document found, extract the fields
-                        String description = document.getString("Description");
-                        String eventBody = document.getString("EventBody");
-                        String name = document.getString("Name");
-
-
-                        // Do something with the extracted information
-                        if (description != null && eventBody != null && name != null) {
-                            eventDesciption.setText(eventBody);
-                            eventTitle.setText(name);
-
-
-                        } else {
-                            // Handle the case if any of the fields are null
-                            Log.d("Description", "Description, EventBody, or Name is null");
-                        }
+        eventInfoDoc.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    String description = document.getString("Description");
+                    String eventBody = document.getString("EventBody");
+                    String name = document.getString("Name");
+                    if (description != null && eventBody != null && name != null) {
+                        eventDesciption.setText(description);
+                        eventTitle.setText(name);
                     } else {
-                        // Document does not exist
-                        Log.d("Description", "Document does not exist");
+                        Log.d("Description", "Description, EventBody, or Name is null");
                     }
                 } else {
-                    // Error occurred while retrieving document
-                    Log.d("Description", "Error getting document: " + task.getException());
+                    Log.d("Description", "Document does not exist");
                 }
+            } else {
+                Log.d("Description", "Error getting document: " + task.getException());
             }
         });
-
-
-
-
-        removeImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get the StorageReference of the image using its ID
-                StorageReference storageRef = storage.getReference();
-                StorageReference imageRef = storageRef.child("images/" + eventID);
-
-
-                // Delete the existing image from Firebase Storage
-                imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Image deleted successfully, now upload the default image to Firebase Storage
-                        StorageReference defaultImageRef = storageRef.child("images/" + eventID);
-                        Bitmap defaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_event);
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        defaultBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        byte[] data = baos.toByteArray();
-
-
-                        defaultImageRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // Default image uploaded successfully, set the ImageView to display the default image
-                                eventPic.setImageResource(R.drawable.default_event);
-                                Toast.makeText(EventEditorActivity.this, "Image removed successfully", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Handle any errors that occurred while uploading the default image
-                                Log.e("EventEditorActivity", "Error uploading default image: " + e.getMessage());
-                                Toast.makeText(EventEditorActivity.this, "Failed to remove image", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Handle any errors that occurred while deleting the image
-                        Log.e("EventEditorActivity", "Error deleting image: " + e.getMessage());
-                        Toast.makeText(EventEditorActivity.this, "Failed to remove image", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-
-
-
-
     }
 
 
-
-
+    /**
+     * Removes the event image from Firebase Storage.
+     */
+    private void removeImage() {
+        StorageReference storageRef = storage.getReference();
+        StorageReference imageRef = storageRef.child("images/" + eventID);
+        imageRef.delete().addOnSuccessListener(aVoid -> {
+            StorageReference defaultImageRef = storageRef.child("images/" + eventID);
+            Bitmap defaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_event);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            defaultBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            defaultImageRef.putBytes(data).addOnSuccessListener(taskSnapshot -> {
+                eventPic.setImageResource(R.drawable.default_event);
+                Toast.makeText(EventEditorActivity.this, "Image removed successfully", Toast.LENGTH_SHORT).show();
+            }).addOnFailureListener(e -> {
+                Log.e("EventEditorActivity", "Error uploading default image: " + e.getMessage());
+                Toast.makeText(EventEditorActivity.this, "Failed to remove image", Toast.LENGTH_SHORT).show();
+            });
+        }).addOnFailureListener(e -> {
+            Log.e("EventEditorActivity", "Error deleting image: " + e.getMessage());
+            Toast.makeText(EventEditorActivity.this, "Failed to remove image", Toast.LENGTH_SHORT).show();
+        });
+    }
 }
