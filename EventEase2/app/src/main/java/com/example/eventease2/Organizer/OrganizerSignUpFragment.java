@@ -23,7 +23,17 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-
+/**
+ * This class represents the fragment used by organizers to view and manage attendee sign-ups
+ * for a specific event. It retrieves attendee information from Firebase Firestore and displays
+ * it in a list view. Organizers can view attendee details and navigate to individual attendee
+ * profiles.
+ * <p>
+ * The {@link #onCreate(Bundle)} method initializes the fragment, retrieves attendee data from
+ * Firestore, and populates the list view with attendee information. It sets click listeners
+ * for each attendee item to navigate to the attendee profile fragment.
+ * </p>
+ */
 public class OrganizerSignUpFragment extends AppCompatActivity {
 
     ListView attendeeList;

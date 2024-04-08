@@ -17,13 +17,34 @@ import java.util.UUID;
 
 
 /**
- * Created by yovi.putra
- * Copyright 2020 M. Fadli Zein
+ * Utility class for retrieving device information such as ICCID, IMSI, and IMEI.
+ * <p>
+ * This class provides methods to retrieve unique identifiers associated with the device's SIM card
+ * (such as ICCID), the device itself (such as IMEI), and a combination of the device's Android ID
+ * and ICCID (such as IMSI). It also handles permission checks and compatibility issues with
+ * different Android SDK versions.
+ * </p>
+ * <p>
+ * Note: Some methods in this class require the 'READ_PHONE_STATE' permission in the application's manifest.
+ * </p>
+ *
+ * @author yovi.putra
+ * @version 1.0
+ * @since 2020
  */
-
 @SuppressLint({"HardwareIds","MissingPermission"})
 public class DeviceInfoUtils {
-    // ICCID (Integrated Circuit Card Identifier)
+    /**
+     * Retrieves the ICCID (Integrated Circuit Card Identifier) of the device's SIM card.
+     * <p>
+     * This method returns the ICCID of the SIM card inserted in the device. For devices with
+     * dual SIM support (Android SDK >= Lollipop MR1), it retrieves ICCIDs of all active SIM cards
+     * and concatenates them. For devices with SDK < Lollipop MR1, it retrieves the SIM serial number.
+     * </p>
+     *
+     * @param context The context of the application.
+     * @return A string representing the ICCID of the device's SIM card(s), or null if unavailable.
+     */
     public static String getICCID(Context context) {
         if (isPermissionGranted(context)) {
             if (isICCIDGranted()) {
@@ -43,17 +64,30 @@ public class DeviceInfoUtils {
         }
         return null;
     }
-
-
-    // IMSI (International Mobile Subscriber Identity)
+    /**
+     * Generates the IMSI (International Mobile Subscriber Identity) using the ICCID and Android ID.
+     * <p>
+     * This method generates a unique identifier for the device using the ICCID and Android ID.
+     * </p>
+     *
+     * @param context The context of the application.
+     * @return A string representing the IMSI of the device.
+     */
     public static String getIMSI(Context context) {
         String iccid = getICCID(context);
         iccid = iccid == null ? "" : iccid;
         return new UUID(getAndroidId(context).hashCode(), iccid.hashCode()).toString();
     }
-
-
-    // IMEI (International Mobile Equipment Identity)
+    /**
+     * Generates a pseudo-IMEI (International Mobile Equipment Identity) based on device attributes.
+     * <p>
+     * This method generates a pseudo-IMEI by combining various device attributes such as board,
+     * brand, device, etc., and hashing them with the Android ID.
+     * </p>
+     *
+     * @param context The context of the application.
+     * @return A string representing the pseudo-IMEI of the device.
+     */
     public static String getIMEI(Context context) {
         return generateIMEI(context);
     }

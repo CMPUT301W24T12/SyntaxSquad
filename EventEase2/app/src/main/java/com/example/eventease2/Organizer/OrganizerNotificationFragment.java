@@ -35,7 +35,25 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
+/**
+ * This class represents the fragment used by organizers to send notifications to attendees
+ * of a specific event. It allows organizers to compose and send notifications, with the
+ * option to specify a title and description for the notification. Notifications are sent
+ * to a topic corresponding to the event, allowing all attendees of the event to receive
+ * the notification.
+ * <p>
+ * The {@link #sendNotification(String, String, String)} method sends the notification to
+ * the Firebase Cloud Messaging (FCM) server using the provided title, description, and
+ * event ID. It constructs a JSON object containing the notification details and sends
+ * a POST request to the FCM server.
+ * </p>
+ * <p>
+ * The {@link #updateTopic(String)} method updates the topic variable in a Postman collection
+ * corresponding to the event ID. This method is used to dynamically update the event ID
+ * in a Postman collection, allowing organizers to manage notification subscriptions for
+ * different events.
+ * </p>
+ */
 public class OrganizerNotificationFragment extends AppCompatActivity {
 
     private String token;

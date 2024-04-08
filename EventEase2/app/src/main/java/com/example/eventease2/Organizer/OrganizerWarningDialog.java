@@ -14,7 +14,25 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.eventease2.R;
-
+/**
+ * This dialog fragment is used by organizers to choose whether to use an existing QR code or generate a new one
+ * when adding an event. It provides options to select an existing QR code or generate a new QR code.
+ * <p>
+ * The {@link #onAttach(Context)} method attaches the QRCodeTypeChangeListener to the context to communicate
+ * with the activity hosting the fragment.
+ * </p>
+ * <p>
+ * The {@link #onCreateDialog(Bundle)} method creates the dialog with two buttons: one for selecting an existing QR code
+ * and another for generating a new QR code. It handles the button clicks and communicates the selected QR code type
+ * to the hosting activity via the QRCodeTypeChangeListener.
+ * </p>
+ * <p>
+ * The {@link #updateORCodeType(String)} method updates the QR code type based on the user's selection.
+ * </p>
+ * <p>
+ * The {@link #intentToReuseQR()} method initiates the intent to reuse an existing QR code.
+ * </p>
+ */
 public class OrganizerWarningDialog extends DialogFragment {
 
     interface QRCodeTypeChangeListener {
