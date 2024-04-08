@@ -1,3 +1,11 @@
+
+package com.example.eventease2.Attendee;
+
+import android.annotation.SuppressLint;
+import android.net.Uri;
+import android.widget.ImageView;
+
+import androidx.lifecycle.ViewModel;
 /**
  * This view model allows many attendee variables to be shared with QR, Profile, and Event
  * fragments. The Start activity also accesses the information in order to provide info for other fragments.
@@ -6,16 +14,8 @@
  * profile details, and check-in status. It is designed to facilitate communication between different
  * fragments and activities within the event management application.
  * <p>
- * Author: Sean
+ * @author Sean
  */
-package com.example.eventease2.Attendee;
-
-import android.annotation.SuppressLint;
-import android.net.Uri;
-import android.widget.ImageView;
-
-import androidx.lifecycle.ViewModel;
-
 public class AttendeeItemViewModel extends ViewModel {
     // Attendee information variables
     private String event = "";

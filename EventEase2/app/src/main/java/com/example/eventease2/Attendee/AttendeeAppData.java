@@ -1,11 +1,30 @@
-/**
- * The AttendeeAppData class represents the data structure for managing attendee-related information
- * in an event management application.
- */
+
 package com.example.eventease2.Attendee;
 
 import java.util.ArrayList;
-
+/**
+ * The AttendeeAppData class represents the data structure for managing attendee-related information
+ * in an event management application.
+ * <p>
+ * It contains ArrayLists to store various types of information related to organizers, events, and attendees.
+ * This class provides methods to manipulate and retrieve data from these lists.
+ * </p>
+ * <p>
+ * The ArrayLists include:
+ * <ul>
+ *   <li>{@code organizerList}: List of organizers</li>
+ *   <li>{@code eventNameList}: List of event names</li>
+ *   <li>{@code eventInfoList}: List of event information</li>
+ *   <li>{@code eventIDs}: List of event IDs</li>
+ *   <li>{@code maxAttendeeList}: List of maximum attendees allowed for each event</li>
+ *   <li>{@code entriesAttendeeList}: List of entries by attendees</li>
+ * </ul>
+ * </p>
+ * <p>
+ * This class also provides methods to retrieve, set, and delete elements from these lists.
+ * </p>
+ * @author Sean
+ */
 public class AttendeeAppData {
     // ArrayLists to store various information related to events and attendees
     private ArrayList<String> organizerList;

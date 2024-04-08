@@ -78,6 +78,7 @@ import android.Manifest;
  * <p>
  * This fragment requests location permission to enable geolocation tracking. Users need to grant
  * location permission for this feature to work properly. However, this was not fully implemented.
+ * @author Sean Sebheyer
  */
 public class AttendeeProfileFragment extends Fragment {
 

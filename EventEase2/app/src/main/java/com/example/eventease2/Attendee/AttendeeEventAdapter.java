@@ -1,8 +1,4 @@
-/**
- * This class is a custom ArrayAdapter used to populate a ListView with event information
- * for attendees. It binds the event name, description, and other details to the respective
- * TextViews and Buttons in the list item layout.
- */
+
 package com.example.eventease2.Attendee;
 
 // Imported libraries
@@ -31,7 +27,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
-
+/**
+ * This class is a custom ArrayAdapter used to populate a ListView with event information for attendees.
+ * It binds the event name, description, and other details to the respective TextViews and Buttons in the list item layout.
+ * <p>
+ * The constructor initializes the adapter with event data and attendee information.
+ * </p>
+ * <p>
+ * The {@link #getView(int, View, ViewGroup)} method is responsible for creating the View for each item in the ListView,
+ * updating UI elements based on attendee's participation status in events, and setting click listeners for event details buttons.
+ * </p>
+ */
 public class AttendeeEventAdapter extends ArrayAdapter<String> {
 
     // Member variables
