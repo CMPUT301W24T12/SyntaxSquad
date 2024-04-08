@@ -1,15 +1,21 @@
 package com.example.eventease2.Organizer;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -43,6 +49,10 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
     ListView attendeeList;
     ArrayList<String> attendeeNameList;
     OrganizerAttendeeListArrayAdapter attendeeArrayAdapter;
+    private String organizerID;
+    private String eventID;
+    private int count = 0; // initialize milestone
+    private Boolean milestone = Boolean.FALSE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +60,8 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
         setContentView(R.layout.organizer_attendee_list);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String eventID = getIntent().getStringExtra("ID");
-        String organizerID = getIntent().getStringExtra("OrganizerID");
+        eventID = getIntent().getStringExtra("EventID");
+        organizerID = getIntent().getStringExtra("OrganizerID");
 
         attendeeList = findViewById(R.id.organizer_attendee_list);
 
@@ -66,11 +76,33 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                             // Access each document here
                             Log.d("NewTag", documentSnapshot.getId() + " => " + documentSnapshot.getData());
                             //                         attendee id's                            attendee info
-                            attendeeIDs.add(documentSnapshot.getId());
-                            attendeeNames.add(documentSnapshot.getString("Name"));
+                            if (documentSnapshot.getString("Number of Check ins:") != null && !documentSnapshot.getString("Number of Check ins:").equals("0")) {
+                                attendeeIDs.add(documentSnapshot.getId());
+                                attendeeNames.add(documentSnapshot.getString("Name"));
+                            }
                         }
-                        attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerAttendeeListFragment.this, attendeeIDs, attendeeNames);
+                        attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerAttendeeListFragment.this, attendeeIDs, attendeeNames, organizerID, eventID);
                         attendeeList.setAdapter(attendeeArrayAdapter);
+
+                        if (attendeeIDs.size() != 0 && attendeeIDs.size() >= count && milestone == Boolean.TRUE) {
+                            Toast.makeText(OrganizerAttendeeListFragment.this, "Milestone reached!", Toast.LENGTH_SHORT).show();
+                        }
+                        // Click listener on List to send to Attendee profile
+
+                        attendeeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(OrganizerAttendeeListFragment.this, OrganizerAttendeeProfileFragment.class);
+                                // Include anything attendee profile may need
+                                // intent.putExtra("Name", name)
+                                intent.putExtra("OrganizerID", organizerID);
+                                intent.putExtra("EventID", eventID);
+                                intent.putExtra("ID", attendeeIDs.get(position));
+                                intent.putExtra("Name", attendeeNames.get(position));
+                                startActivity(intent);
+                            }
+                        });
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -80,18 +112,73 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                     }
                 });
 
-        TextView back = findViewById(R.id.back_text);
-        back.setOnClickListener(new View.OnClickListener() {
+        Button milestone = findViewById(R.id.button5);
+        milestone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMilestoneDialog();
+            }
+        });
+
+        Button notifications = findViewById(R.id.button4);
+        notifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Create an Intent to navigate to the Add Event Activity
-                Intent intent = new Intent(OrganizerAttendeeListFragment.this, EventListFragment.class);
+                Intent intent = new Intent(OrganizerAttendeeListFragment.this, OrganizerNotificationFragment.class);
                 intent.putExtra("OrganizerID", organizerID);
                 intent.putExtra("EventID", eventID);
                 // Start the new activity
                 startActivity(intent);
             }
         });
+
+        TextView back = findViewById(R.id.back_text);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to navigate to the Add Event Activity
+                Intent intent = new Intent(OrganizerAttendeeListFragment.this, OrganizerSignUpFragment.class);
+                intent.putExtra("OrganizerID", organizerID);
+                intent.putExtra("EventID", eventID);
+                // Start the new activity
+                //startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    private void setMilestoneDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(OrganizerAttendeeListFragment.this);
+        builder.setTitle("Set Milestone");
+        builder.setMessage("Enter the milestone number:");
+
+        // Set up the input field
+        final EditText input = new EditText(OrganizerAttendeeListFragment.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Set", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String milestoneStr = input.getText().toString();
+                if (!milestoneStr.isEmpty()) {
+                    count = Integer.parseInt(milestoneStr);
+                    milestone = Boolean.TRUE;
+                    Toast.makeText(OrganizerAttendeeListFragment.this, "Milestone set to " + count, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
 }

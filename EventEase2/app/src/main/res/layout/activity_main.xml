@@ -23,17 +23,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
+        app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
         app:itemIconSize="30dp"
         app:itemIconTint="#272727"
         app:itemRippleColor="#00B6AA"
         app:itemTextAppearanceActive="@style/TextAppearance.Material3.LabelLarge"
         app:itemTextAppearanceInactive="@style/TextAppearance.Material3.LabelSmall"
-        app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
         app:itemTextColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/frameLayout"
+        app:layout_constraintHorizontal_bias="1.0"
 
+        app:layout_constraintStart_toEndOf="@+id/frameLayout"
         app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

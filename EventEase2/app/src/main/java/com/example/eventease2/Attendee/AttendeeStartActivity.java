@@ -150,13 +150,15 @@ public class AttendeeStartActivity extends AppCompatActivity{
             String s = new String(content);
             s = s.substring(1,s.length()-1);
             String split[] = s.split(", ");
-            if(split.length == 5){
+            if(split.length == 5) {
                 viewModel.setAttendeeID(split[0]);
                 viewModel.setProfileName(split[1]);
                 viewModel.setProfilePhone(split[2]);
                 viewModel.setProfileEmail(split[3]);
                 viewModel.setProfileBio(split[4]);
                 // Create a storage reference from our app
+            }if(split.length >= 1){
+                viewModel.setAttendeeID(split[0]);
             }
         } catch (Exception e) {
             e.printStackTrace();
