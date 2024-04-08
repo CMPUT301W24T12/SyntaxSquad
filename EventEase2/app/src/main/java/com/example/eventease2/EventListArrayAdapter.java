@@ -41,7 +41,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
     private ArrayList<String> eventIDs;
     private Context context;
 
-    private Integer count;
+    private String count;
 
     public EventListArrayAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, String organizerID, ArrayList<String> eventIDs) {
         super(context, 0, eventNames);
@@ -69,6 +69,7 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
 
         TextView eventName = view.findViewById(R.id.event_title);
         TextView eventDetails = view.findViewById(R.id.event_description);
+        TextView eventCount = view.findViewById(R.id.participant_count);
 
         eventName.setText(name);
         eventDetails.setText(description);
@@ -76,10 +77,10 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
         ArrayList<Integer> attendeeIDs = new ArrayList<>();
         for (String event : eventIDs) {
             ArrayList<String> attendeeID = new ArrayList<>();
+            //ArrayList<Integer> attendeeIDs = new ArrayList<>();
             CollectionReference attendeeRef = db.collection("Organizer").document(organizerID)
                     .collection("Events").document(event).collection("Attendees");
 
-            View finalView = view;
             attendeeRef.get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
@@ -92,16 +93,18 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
                                 attendeeID.add(attendees);
                             }
                             attendeeIDs.add(attendeeID.size());
-                            Log.d("Entries Get", attendeeIDs.toString());
-                            TextView eventCount = finalView.findViewById(R.id.participant_count);
+                            Log.d("Entries 1", attendeeID.toString());
+                            Log.d("Entries 2", attendeeIDs.toString());
                             if (attendeeIDs.isEmpty()) {
-                                count = 0;
+                                count = "0";
                             } else {
-                                count = attendeeIDs.get(position);
+                                Log.d("Entries 5", String.valueOf(position));
+                                if (position == attendeeIDs.size() - 1){
+                                    count = String.valueOf(attendeeIDs.get(position));
+                                    eventCount.setText(count);
+                                }
+                                //eventCount.setText(count);
                             }
-                            Log.d("Entries", attendeeIDs.toString());
-                            Log.d("Entries", count.toString());
-                            eventCount.setText(count.toString());
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
