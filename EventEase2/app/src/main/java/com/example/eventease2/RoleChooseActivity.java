@@ -11,6 +11,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,6 +69,8 @@ public class RoleChooseActivity extends AppCompatActivity {
     public String imei;
     private DocumentReference organizerRef;
     private CollectionReference collectionRef;
+    private ImageButton selectedButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +150,8 @@ public class RoleChooseActivity extends AppCompatActivity {
      */
     private void handleAttendeeIconClick() {
         confirmButton.setTextColor(Color.parseColor("#FFFFFF"));
+        Toast.makeText(this, "This Role Joins Events!", Toast.LENGTH_SHORT).show();
+        handleSelected(attendeeIcon);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,6 +166,8 @@ public class RoleChooseActivity extends AppCompatActivity {
      */
     private void handleOrganizerIconClick() {
         confirmButton.setTextColor(Color.parseColor("#FFFFFF"));
+        Toast.makeText(this, "This Role Creates and Edits Events!", Toast.LENGTH_SHORT).show();
+        handleSelected(organizerIcon);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,6 +183,8 @@ public class RoleChooseActivity extends AppCompatActivity {
      */
     private void handleAdmIconClick() {
         confirmButton.setTextColor(Color.parseColor("#FFFFFF"));
+        Toast.makeText(this, "This Role Manages Events and Attendees!", Toast.LENGTH_SHORT).show();
+        handleSelected(admIcon);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,4 +193,27 @@ public class RoleChooseActivity extends AppCompatActivity {
             }
         });
     }
+    private void handleSelected(ImageButton button) {
+        if (selectedButton != null && selectedButton != button) {
+            // Deselect the previously selected button
+            selectedButton.setSelected(false);
+            selectedButton.clearColorFilter();
+            selectedButton.setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        // Toggle selection state of the clicked button
+        button.setSelected(!button.isSelected());
+
+        // Apply tint based on selection state
+        if (button.isSelected()) {
+            button.setColorFilter(ContextCompat.getColor(this, R.color.black), PorterDuff.Mode.SRC_ATOP);
+            button.setBackgroundColor(ContextCompat.getColor(this, R.color.selected_tint_color));
+            selectedButton = button; // Update selected button reference
+        } else {
+            button.clearColorFilter(); // Clear tint if deselected
+            button.setBackgroundColor(Color.TRANSPARENT);
+            selectedButton = null; // Reset selected button reference
+        }
+    }
+
 }
