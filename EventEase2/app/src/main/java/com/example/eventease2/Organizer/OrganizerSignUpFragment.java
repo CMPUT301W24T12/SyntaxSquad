@@ -106,6 +106,7 @@ public class OrganizerSignUpFragment extends AppCompatActivity {
                 intent.putExtra("EventID", eventID);
                 // Start the new activity
                 startActivity(intent);
+                finish();
             }
         });
 

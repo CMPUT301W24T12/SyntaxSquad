@@ -1,6 +1,7 @@
 package com.example.eventease2;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+import static androidx.test.InstrumentationRegistry.getContext;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
