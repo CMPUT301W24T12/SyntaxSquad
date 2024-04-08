@@ -1,5 +1,3 @@
-
-
 package com.example.eventease2.Administrator;
 
 
@@ -40,6 +38,7 @@ import com.google.firebase.storage.UploadTask;
 
 
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 /**
  * EventEditorActivity is an activity class responsible for editing and managing event details by the administrator.
@@ -59,6 +58,8 @@ public class EventEditorActivity extends AppCompatActivity {
     private TextView getBackInstruct;
     private ImageView eventImg;
     private Button removeImg;
+    private TextView locationText;
+    private TextView maxEntries;
 
     private String eventID;
     private String organizerID;
@@ -92,6 +93,8 @@ public class EventEditorActivity extends AppCompatActivity {
         getBackInstruct = findViewById(R.id.events_back_button);
         eventImg = findViewById(R.id.event_editable_photo);
         removeImg = findViewById(R.id.event_remove_photo_button);
+        locationText = findViewById(R.id.location);
+        maxEntries = findViewById(R.id.maxentries);
     }
 
     /**
@@ -176,11 +179,26 @@ public class EventEditorActivity extends AppCompatActivity {
                     String description = document.getString("Description");
                     String eventBody = document.getString("EventBody");
                     String name = document.getString("Name");
-                    if (description != null && eventBody != null && name != null) {
-                        eventDesciption.setText(description);
-                        eventTitle.setText(name);
+                    Long maxLong = document.getLong("Max");
+                    if (maxLong != null) {
+                        int maxNumb = maxLong.intValue();
+                        maxEntries.setText(String.valueOf(maxNumb));
                     } else {
-                        Log.d("Description", "Description, EventBody, or Name is null");
+                        Log.d("Description", "Max is null");
+                        // Handle the case when "Max" is null
+                    }
+                    String location = document.getString("Location");
+                    if (description != null) {
+                        eventDesciption.setText(description);
+                    }
+                    if (eventBody != null) {
+                        eventDesciption.setText(eventBody);
+                    }
+                    if (name != null) {
+                        eventTitle.setText(name);
+                    }
+                    if (location != null && !location.equals("")) {
+                        locationText.setText(location);
                     }
                 } else {
                     Log.d("Description", "Document does not exist");
