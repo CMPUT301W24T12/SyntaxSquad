@@ -76,6 +76,8 @@ public class AttendeeProfileFragment extends Fragment {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
     public AttendeeProfileFragment() {
         event = "";
@@ -326,8 +328,17 @@ public class AttendeeProfileFragment extends Fragment {
                 @Override
                 public void onLocationChanged(@NonNull Location location) {
                     if (isGeoLocationEnabled) {
-                        // Display current coordinates in a toast message
-                        Toast.makeText(getContext(), "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                        // Update latitude and longitude values
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+
+                        // Display toast message only once
+                        if (latitude != 0.0 && longitude != 0.0) {
+                            Toast.makeText(getContext(), "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
+                            // Reset latitude and longitude values to prevent showing toast message multiple times
+                            latitude = 0.0;
+                            longitude = 0.0;
+                        }
                     }
                 }
 
