@@ -112,14 +112,12 @@ public class AttendeeTest {
 //    }
 
     @Test
-    public void testAttendeeEvent() throws InterruptedException {
+    public void testAttendeeEventView() throws InterruptedException {
         onView(withId(R.id.attendIcon)).perform(click());
 
         onView(withId(R.id.confirmButton)).perform(click());
 
         onView(withId(R.id.Event)).perform(click());
-
-        onView(withId(R.id.event_header)).check(matches(isDisplayed()));
 
         onView(withId(R.id.event_header)).check(matches(isDisplayed()));
 
@@ -129,9 +127,28 @@ public class AttendeeTest {
                         .atPosition(0).check(matches(isDisplayed()));
 
         Espresso.onData(is(instanceOf(String.class))).inAdapterView(withId(R.id.attendee_event_list))
-                .atPosition(8).onChildView(withId(R.id.event_details)).check(matches(isDisplayed()))
+                .atPosition(0).onChildView(withId(R.id.event_details)).check(matches(isDisplayed()))
                 .perform(click());
 
+        onView(withId(R.id.attendee_event_photo)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testAttendeeEventSignUp() throws InterruptedException {
+        onView(withId(R.id.attendIcon)).perform(click());
+
+        onView(withId(R.id.confirmButton)).perform(click());
+
+        onView(withId(R.id.Event)).perform(click());
+
+        onView(withId(R.id.event_header)).check(matches(isDisplayed()));
+
+        Thread.sleep(1000);
+
+        Espresso.onData(is(instanceOf(String.class))).inAdapterView(withId(R.id.attendee_event_list))
+                .atPosition(0).onChildView(withId(R.id.event_details)).check(matches(isDisplayed()))
+                .perform(click());
+
+        onView(withId(R.id.attendee_event_photo)).check(matches(isDisplayed()));
 
     }
 
