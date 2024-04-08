@@ -88,9 +88,7 @@ public class RoleChooseActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(RoleChooseActivity.this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(RoleChooseActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 546);
-            }
-        }
+                ActivityCompat.requestPermissions(RoleChooseActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 
     }
 
     /**
