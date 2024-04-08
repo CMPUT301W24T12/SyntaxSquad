@@ -101,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/see_more"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 
 </LinearLayout>
