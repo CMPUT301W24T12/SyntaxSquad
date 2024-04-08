@@ -1,5 +1,7 @@
 package com.example.eventease2;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,6 +23,7 @@ import com.example.eventease2.Attendee.AttendeeStartActivity;
 
 import com.example.eventease2.Administrator.AppEventsActivity;
 
+import com.example.eventease2.Organizer.OrganizerAttendeeListFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -88,6 +91,7 @@ public class RoleChooseActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(RoleChooseActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 546);
             }
         }
+        
     }
 
     /**
