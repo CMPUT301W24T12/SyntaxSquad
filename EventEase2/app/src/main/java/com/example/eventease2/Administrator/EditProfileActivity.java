@@ -225,12 +225,15 @@ public class EditProfileActivity extends AppCompatActivity {
      */
     private void setBackButtonListener() {
         TextView back = findViewById(R.id.profile_back_button);
-        back.setOnClickListener(v -> {
-            Intent intent = new Intent(EditProfileActivity.this, AdminAttendeeView.class);
-            intent.putExtra("OrganizerID", organizerID);
-            intent.putExtra("EventID", eventID);
-            startActivity(intent);
-            finish();
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditProfileActivity.this, AdminAttendeeView.class);
+                intent.putExtra("ID", eventID);
+                intent.putExtra("OrganizerID", organizerID);
+                startActivity(intent);
+                finish();
+            }
         });
     }
 }
