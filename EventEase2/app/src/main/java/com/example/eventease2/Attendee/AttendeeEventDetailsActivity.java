@@ -3,8 +3,6 @@ package com.example.eventease2.Attendee;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -22,12 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
-import com.example.eventease2.Administrator.AdminAttendeeView;
 import com.example.eventease2.Administrator.AppData;
-import com.example.eventease2.Administrator.AppEventsActivity;
 import com.example.eventease2.Event;
 import com.example.eventease2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,13 +36,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
-import java.util.Objects;
+
 /**
  * An activity that displays details of an event for attendees and allows them to indicate
  * their intention to attend the event.
@@ -86,29 +78,28 @@ import java.util.Objects;
  * This activity relies on Firebase Firestore to retrieve event and attendee information,
  * as well as Firebase Storage to fetch event photos.
  * <p>
+ * @author Sean
  */
 public class AttendeeEventDetailsActivity extends AppCompatActivity {
-    FirebaseFirestore appDb = FirebaseFirestore.getInstance();
-    TextView eventTitle;
-    TextView eventDescription;
-    TextView eventDetails,entriesTextView;
-    String entries;
-    ImageView eventPhoto;
+    public static AppData appData;
+    private FirebaseFirestore appDb = FirebaseFirestore.getInstance();
+    private TextView eventTitle;
+    private TextView eventDescription;
+    private TextView eventDetails, entriesTextView;
+    private String entries;
+    private ImageView eventPhoto;
     int maxInt;
-    String eventID;
-    String organizerID;
-    String posOfEvent,attendeeId;
-    Switch promiseToGoSwitch;
-    DocumentReference eventInfoDoc;
-    CollectionReference attendeeList;
-    Event promisedEvent;
-    Bundle extras;
-    StorageReference pathReference;
+    private String eventID;
+    private String organizerID;
+    private String  attendeeId;
+    private Switch promiseToGoSwitch;
+    private DocumentReference eventInfoDoc;
+    private CollectionReference attendeeList;
+    private Event promisedEvent;
+    private Bundle extras;
+    private StorageReference pathReference;
     boolean sent = false;
     boolean noMax = false;
-    FirebaseStorage storageRef;
-
-    public static AppData appData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +120,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
         pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 eventPhoto.setImageBitmap(bitmap);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -154,10 +145,10 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
         eventInfoDoc = appDb.collection("Organizer").document(organizerID).collection("Events").document(eventID);
         attendeeList = eventInfoDoc.collection("Attendees");
 
-        eventTitle = (TextView)findViewById(R.id.event_title);
+        eventTitle = (TextView) findViewById(R.id.event_title);
         entriesTextView = findViewById(R.id.numOfSpotLeft);
-        eventDescription = (TextView)findViewById(R.id.event_description);
-        eventDetails = (TextView)findViewById(R.id.event_detail);
+        eventDescription = (TextView) findViewById(R.id.event_description);
+        eventDetails = (TextView) findViewById(R.id.event_detail);
         eventPhoto = findViewById(R.id.attendee_event_photo);
         promiseToGoSwitch = findViewById(R.id.switch1);
         TextView back = findViewById(R.id.textView12);
@@ -180,9 +171,9 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                         eventTitle.setText((CharSequence) document.get("Name"));
                         eventDescription.setText((CharSequence) document.get("Description"));
                         eventDetails.setText((CharSequence) document.get("EventBody"));
-                        if(document.get("Max") == null){
+                        if (document.get("Max") == null) {
                             noMax = true;
-                        }else{
+                        } else {
                             maxInt = Integer.parseInt(String.valueOf(document.get("Max")));
                         }
 
@@ -222,11 +213,11 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                     AggregateQuerySnapshot snapshot = task.getResult();
                     Log.d(TAG, "Count: " + snapshot.getCount());
                     entries = String.valueOf(snapshot.getCount());
-                    if (noMax){
+                    if (noMax) {
                         entriesTextView.setText("No Limit");
-                    }else if (maxInt - Integer.parseInt(entries) < 0){
+                    } else if (maxInt - Integer.parseInt(entries) < 0) {
                         entriesTextView.setText("0");
-                    }else{
+                    } else {
                         entries = String.valueOf(maxInt - Integer.parseInt(entries));
                         entriesTextView.setText(entries);
                     }
@@ -240,28 +231,28 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isChecked){
+                if (isChecked) {
                     Query query = eventInfoDoc.collection("Attendees");
                     AggregateQuery countQuery = query.count();
                     countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                if(!sent){
+                                if (!sent) {
                                     // Count fetched successfully
                                     AggregateQuerySnapshot snapshot = task.getResult();
                                     Log.d(TAG, "Count: " + snapshot.getCount());
-                                    if(maxInt > snapshot.getCount() || noMax){
+                                    if (maxInt > snapshot.getCount() || noMax) {
                                         addAttendeeData();
-                                        promisedEvent = new Event(eventPhoto,eventTitle.toString(),
-                                                eventDescription.toString(),null,
-                                                false,null, null);
-                                        if(!noMax){
-                                            entries = String.valueOf(Integer.parseInt(entries)-1);
+                                        promisedEvent = new Event(eventPhoto, eventTitle.toString(),
+                                                eventDescription.toString(), null,
+                                                false, null, null);
+                                        if (!noMax) {
+                                            entries = String.valueOf(Integer.parseInt(entries) - 1);
                                             entriesTextView.setText(entries);
                                         }
                                         sent = true;
-                                    }else{
+                                    } else {
                                         //geolocation, and
                                         Toast.makeText(AttendeeEventDetailsActivity.this,
                                                 "Sorry. All spots for this event are taken.",
@@ -269,7 +260,7 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                                         promiseToGoSwitch.setChecked(false);
                                         sent = false;
                                     }
-                                }else{
+                                } else {
                                     sent = true;
                                 }
                             } else {
@@ -278,14 +269,14 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
                         }
                     });
 
-                }else {
-                    if (sent){
-                        eventInfoDoc.collection("Attendees").document(attendeeId )
+                } else {
+                    if (sent) {
+                        eventInfoDoc.collection("Attendees").document(attendeeId)
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        entries = String.valueOf(Integer.parseInt(entries)+1);
+                                        entries = String.valueOf(Integer.parseInt(entries) + 1);
                                         entriesTextView.setText(entries);
                                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
                                         sent = false;
@@ -302,8 +293,9 @@ public class AttendeeEventDetailsActivity extends AppCompatActivity {
             }
         });
     }
-    public void addAttendeeData(){
-        HashMap<String,String> data = new HashMap<>();
+
+    public void addAttendeeData() {
+        HashMap<String, String> data = new HashMap<>();
         data.put("Name", extras.getString("AttendeeName"));
         data.put("Email", extras.getString("AttendeeEmail"));
         data.put("Phone", extras.getString("AttendeePhone"));

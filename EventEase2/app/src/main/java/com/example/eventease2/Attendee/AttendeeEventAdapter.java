@@ -1,7 +1,7 @@
-
 package com.example.eventease2.Attendee;
 
 // Imported libraries
+
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.content.Context;
@@ -26,7 +26,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
+
 /**
  * This class is a custom ArrayAdapter used to populate a ListView with event information for attendees.
  * It binds the event name, description, and other details to the respective TextViews and Buttons in the list item layout.
@@ -37,26 +39,31 @@ import java.util.ArrayList;
  * The {@link #getView(int, View, ViewGroup)} method is responsible for creating the View for each item in the ListView,
  * updating UI elements based on attendee's participation status in events, and setting click listeners for event details buttons.
  * </p>
+ * @author Sean
  */
 public class AttendeeEventAdapter extends ArrayAdapter<String> {
 
     // Member variables
-    private ArrayList<String> eventNames;
-    private ArrayList<String> eventDescription;
-    private ArrayList<String> organizerID;
-    private ArrayList<String> eventIDs;
-    private Context context;
-    private String attendeeID, attendeeName, attendeePhone, attendeeEmail;
-    private FirebaseFirestore appDb = FirebaseFirestore.getInstance();
+    private final ArrayList<String> eventNames;
+    private final ArrayList<String> eventDescription;
+    private final ArrayList<String> organizerID;
+    private final ArrayList<String> eventIDs;
+    private final Context context;
+    private final String attendeeID;
+    private final String attendeeName;
+    private final String attendeePhone;
+    private final String attendeeEmail;
+    private final FirebaseFirestore appDb = FirebaseFirestore.getInstance();
     private Button eventDetailButton;
-    private AttendeeAppData attendeeAppData;
+    private final AttendeeAppData attendeeAppData;
 
     /**
      * Constructor for the AttendeeEventAdapter.
-     * @param context The context of the application.
-     * @param appData An instance of AttendeeAppData containing event data.
-     * @param attendeeID The ID of the attendee.
-     * @param attendeeName The name of the attendee.
+     *
+     * @param context       The context of the application.
+     * @param appData       An instance of AttendeeAppData containing event data.
+     * @param attendeeID    The ID of the attendee.
+     * @param attendeeName  The name of the attendee.
      * @param attendeePhone The phone number of the attendee.
      * @param attendeeEmail The email of the attendee.
      */
@@ -78,9 +85,10 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
     /**
      * Method to get the View for each item in the ListView. And updating which events that the
      * current attendee is a part of.
-     * @param position The position of the item in the ListView.
+     *
+     * @param position    The position of the item in the ListView.
      * @param convertView The recycled view to populate.
-     * @param parent The parent ViewGroup.
+     * @param parent      The parent ViewGroup.
      * @return The View for the item at the specified position.
      */
     @NonNull
@@ -111,12 +119,12 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
                     if (document.exists()) {
                         enteredInEvent.setText("Yes");
                         enteredInEvent.setTextSize(40);
-                        enteredInEvent.setTextColor(Color.rgb(0,181,169));
+                        enteredInEvent.setTextColor(Color.rgb(0, 181, 169));
                     } else {
                         Log.d(TAG, "No such document");
                         enteredInEvent.setText("No");
                         enteredInEvent.setTextSize(24);
-                        enteredInEvent.setTextColor(Color.rgb(0,0,0));
+                        enteredInEvent.setTextColor(Color.rgb(0, 0, 0));
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
@@ -137,10 +145,10 @@ public class AttendeeEventAdapter extends ArrayAdapter<String> {
                 intent.putExtra("ID", eventIDs.get(position));
                 intent.putExtra("OrganizerID", organizerID.get(position));
                 intent.putExtra("posOfEvent", position);
-                intent.putExtra("AttendeeID",attendeeID);
-                intent.putExtra("AttendeeName",attendeeName);
-                intent.putExtra("AttendeePhone",attendeePhone);
-                intent.putExtra("AttendeeEmail",attendeeEmail);
+                intent.putExtra("AttendeeID", attendeeID);
+                intent.putExtra("AttendeeName", attendeeName);
+                intent.putExtra("AttendeePhone", attendeePhone);
+                intent.putExtra("AttendeeEmail", attendeeEmail);
                 // Start activity and pass necessary data
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
