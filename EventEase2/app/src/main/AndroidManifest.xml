@@ -5,14 +5,18 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -20,10 +24,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EventEase2"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity android:name=".Administrator.EditProfileActivity"
-            android:exported="false"/>
-
+        <activity
+            android:name=".Administrator.MockActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Administrator.EditProfileActivity"
+            android:exported="false" />
         <activity
             android:name=".Administrator.EventEditorActivity"
             android:exported="false" />
@@ -38,6 +46,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -48,15 +57,31 @@
         <activity android:name=".EventListFragment" />
         <activity android:name=".EventListArrayAdapter" />
         <activity android:name=".Organizer.OrganizerAttendeeListFragment" />
+        <activity android:name=".Organizer.OrganizerSignUpFragment" />
+        <activity android:name=".Organizer.OrganizerNotificationFragment" />
+        <activity android:name=".Organizer.OrganizerAttendeeProfileFragment" />
         <activity android:name=".Attendee.AttendeeEventDetailsActivity" />
         <activity android:name=".Attendee.AttendeeEventAdapter" />
-        <activity android:name=".Organizer.ReuseQRCodeFragment"/>
+        <activity android:name=".Organizer.ReuseQRCodeFragment" />
         <activity
             android:name=".Organizer.AddEventFragment"
             android:exported="true" />
         <activity
             android:name=".Organizer.OrganizerEventFrame"
             android:exported="true" />
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher_foreground" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@drawable/ic_launcher_background" />
     </application>
 
 </manifest>
