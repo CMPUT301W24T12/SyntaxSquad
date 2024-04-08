@@ -30,97 +30,119 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AddEventUITest {
-//    @Rule
-//    public ActivityScenarioRule<RoleChooseActivity> scenario = new ActivityScenarioRule<>(RoleChooseActivity.class);
     private Solo solo;
+    private Solo solo2;
     @Rule
     public ActivityTestRule<AddEventFragment> addEvent =
             new ActivityTestRule<>(AddEventFragment.class, true, true);
+    @Rule
+    public ActivityTestRule<RoleChooseActivity> roleEvent =
+            new ActivityTestRule<>(RoleChooseActivity.class, true, true);
     @Before
     public void setUp() {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), addEvent.getActivity());
+        solo2 = new Solo(InstrumentationRegistry.getInstrumentation(), roleEvent.getActivity());
     }
-//    /**Click Organizer button and confirm
-//     *check if it turns to the event list page
-//     */
-//    @Test
-//    public void testGoToEventList(){
-//        // Click on organizer icon
-//        onView(withId(R.id.orgIcon)).perform(click());
-//        //Click confirm to intent
-//        onView(withId(R.id.confirmButton)).perform(click());
-//        //Check if we are in the page of event list
-//        onView(withText("EventEase")).check(matches(isDisplayed()));
-//
-//    }
     @Test
     public void testActivity(){
         boolean uploadText = solo.searchText("Upload an image for the event", true);
         assertTrue("Not in the Add Event Page", uploadText);
     }
 
+    /**
+     * Test intent from role choose activity to event list
+     */
     @Test
     public void testNavigateToEventList() {
-        solo.clickOnButton("Back");
-        boolean isAddButtonExist = false;
-        try{
-            onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
-        } catch (Exception e){
-            isAddButtonExist = true;
-        }
-        assertTrue("Not in eventList activity", isAddButtonExist);
+        assertTrue(solo2.searchText("Welcome"));
+        solo2.clickOnView(solo2.getView(R.id.orgIcon));
+        solo2.clickOnView(solo2.getView(R.id.confirmButton));
+        boolean isBackTestPresent = solo2.searchText("Back", true);
+        assertTrue("Unable to Navigate to Event List Activity", isBackTestPresent);
     }
 
-//    @Test
-//    public void testImageSelection(){
-//        intended(hasAction(Intent.ACTION_PICK));
-//        intended(hasType("image/*"));
-//    }
+    /**
+     * test intent to add event fragment
+     */
+    @Test
+    public void testNavigateToAddEventFragment() {
+        assertTrue(solo2.searchText("Welcome"));
+        solo2.clickOnView(solo2.getView(R.id.orgIcon));
+        solo2.clickOnView(solo2.getView(R.id.confirmButton));
+        solo2.clickOnView(solo2.getView(R.id.attendeeProfileImage));
+        boolean uploadText = solo2.searchText("Upload an image for the event", true);
+        assertTrue("Unable to Navigate to Add Event Activity", uploadText);
+    }
+    /**
+     * test intent to add event fragment
+     */
+    @Test
+    public void testNavigateToReuseQRCode() {
+        assertTrue(solo2.searchText("Welcome"));
+        solo2.clickOnView(solo2.getView(R.id.orgIcon));
+        solo2.clickOnView(solo2.getView(R.id.confirmButton));
+        solo2.clickOnView(solo2.getView(R.id.attendeeProfileImage));
+        solo2.clickOnView(solo2.getView(R.id.existing));
+        boolean isChooseButtonPresent = solo2.searchText("Choose this QR code", true);
+        assertTrue("Unable to Navigate to Reuse QR Code Activity", isChooseButtonPresent);
+    }
+    /**
+     * test intent to event detail after a generation
+     */
+    @Test
+    public void testNavigateToEventDetailsAfterGenerate() {
+        assertTrue(solo2.searchText("Welcome"));
+        solo2.clickOnView(solo2.getView(R.id.orgIcon));
+        solo2.clickOnView(solo2.getView(R.id.confirmButton));
+        solo2.clickOnView(solo2.getView(R.id.attendeeProfileImage));
+        solo2.clickOnView(solo2.getView(R.id.new_qr));
+        solo2.clickOnView(solo2.getView(R.id.button2));
+        boolean isEditButtonPresent = solo2.searchText("Edit", true);
+        assertTrue("Unable to Navigate to Event Detail Activity", isEditButtonPresent);
+    }
 
-//    /**Add a event to firebase
-//     *check if the event info are in the firebase
+//    /**
+//     * test intent to event detail after clicking event detail button
 //     */
 //    @Test
-//    public void testAddEvent(){
-//        AtomicReference<String> id = null;
-//        //ActivityScenario<AddEventFragment> add = addScenario.getScenario();
-//        ActivityScenario<RoleChooseActivity> add = scenario.getScenario();
-//        // Click on organizer icon
-//        onView(withId(R.id.orgIcon)).perform(click());
-//        //Click confirm to intent
-//        onView(withId(R.id.confirmButton)).perform(click());
-//        //Click on add event button
-//        onView(withId(R.id.imageButton)).perform(click());
-//        //Add information to am event
-//        // Type Test in the editText
-//        onView(withId(R.id.editTextText)).perform(ViewActions.typeText("TestName"));
-//        onView(withId(R.id.editTextText2)).perform(ViewActions.typeText("TestDescription"));
-//        onView(withId(R.id.enable_location_checkbox)).perform(ViewActions.click());
-//        onView(withId(R.id.editTextText4)).perform(ViewActions.typeText("TestDuration"));
-//        //get the event id
-//        scenario.getScenario().onActivity(activity -> {
-//                    // Access instance variable of the activity
-//                id.set(activity.getID());
-//        });
-//        //Click generate
-//        onView(withId(R.id.button2)).perform(click());
-//        //check the firebase
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        String imei = DeviceInfoUtils.getIMEI(getApplicationContext());
-//        DocumentReference eventRef = db.collection("Organizer").document(imei).collection("Events").document(id.get());
-//
+//    public void testEventDetailButton() {
+//        assertTrue(solo2.searchText("Welcome"));
+//        solo2.clickOnView(solo2.getView(R.id.orgIcon));
+//        solo2.clickOnView(solo2.getView(R.id.confirmButton));
+////        solo2.clickOnView(solo2.getView(R.id.attendeeProfileImage));
+////        solo2.clickOnView(solo2.getView(R.id.new_qr));
+////        solo2.clickOnView(solo2.getView(R.id.button2));
+////        solo2.clickOnView(solo2.getView(R.id.back_button));
+//        solo.clickOnView(solo2.getView(R.id.event_details));
+//        boolean isEditButtonPresent = solo2.searchText("Edit", true);
+//        assertTrue("Unable to Navigate to Event Detail Activity", isEditButtonPresent);
 //    }
-
-
-    //    @Test
-    //    public void testAddCity(){
-    //        // Click on Add City button
-    //        onView(withId(R.id.button_add)).perform(click());
-    //        // Type "Edmonton" in the editText
-    //        onView(withId(R.id.editText_name)).perform(ViewActions.typeText("Edmonton"));
-    //        // Click on Confirm
-    //        onView(withId(R.id.button_confirm)).perform(click());
-    //        // Check if text "Edmonton" is matched with any of the text displayed on the screen
-    //        onView(withText("Edmonton")).check(matches(isDisplayed()));
-    //    }
+//    /**
+//     * test intent to between back buttons
+//     */
+//    @Test
+//    public void testBackButton() {
+//        assertTrue(solo2.searchText("Welcome"));
+//        solo2.clickOnView(solo2.getView(R.id.orgIcon));
+//        solo2.clickOnView(solo2.getView(R.id.confirmButton));
+//        solo2.clickOnView(solo2.getView(R.id.attendeeProfileImage));
+//        solo2.clickOnView(solo2.getView(R.id.new_qr));
+//        solo2.clickOnView(solo2.getView(R.id.button2));
+//        solo2.clickOnView(solo2.getView(R.id.back_button));
+//        boolean isAddButtonPresent = false;
+//        boolean isWelcomePresent = false;
+//        try{
+//            solo2.clickOnView(solo2.getView(R.id.attendeeProfileImage));
+//
+//            isAddButtonPresent = true;
+//            assertTrue("Unable to Navigate back Event List Activity", isAddButtonPresent);
+//            solo2.clickOnView(solo2.getView(R.id.back_button));
+//            solo2.clickOnView(solo2.getView(R.id.home_event));
+//            isWelcomePresent = solo2.searchText("Welcome", true);
+//        }catch (Exception e){
+//
+//        }
+//        //assertTrue("Unable to Navigate back Event List Activity", isAddButtonPresent);
+//        assertTrue("Unable to Navigate to Main Page Activity", isWelcomePresent);
+//    }
 }
