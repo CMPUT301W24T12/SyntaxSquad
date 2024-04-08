@@ -19,8 +19,14 @@
         android:textStyle="bold" />
 
     <Space
-        android:layout_width="100dp"
-        android:layout_height="300dp" />
+        android:layout_width="106dp"
+        android:layout_height="227dp" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:src="@drawable/baseline_qr_code_24" />
 
     <Button
         android:id="@+id/btnScanQR"
@@ -30,6 +36,7 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:foregroundGravity="center"
+        android:background="@drawable/rounded_button_background"
         android:gravity="center"
         android:text="Scan QR Code" />
 
