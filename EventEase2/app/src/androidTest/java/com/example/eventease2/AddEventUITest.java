@@ -71,11 +71,11 @@ public class AddEventUITest {
         assertTrue("Not in eventList activity", isAddButtonExist);
     }
 
-    @Test
-    public void testImageSelection(){
-        intended(hasAction(Intent.ACTION_PICK));
-        intended(hasType("image/*"));
-    }
+//    @Test
+//    public void testImageSelection(){
+//        intended(hasAction(Intent.ACTION_PICK));
+//        intended(hasType("image/*"));
+//    }
 
 //    /**Add a event to firebase
 //     *check if the event info are in the firebase

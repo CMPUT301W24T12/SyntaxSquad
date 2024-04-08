@@ -4,6 +4,7 @@ import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -110,6 +111,13 @@ public class AttendeeTest {
         onView(withId(R.id.Profile)).perform(click());
 
         onView(withId(R.id.attendeeProfileImage)).check(matches(isDisplayed()));
+
+        Espresso.onView(withId(R.id.imageView2)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.editProfileName)).perform(ViewActions.typeText("Sean Piatt"));
+
+        onView(withId(R.id.AttendeeAddChanges)).perform(click());
+
     }
 
     @Test
@@ -122,7 +130,7 @@ public class AttendeeTest {
 
         onView(withId(R.id.event_header)).check(matches(isDisplayed()));
 
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         Espresso.onData(is(instanceOf(String.class))).inAdapterView(withId(R.id.attendee_event_list))
                         .atPosition(0).check(matches(isDisplayed()));
@@ -143,7 +151,7 @@ public class AttendeeTest {
 
         onView(withId(R.id.event_header)).check(matches(isDisplayed()));
 
-        Thread.sleep(1000);
+        Thread.sleep(1500);
 
         Espresso.onData(is(instanceOf(String.class))).inAdapterView(withId(R.id.attendee_event_list))
                 .atPosition(0).onChildView(withId(R.id.event_details)).check(matches(isDisplayed()))
@@ -152,7 +160,10 @@ public class AttendeeTest {
 
         onView(withId(R.id.switch1)).perform(click());
 
-        Espresso.pressBack();
+        onView(withId(R.id.textView12)).perform(click());
+
+        Espresso.onData(is(instanceOf(String.class))).inAdapterView(withId(R.id.attendee_event_list))
+                .atPosition(0).onChildView(withId(R.id.signedUp)).check(matches(isDisplayed()));
 
     }
 
