@@ -229,6 +229,7 @@ public class EditProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(EditProfileActivity.this, AdminAttendeeView.class);
             intent.putExtra("OrganizerID", organizerID);
             intent.putExtra("EventID", eventID);
+            intent.putExtra("ID", attendeeID); // Add this line to pass attendeeID
             startActivity(intent);
             finish();
         });
