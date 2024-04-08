@@ -43,15 +43,16 @@ public class AppEventsActivity extends AppCompatActivity {
     // Instance variables
     ListView eventList;
     AppEventAdapter adminListArrayAdapter;
-    ArrayList<String> organizerList;
-    ArrayList<String> eventNameList;
-    ArrayList<String> eventInfoList;
-    ArrayList<String> eventIDs;
-    ArrayList<String> participantCountList;
+    public ArrayList<String> organizerList;
+    public ArrayList<String> eventNameList;
+    public ArrayList<String> eventInfoList;
+    public ArrayList<String> eventIDs;
+    public ArrayList<String> participantCountList;
     TextView backInstruct;
     public static AppData appData;
     Button showMoreButton;
     private int initiallyDisplayedCount = 10;
+    public FirebaseFirestore appDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +100,9 @@ public class AppEventsActivity extends AppCompatActivity {
     /**
      * Refreshes event data by clearing existing lists and fetching data from Firestore.
      */
-    private void refreshEventData() {
+    public void refreshEventData() {
         clearEventData();
-        FirebaseFirestore appDb = FirebaseFirestore.getInstance();
+        appDb = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = appDb.collection("Organizer");
         fetchOrganizers(collectionRef, appDb);
     }
@@ -122,7 +123,7 @@ public class AppEventsActivity extends AppCompatActivity {
      * @param collectionRef Reference to the collection of organizers in Firestore
      * @param appDb Reference to the Firestore database
      */
-    private void fetchOrganizers(CollectionReference collectionRef, FirebaseFirestore appDb) {
+    public void fetchOrganizers(CollectionReference collectionRef, FirebaseFirestore appDb) {
         collectionRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
