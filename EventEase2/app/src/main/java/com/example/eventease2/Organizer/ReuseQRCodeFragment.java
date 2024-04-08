@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.example.eventease2.DeviceInfoUtils;
 import com.example.eventease2.EventListArrayAdapter;
 import com.example.eventease2.EventListFragment;
 import com.example.eventease2.R;
+import com.example.eventease2.RoleChooseActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -111,23 +113,12 @@ public class ReuseQRCodeFragment extends EventListFragment {
                     }
                 });
 
-//        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                String eventID = eventIDs.get(position);
-////                                    Intent intent = new Intent(EventListFragment.this, AddEventFragment.class);
-////                                    intent.putExtra("OrganizerID", organizerID);
-////                                    startActivity(intent);
-//                Toast.makeText(ReuseQRCodeFragment.this,eventID,Toast.LENGTH_LONG).show();
-//
-//            }
-//        });
-//        ImageButton add = findViewById(R.id.attendeeProfileImage);
-//        add.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(ReuseQRCodeFragment.this,"111",Toast.LENGTH_LONG).show();
-//            }
-//        });
+        Button back = findViewById(R.id.button_second);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
