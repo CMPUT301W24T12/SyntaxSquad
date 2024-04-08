@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/event_title"
-        android:layout_width="145dp"
+        android:layout_width="321dp"
         android:layout_height="wrap_content"
         android:text="Event Title"
         android:textSize="26sp"
@@ -28,12 +28,12 @@
 
     <TextView
         android:id="@+id/event_description"
-        android:layout_width="132dp"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:text="Event Description"
         android:textSize="14sp"
         android:textStyle="italic"
-        android:translationX="-520dp"
+        android:translationX="-695dp"
         android:translationY="40dp"
         tools:layout_editor_absoluteX="36dp"
         tools:layout_editor_absoluteY="64dp" />
@@ -43,7 +43,7 @@
         android:layout_width="68dp"
         android:layout_height="wrap_content"
         android:text="ENTRIES"
-        android:translationX="-510dp"
+        android:translationX="-910dp"
         android:translationY="75dp"
         tools:layout_editor_absoluteX="178dp"
         tools:layout_editor_absoluteY="100dp" />

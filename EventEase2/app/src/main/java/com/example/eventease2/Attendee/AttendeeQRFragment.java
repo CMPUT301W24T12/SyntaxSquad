@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -227,6 +228,15 @@ public class AttendeeQRFragment extends Fragment{
             attendeeCollect.document(viewModel.getAttendeeID()).set(data);
             Toast.makeText(getContext(), "Checked In!", Toast.LENGTH_SHORT).show();
         }
+
+        FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(event))
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Subscribed to topic successfully");
+                    } else {
+                        Log.e(TAG, "Failed to subscribe to topic: " + task.getException().getMessage());
+                    }
+                });
     }
     /**
      * Firebase connecting function.
