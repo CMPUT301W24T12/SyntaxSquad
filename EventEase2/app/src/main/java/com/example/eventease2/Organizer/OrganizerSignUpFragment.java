@@ -28,6 +28,8 @@ public class OrganizerSignUpFragment extends AppCompatActivity {
 
     ListView attendeeList;
     OrganizerAttendeeListArrayAdapter attendeeArrayAdapter;
+    private String organizerID;
+    private String eventID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +37,8 @@ public class OrganizerSignUpFragment extends AppCompatActivity {
         setContentView(R.layout.organizer_signup_page);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String eventID = getIntent().getStringExtra("EventID");
-        String organizerID = getIntent().getStringExtra("OrganizerID");
+        eventID = getIntent().getStringExtra("EventID");
+        organizerID = getIntent().getStringExtra("OrganizerID");
 
         attendeeList = findViewById(R.id.organizer_attendee_list);
 
@@ -55,7 +57,7 @@ public class OrganizerSignUpFragment extends AppCompatActivity {
                             attendeeIDs.add(documentSnapshot.getId());
                             attendeeNames.add(documentSnapshot.getString("Name"));
                         }
-                        attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerSignUpFragment.this, attendeeIDs, attendeeNames);
+                        attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerSignUpFragment.this, attendeeIDs, attendeeNames, organizerID, eventID);
                         attendeeList.setAdapter(attendeeArrayAdapter);
 
                         attendeeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

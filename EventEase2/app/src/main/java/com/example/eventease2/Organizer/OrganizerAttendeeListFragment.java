@@ -49,7 +49,8 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
     ListView attendeeList;
     ArrayList<String> attendeeNameList;
     OrganizerAttendeeListArrayAdapter attendeeArrayAdapter;
-
+    private String organizerID;
+    private String eventID;
     private int count = 0; // initialize milestone
     private Boolean milestone = Boolean.FALSE;
 
@@ -59,8 +60,8 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
         setContentView(R.layout.organizer_attendee_list);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String eventID = getIntent().getStringExtra("EventID");
-        String organizerID = getIntent().getStringExtra("OrganizerID");
+        eventID = getIntent().getStringExtra("EventID");
+        organizerID = getIntent().getStringExtra("OrganizerID");
 
         attendeeList = findViewById(R.id.organizer_attendee_list);
 
@@ -80,7 +81,7 @@ public class OrganizerAttendeeListFragment extends AppCompatActivity {
                                 attendeeNames.add(documentSnapshot.getString("Name"));
                             }
                         }
-                        attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerAttendeeListFragment.this, attendeeIDs, attendeeNames);
+                        attendeeArrayAdapter = new OrganizerAttendeeListArrayAdapter(OrganizerAttendeeListFragment.this, attendeeIDs, attendeeNames, organizerID, eventID);
                         attendeeList.setAdapter(attendeeArrayAdapter);
 
                         if (attendeeIDs.size() != 0 && attendeeIDs.size() >= count && milestone == Boolean.TRUE) {
