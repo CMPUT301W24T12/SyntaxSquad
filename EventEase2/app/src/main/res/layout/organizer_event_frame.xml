@@ -196,6 +196,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:background="@drawable/rounded_button_background"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:text="Share QR Code"
         android:textColor="@color/white"
         android:visibility="gone"
