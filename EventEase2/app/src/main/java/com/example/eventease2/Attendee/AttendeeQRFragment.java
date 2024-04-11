@@ -307,7 +307,7 @@ public class AttendeeQRFragment extends Fragment {
     }
 
     public void firebaseMessaging(){
-        Log.d("Notification Event", String.valueOf(event));
+        Log.d("Notification Event", viewModel.getEvent());
         FirebaseMessaging.getInstance().subscribeToTopic(viewModel.getEvent())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
