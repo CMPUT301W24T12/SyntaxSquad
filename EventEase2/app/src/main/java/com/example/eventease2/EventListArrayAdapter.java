@@ -24,6 +24,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Custom ListArray Adapter for the Event List page
@@ -40,8 +42,6 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
     private String organizerID;
     private ArrayList<String> eventIDs;
     private Context context;
-    private ArrayList<Integer> attendeeIDs = new ArrayList<>();
-    private String count;
 
     public EventListArrayAdapter(Context context, ArrayList<String> eventNames, ArrayList<String> eventDescription, String organizerID, ArrayList<String> eventIDs) {
         super(context, 0, eventNames);
@@ -49,7 +49,6 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
         this.eventDescription = eventDescription;
         this.organizerID = organizerID;
         this.eventIDs = eventIDs;
-        this.attendeeIDs = attendeeIDs;
         this.context = context;
     }
 
@@ -67,7 +66,6 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
         String name = eventNames.get(position);
         String description = eventDescription.get(position);
         String eventID = eventIDs.get(position);
-        //Integer attendeeSize = attendeeIDs.get(position);
 
         TextView eventName = view.findViewById(R.id.event_title);
         TextView eventDetails = view.findViewById(R.id.event_description);
@@ -75,15 +73,14 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
 
         eventName.setText(name);
         eventDetails.setText(description);
-        //eventCount.setText(attendeeSize.toString());
-
-        ArrayList<Integer> attendeeIDs = new ArrayList<>();
+        ArrayList<Integer> attendeeIDs = new ArrayList<>(Collections.nCopies(eventIDs.size(), 0));
+        int index = 0;
         for (String event : eventIDs) {
             ArrayList<String> attendeeID = new ArrayList<>();
             //ArrayList<Integer> attendeeIDs = new ArrayList<>();
             CollectionReference attendeeRef = db.collection("Organizer").document(organizerID)
                     .collection("Events").document(event).collection("Attendees");
-
+            final int currentIndex = index;
             attendeeRef.get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
@@ -95,22 +92,24 @@ public class EventListArrayAdapter extends ArrayAdapter<String> {
                                 //String attendees = documentSnapshot.getId();
                                 attendeeID.add(documentSnapshot.getId());
                             }
-                            attendeeIDs.add(attendeeID.size());
-                            Log.d("Entries", String.valueOf(attendeeIDs));
+
+                            attendeeIDs.set(currentIndex, attendeeID.size());
                             if (attendeeIDs.size() == eventIDs.size()) {
                                 String count = String.valueOf(attendeeIDs.get(position));
+                                //setCount(attendeeIDs, position, eventCount);
                                 eventCount.setText(count);
                             }
-                            Log.d("Entries After2", String.valueOf(attendeeIDs));
+
                         }
 
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d("NewTag", "Error getting documents.", e);
+                            Log.d("Entries failure", "Error getting documents.", e);
                         }
                     });
+            index++;
         }
 
 

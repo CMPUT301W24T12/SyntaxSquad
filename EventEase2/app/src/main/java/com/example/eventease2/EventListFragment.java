@@ -20,6 +20,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Fragment for the Events List page, gets the necessary data for the page from firebase
@@ -86,6 +88,7 @@ public class EventListFragment extends AppCompatActivity {
                                             //Log.d("Event IDs", eventIDs.get(0));
                                             //Log.d("Name List", eventNameList.get(0));
                                             //Log.d("Event Info", eventInfoList.get(0));
+                                            Log.d("Entries Event IDs", String.valueOf(eventIDs));
                                             eventListArrayAdapter = new EventListArrayAdapter(EventListFragment.this, eventNameList, eventInfoList, organizerID, eventIDs);
                                             eventList.setAdapter(eventListArrayAdapter);
                                         }

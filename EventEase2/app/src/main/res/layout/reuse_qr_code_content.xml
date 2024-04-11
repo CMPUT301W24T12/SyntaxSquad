@@ -7,14 +7,14 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="408dp"
+        android:layout_width="395dp"
         android:layout_height="273dp"
         android:scaleX="1.2"
         app:srcCompat="@android:drawable/editbox_dropdown_light_frame" />
 
     <TextView
         android:id="@+id/event_title"
-        android:layout_width="145dp"
+        android:layout_width="342dp"
         android:layout_height="wrap_content"
         android:text="Event Title"
         android:textSize="26sp"
@@ -26,23 +26,24 @@
 
     <TextView
         android:id="@+id/event_description"
-        android:layout_width="132dp"
+        android:layout_width="342dp"
         android:layout_height="wrap_content"
         android:text="Event Description"
         android:textSize="14sp"
         android:textStyle="italic"
-        android:translationX="-520dp"
+        android:translationX="-715dp"
         android:translationY="40dp"
         tools:layout_editor_absoluteX="36dp"
         tools:layout_editor_absoluteY="64dp" />
 
     <Button
         android:id="@+id/chooseButton"
-        android:layout_width="163dp"
+        android:layout_width="183dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/green"
+        android:background="@drawable/rounded_button_background"
         android:text="Choose this QR code"
-        android:translationX="-560dp"
+        android:textColor="#FFFFFF"
+        android:translationX="-978dp"
         android:translationY="100dp"
         tools:layout_editor_absoluteX="178dp"
         tools:layout_editor_absoluteY="100dp" />
@@ -58,10 +59,11 @@
         android:id="@+id/view_attendees"
         android:layout_width="151dp"
         android:layout_height="47dp"
-        android:backgroundTint="#00B6AA"
+        android:background="@drawable/rounded_button_background"
         android:text="VIEW ATTENDEES"
+        android:textColor="#FFFFFF"
         android:textSize="11sp"
-        android:translationX="-620dp"
+        android:translationX="-1230dp"
         android:translationY="170dp"
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="179dp" />
@@ -70,10 +72,11 @@
         android:id="@+id/event_details"
         android:layout_width="151dp"
         android:layout_height="47dp"
-        android:backgroundTint="#00B6AA"
+        android:background="@drawable/rounded_button_background"
         android:text="EVENT DETAILS"
+        android:textColor="#FFFFFF"
         android:textSize="11sp"
-        android:translationX="-950dp"
+        android:translationX="-1210dp"
         android:translationY="170dp"
         tools:layout_editor_absoluteX="217dp"
         tools:layout_editor_absoluteY="179dp" />
